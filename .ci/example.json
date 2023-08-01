@@ -1,0 +1,65 @@
+{
+  "test-id" :
+  {
+    "submit_options" :
+    { 
+      "working_directory" : "dirpath",
+      "queue"             : "queue-to-submit-to",
+      "resources"         : "resource_list",
+      "timelimit"         : "hh:mm:ss"
+    },
+    "steps" :
+    {
+      "step-name" :
+       { 
+        "submit_options" :
+        { 
+          "working_directory" : "dirpath",
+          "queue"             : "queue-to-submit-to",
+          "resources"         : "resource_list",
+          "timelimit"         : "hh:mm:ss"
+        },
+        "script"       : "filepath",
+        "arguments"    : "-add args"
+      }
+    }
+  },
+  "test-id-0" :
+  {
+    "submit_options" :
+    { 
+      "working_directory" : "dirpath",
+      "queue"             : "queue-to-submit-to",
+      "resources"         : "resource_list",
+      "timelimit"         : "hh:mm:ss"
+    },
+    "steps" :
+    {
+      "step-0" :
+       { 
+        "submit_options" :
+        { 
+          "working_directory" : "dirpath",
+          "queue"             : "queue-to-submit-to",
+          "resources"         : "resource_list",
+          "timelimit"         : "hh:mm:ss"
+        },
+        "script"       : "filepath",
+        "arguments"    : "-add args"
+      },
+      "step-1" :
+       { 
+        "submit_options" :
+        { 
+          "working_directory" : "dirpath",
+          "queue"             : "queue-to-submit-to",
+          "resources"         : "resource_list",
+          "timelimit"         : "hh:mm:ss"
+        },
+        "script"       : "filepath",
+        "arguments"    : "-add args",
+        "dependencies" : { "step-0" : "afterany" }
+      }
+    }
+  }
+}
