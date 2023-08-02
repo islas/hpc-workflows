@@ -1,51 +1,63 @@
+import copy
+
 from enum import Enum
 
 class SubmitOptions( ) :
-  class SubmissionType( dict , Enum ):
-    PBS   = { "submit" : "qsub",   "resources"  : "-l select={0}",
-              "name"   : "-N {0}", "dependency" : "-W depend={0}",
-              "queue"  : "-q {0}", "account"    : "-A {0}",
-              "output" : "-j oe -o {0}.log",
-              "time"   : "-l walltime={0}" }
-    SLURM = { "submit" : "sbtach", "resources"  : "--gres={0}",
-              "name"   : "-J {0}", "dependency" : "-d {0}",
-              "queue"  : "-p {0}", "account"    : "-A {0}",
-              "output" : "-j -o {0}",
-              "time"   : "-t {0}" }
-    LOCAL = { "submit" : "",       "resources"  : "",
-              "name"   : "",       "dependency" : "",
-              "queue"  : "",       "account"    : "",
-              "output" : "-o {0}.log",
-              "time"   : "" }
+  class SubmissionType( Enum ):
+    PBS   = 0
+    SLURM = 1
+    LOCAL = 2
 
     def format( self, subOpts ) :
+      # https://github.com/python/cpython/issues/88508
+      submitDict = {}
+      if self == self.PBS :
+        submitDict    = { "submit" : "qsub",   "resources"  : "-l select={0}",
+                          "name"   : "-N {0}", "dependency" : "-W depend={0}",
+                          "queue"  : "-q {0}", "account"    : "-A {0}",
+                          "output" : "-j oe -o {0}.log",
+                          "time"   : "-l walltime={0}" }
+      elif self == self.SLURM :
+        submitDict    = { "submit" : "sbtach", "resources"  : "--gres={0}",
+                          "name"   : "-J {0}", "dependency" : "-d {0}",
+                          "queue"  : "-p {0}", "account"    : "-A {0}",
+                          "output" : "-j -o {0}",
+                          "time"   : "-t {0}" }
+      elif self == self.LOCAL :
+        submitDict    = { "submit" : "",       "resources"  : "",
+                          "name"   : "",       "dependency" : "",
+                          "queue"  : "",       "account"    : "",
+                          "output" : "-o {0}.log",
+                          "time"   : "" }
+
+
       if self == self.LOCAL :
         return []
       else :
-        cmd = [ self[ "submit" ] ]
+        cmd = [ submitDict[ "submit" ] ]
 
         # Set through config
         if subOpts.resources_ is not None :
-          cmd.extend( self[ "resources" ].format( subOpts.resources_ ).split( " " ) )
+          cmd.extend( submitDict[ "resources" ].format( subOpts.resources_ ).split( " " ) )
 
         if subOpts.queue_ is not None :
-          cmd.extend( self[ "queue" ].format( subOpts.queue_ ).split( " " ) )
+          cmd.extend( submitDict[ "queue" ].format( subOpts.queue_ ).split( " " ) )
 
         if subOpts.timelimit_ is not None :
-          cmd.extend( self[ "time" ].format( subOpts.timelimit_ ).split( " " ) )
+          cmd.extend( submitDict[ "time" ].format( subOpts.timelimit_ ).split( " " ) )
 
         # Set via test runner secrets
         if subOpts.account_ is not None :
-          cmd.extend( self[ "account" ].format( subOpts.account_ ).split( " " ) )
+          cmd.extend( submitDict[ "account" ].format( subOpts.account_ ).split( " " ) )
 
         # Set via step
         if subOpts.name_ is not None :
-          cmd.extend( self[ "name"   ].format( subOpts.name_ ).split( " " ) )
-          cmd.extend( self[ "output" ].format( subOpts.name_ ).split( " " ) )
+          cmd.extend( submitDict[ "name"   ].format( subOpts.name_ ).split( " " ) )
+          cmd.extend( submitDict[ "output" ].format( subOpts.name_ ).split( " " ) )
 
 
         if subOpts.dependencies_ is not None :
-          cmd.extend( self[ "dependency" ].format( subOpts.dependencies_ ).split( " " ) )
+          cmd.extend( submitDict[ "dependency" ].format( subOpts.dependencies_ ).split( " " ) )
 
         if self == self.PBS :
           # Extra bit to delineate command + args
@@ -130,7 +142,8 @@ class SubmitOptions( ) :
               "debug"             : self.debug_,
               "account"           : self.account_,
               "name"              : self.name_,
-              "dependencies"      : self.dependencies_ }
+              "dependencies"      : self.dependencies_,
+              "original"          : self.submit_ }
     return str( output )
 
 

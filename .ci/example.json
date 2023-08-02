@@ -1,64 +1,45 @@
 {
-  "test-id" :
+  "submit_options" :
   {
-    "submit_options" :
-    { 
-      "working_directory" : "./",
-      "queue"             : "economy",
-      "resources"         : "1:ncpus=1",
-      "timelimit"         : "00:05:00"
-    },
-    "steps" :
-    {
-      "step-name" :
-       { 
-        "submit_options" :
-        { 
-          "working_directory" : "./",
-          "queue"             : "economy",
-          "resources"         : "1:ncpus=1",
-          "timelimit"         : "00:05:00"
-        },
-        "command"      : "filepath",
-        "arguments"    : "-add args"
-      }
-    }
+    "queue"     : "regular",
+    "timelimit" : "00:05:00"
   },
   "test-id-0" :
   {
-    "submit_options" :
-    { 
-      "working_directory" : "./",
-      "queue"             : "economy",
-      "resources"         : "1:ncpus=1",
-      "timelimit"         : "00:05:00"
-    },
     "steps" :
     {
       "step-0" :
        { 
         "submit_options" :
         { 
-          "working_directory" : "./",
-          "queue"             : "economy",
+          "working_directory" : "./tests",
           "resources"         : "1:ncpus=1",
-          "timelimit"         : "00:05:00"
+          "timelimit"         : "00:01:00"
         },
-        "command"      : "sh",
-        "arguments"    : [ "-c", "echo bar; exit 0" ]
+        "command"      : "./test_0.sh",
+        "arguments"    : [ "-ne", "\\nfoobar\\tbarbar\\n\\n" ]
       },
       "step-1" :
        { 
         "submit_options" :
         { 
-          "working_directory" : "./",
-          "queue"             : "economy",
           "resources"         : "1:ncpus=1",
           "timelimit"         : "00:05:00"
         },
-        "command"      : "echo",
-        "arguments"    : [ "foobar" ],
+        "command"      : "tests/test_0.sh",
+        "arguments"    : [ "Hello", "World!" ],
         "dependencies" : { "step-0" : "afterany" }
+      },
+      "step-2" :
+       { 
+        "submit_options" :
+        { 
+          "working_directory" : "./tests",
+          "resources"         : "1:ncpus=1"
+        },
+        "command"      : "./test_0.sh",
+        "arguments"    : [ "Final step" ],
+        "dependencies" : { "step-0" : "afterany", "step-1" : "afterany" }
       }
     }
   }

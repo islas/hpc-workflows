@@ -30,6 +30,6 @@ class Test( SubmitAction ):
         if step.runnable() :
           step.run()
           steps.append( step.name_ )
-      print( "Checking remaining jobs..." )
+      self.log( "Checking remaining steps..." )
 
-    print( "No remaining steps, test submission complete" )
+    self.log( "No remaining steps, test submission complete" )

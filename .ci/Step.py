@@ -60,6 +60,7 @@ class Step( SubmitAction ):
       print( err )
       raise Exception( err )
 
+
   def formatDependencies( self ) :
     allDepsJobID = True
     deps         = { depType : [] for depType in Step.DependencyType }
@@ -93,7 +94,7 @@ class Step( SubmitAction ):
   
   def executeAction( self ) :
     # Do submission logic....
-    print( "Submitting step {0}...".format( self.name_ ) )
+    self.log( "Submitting step {0}...".format( self.name_ ) )
     self.submitted_ = True
   
     output = ""
@@ -102,10 +103,11 @@ class Step( SubmitAction ):
     args   = [ *self.submitOptions_.format(), self.command_, *self.arguments_ ]
 
     if self.submitOptions_.debug_ :
-      print( "Arguments: {0}".format( args ) )
+      self.log( "Arguments: {0}".format( args ) )
 
     command = " ".join( [ arg if " " not in arg else "\"{0}\"".format( arg ) for arg in args ] )
-    print( "Running command:\n\t{0}".format( command ) )
+    self.log( "Running command:" )
+    self.log( "\t{0}".format( command ) )
 
     if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
       print( "*" * 40 )
@@ -141,7 +143,7 @@ class Step( SubmitAction ):
         self.jobid_ = 0
 
       if self.children_ :
-        print( "Notifying children..." )
+        self.log( "Notifying children..." )
         # Go to all children and mark ok
         for child in self.children_ :
           child.depSignOff_[ self.name_ ] = self.jobid_
@@ -155,6 +157,8 @@ class Step( SubmitAction ):
             )
       print( err )
       raise Exception( err )
+    
+    self.log( "Finished submitting step {0}\n".format( self.name_ ) )
 
   @staticmethod
   def sortDependencies( steps ) :
