@@ -3,16 +3,19 @@ from enum import Enum
 class SubmitOptions( ) :
   class SubmissionType( dict , Enum ):
     PBS   = { "submit" : "qsub",   "resources"  : "-l select={0}",
-              "name"   : "-N {0}", "dependency" : "-W {0}",
+              "name"   : "-N {0}", "dependency" : "-W depend={0}",
               "queue"  : "-q {0}", "account"    : "-A {0}",
+              "output" : "-j oe -o {0}.log",
               "time"   : "-l walltime={0}" }
     SLURM = { "submit" : "sbtach", "resources"  : "--gres={0}",
               "name"   : "-J {0}", "dependency" : "-d {0}",
               "queue"  : "-p {0}", "account"    : "-A {0}",
+              "output" : "-j -o {0}",
               "time"   : "-t {0}" }
     LOCAL = { "submit" : "",       "resources"  : "",
               "name"   : "",       "dependency" : "",
               "queue"  : "",       "account"    : "",
+              "output" : "-o {0}.log",
               "time"   : "" }
 
     def format( self, subOpts ) :
@@ -37,7 +40,9 @@ class SubmitOptions( ) :
 
         # Set via step
         if subOpts.name_ is not None :
-          cmd.extend( self[ "name" ].format( subOpts.name_ ).split( " " ) )
+          cmd.extend( self[ "name"   ].format( subOpts.name_ ).split( " " ) )
+          cmd.extend( self[ "output" ].format( subOpts.name_ ).split( " " ) )
+
 
         if subOpts.dependencies_ is not None :
           cmd.extend( self[ "dependency" ].format( subOpts.dependencies_ ).split( " " ) )
@@ -49,8 +54,8 @@ class SubmitOptions( ) :
         return cmd
 
   def __init__( self, optDict={} ) :
-    self.submit_ = optDict
-    self.working_directory_ = None
+    self.submit_            = optDict
+    self.workingDirectory_  = None
     self.queue_             = None
     self.resources_         = None
     self.timelimit_         = None
@@ -69,7 +74,7 @@ class SubmitOptions( ) :
   def parse( self ):
     key = "working_directory"
     if key in self.submit_ :
-      self.working_directory_ = self.submit_[ key ]
+      self.workingDirectory_ = self.submit_[ key ]
     
     key = "queue"
     if key in self.submit_ :
@@ -85,7 +90,7 @@ class SubmitOptions( ) :
 
   # Updates and overrides current with values from rhs if they exist
   def update( self, rhs ) :
-    if rhs.working_directory_ is not None : self.working_directory_ = rhs.working_directory_
+    if rhs.workingDirectory_  is not None : self.workingDirectory_ = rhs.workingDirectory_
     if rhs.queue_             is not None : self.queue_             = rhs.queue_
     if rhs.resources_         is not None : self.resources_         = rhs.resources_
     if rhs.timelimit_         is not None : self.timelimit_         = rhs.timelimit_
@@ -117,7 +122,7 @@ class SubmitOptions( ) :
   
   def __str__( self ) :
     output = {
-              "working_directory" : self.working_directory_,
+              "working_directory" : self.workingDirectory_,
               "queue"             : self.queue_,
               "resources"         : self.resources_,
               "timelimit"         : self.timelimit_,

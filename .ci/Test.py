@@ -1,38 +1,32 @@
-from Step          import Step
+import os
+
+from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions
+from Step          import Step
 
-class Test():
+
+class Test( SubmitAction ):
   
-  def __init__( self, name, testDict, defaultSubmitOptions = SubmitOptions() ) :
-    self.name_      = name
-    self.test_      = testDict
-
+  def __init__( self, name, options, defaultSubmitOptions = SubmitOptions(), parent = "", rootDir = "./" ) :
     self.steps_         = {}
-    self.submitOptions_ = defaultSubmitOptions
-    
-    self.parse()
+    super().__init__( name, options, defaultSubmitOptions, parent, rootDir )
 
-  def parse( self ) :
-    key = "submit_options"
-    if key in self.test_ :
-      self.submitOptions_.update( SubmitOptions( self.test_[ key ] ) )
-    # We don't need to validate submission options yet
-    
+  def parseSpecificOptions( self ) :
+
     key = "steps"
-    if key in self.test_ :
-      for stepname, stepDict in self.test_[ key ].items() :
-        self.steps_[ stepname ] = Step( self.name_, stepname, stepDict, self.submitOptions_ )
+    if key in self.options_ :
+      for stepname, stepDict in self.options_[ key ].items() :
+        self.steps_[ stepname ] = Step( stepname, stepDict, self.submitOptions_, parent=self.name_, rootDir=self.rootDir_ )
     
     # Now that steps are fully parsed, attempt to organize dependencies
     Step.sortDependencies( self.steps_ )
 
-  def run( self ) :
 
+  def executeAction( self ) :
     steps = []
-    # print( len( steps )  )
-    # print( len( self.steps_ ) )
     while len( steps ) != len( self.steps_ ) :
       for step in self.steps_.values() :
+
         if step.runnable() :
           step.run()
           steps.append( step.name_ )

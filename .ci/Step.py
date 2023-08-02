@@ -1,12 +1,15 @@
 from enum import Enum
 import subprocess
 import sys
+import re
 
+from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions
 
-SUBMIT_NAME = "{test}_{step}"
+SUBMIT_NAME = "{test}.{step}"
+jobidRegex  = re.compile( r"(\d{5,})" )
 
-class Step():
+class Step( SubmitAction ):
 
   class DependencyType( str, Enum ):
     AFTER      = "after"
@@ -20,10 +23,7 @@ class Step():
     #   return DependencyType[ s ]
 
 
-  def __init__( self, testname, name, stepDict, defaultSubmitOptions = SubmitOptions() ) :
-    self.test_      = testname
-    self.name_      = name
-    self.step_      = stepDict
+  def __init__( self, name, options, defaultSubmitOptions = SubmitOptions(), parent = "", rootDir = "./" ) :
     self.submitted_ = False
     self.jobid_     = -1
     self.command_       = None
@@ -31,31 +31,28 @@ class Step():
     self.dependencies_  = {} # our steps we are dependent on and their type
     self.depSignOff_    = {} # steps we are dependent on will need to tell us when to go
     self.children_      = [] # steps that are dependent on us that we will need to sign off for
-    self.submitOptions_ = defaultSubmitOptions
 
-    self.parse()
+    super().__init__( name, options, defaultSubmitOptions, parent, rootDir )
 
-  def parse( self ) :
+    self.printDir_ = True
+
+  def parseSpecificOptions( self ) :
 
     key = "command"
-    if key in self.step_ :
-      self.command_ = self.step_[ key ]
+    if key in self.options_ :
+      self.command_ = self.options_[ key ]
 
     key = "arguments"
-    if key in self.step_ :
-      self.arguments_ = self.step_[ key ]
+    if key in self.options_ :
+      self.arguments_ = self.options_[ key ]
 
     key = "dependencies"
-    if key in self.step_ :
-      for depStep, depType in self.step_[ key ].items() :
+    if key in self.options_ :
+      for depStep, depType in self.options_[ key ].items() :
         self.dependencies_[ depStep ] = Step.DependencyType( depType )
-    
-    key = "submit_options"
-    if key in self.step_ :
-      self.submitOptions_.update( SubmitOptions( self.step_[ key ] ) )
 
     # Now set things manually
-    self.submitOptions_.name_ = SUBMIT_NAME.format( test=self.test_, step=self.name_ )
+    self.submitOptions_.name_ = SUBMIT_NAME.format( test=self.parent_, step=self.name_ )
 
     valid = self.submitOptions_.validate()
     if not valid :
@@ -65,7 +62,7 @@ class Step():
 
   def formatDependencies( self ) :
     allDepsJobID = True
-    deps         = { depType : [] for depType in DependencyType }
+    deps         = { depType : [] for depType in Step.DependencyType }
 
     for dep, jobid in self.depSignOff_.items() :
       allDepsJobID = ( jobid != -1 ) and allDepsJobID
@@ -74,14 +71,14 @@ class Step():
     # only perform list comprehension if we have dependencies,
     # then join all types with ","
     depsFormat = ",".join(
-                          [ depType.value + ":" + ":".join( depsJobIDs ) 
-                            for depType, depsJobIDs in deps 
+                          [ depType.value + ":" + ":".join( [ str( jobid ) for jobid in depsJobIDs ] )
+                            for depType, depsJobIDs in deps.items()
                               if len( depsJobIDs ) > 0 
                           ] 
                           )
 
     return allDepsJobID, depsFormat
-  
+
   def runnable( self ) :
     canRun = False
     # If no depenedencies just run
@@ -94,7 +91,7 @@ class Step():
 
     return canRun
   
-  def run( self ) :
+  def executeAction( self ) :
     # Do submission logic....
     print( "Submitting step {0}...".format( self.name_ ) )
     self.submitted_ = True
@@ -117,14 +114,14 @@ class Step():
     ##
     ## Call step
     ##
-    # proc = subprocess.Popen(
-    #                         args,
-    #                         stdin =subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None,
-    #                         stdout=subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None,
-    #                         stderr=subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None
-    #                         )
-    # output, err = proc.communicate()
-    # retVal      = proc.returncode
+    proc = subprocess.Popen(
+                            args,
+                            stdin =subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None,
+                            stdout=subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None,
+                            stderr=subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None
+                            )
+    output, err = proc.communicate()
+    retVal      = proc.returncode
     ##
     ## 
     ##
@@ -133,21 +130,22 @@ class Step():
     if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
       print( "*" * 40 )
 
-    # Process output
-    if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL :
-      # Find job id
-      self.jobid_ = 0
-    else:
-      self.jobid_ = 0
-
 
     # if submitted properly
-    if retVal == 0 and self.children_ :
-      print( "Notifying children..." )
-      # Go to all children and mark ok
-      for child in self.children_ :
-        child.depSignOff_[ self.name_ ] = self.jobid_
-    elif retVal != 0 :
+    if retVal == 0 :
+      # Process output
+      if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL :
+        # Find job id
+        self.jobid_ = int( jobidRegex.match( output ).group(1) )
+      else:
+        self.jobid_ = 0
+
+      if self.children_ :
+        print( "Notifying children..." )
+        # Go to all children and mark ok
+        for child in self.children_ :
+          child.depSignOff_[ self.name_ ] = self.jobid_
+    else:
       err = ( "Error: Failed to run step '{0}' exit code {1}\n\tlog: {2}".format(
                                                                                   self.name_,
                                                                                   retVal,

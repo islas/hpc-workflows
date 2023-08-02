@@ -3,10 +3,10 @@
   {
     "submit_options" :
     { 
-      "working_directory" : "dirpath",
-      "queue"             : "queue-to-submit-to",
-      "resources"         : "resource_list",
-      "timelimit"         : "hh:mm:ss"
+      "working_directory" : "./",
+      "queue"             : "economy",
+      "resources"         : "1:ncpus=1",
+      "timelimit"         : "00:05:00"
     },
     "steps" :
     {
@@ -14,10 +14,10 @@
        { 
         "submit_options" :
         { 
-          "working_directory" : "dirpath",
-          "queue"             : "queue-to-submit-to",
-          "resources"         : "resource_list",
-          "timelimit"         : "hh:mm:ss"
+          "working_directory" : "./",
+          "queue"             : "economy",
+          "resources"         : "1:ncpus=1",
+          "timelimit"         : "00:05:00"
         },
         "command"      : "filepath",
         "arguments"    : "-add args"
@@ -28,10 +28,10 @@
   {
     "submit_options" :
     { 
-      "working_directory" : "dirpath",
-      "queue"             : "queue-to-submit-to",
-      "resources"         : "resource_list",
-      "timelimit"         : "hh:mm:ss"
+      "working_directory" : "./",
+      "queue"             : "economy",
+      "resources"         : "1:ncpus=1",
+      "timelimit"         : "00:05:00"
     },
     "steps" :
     {
@@ -39,10 +39,10 @@
        { 
         "submit_options" :
         { 
-          "working_directory" : "dirpath",
-          "queue"             : "queue-to-submit-to",
-          "resources"         : "resource_list",
-          "timelimit"         : "hh:mm:ss"
+          "working_directory" : "./",
+          "queue"             : "economy",
+          "resources"         : "1:ncpus=1",
+          "timelimit"         : "00:05:00"
         },
         "command"      : "sh",
         "arguments"    : [ "-c", "echo bar; exit 0" ]
@@ -51,10 +51,10 @@
        { 
         "submit_options" :
         { 
-          "working_directory" : "dirpath",
-          "queue"             : "queue-to-submit-to",
-          "resources"         : "resource_list",
-          "timelimit"         : "hh:mm:ss"
+          "working_directory" : "./",
+          "queue"             : "economy",
+          "resources"         : "1:ncpus=1",
+          "timelimit"         : "00:05:00"
         },
         "command"      : "echo",
         "arguments"    : [ "foobar" ],
