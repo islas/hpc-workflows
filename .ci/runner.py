@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 import sys
 import json
-from Test import Test
+from Test          import Test
+from SubmitOptions import SubmitOptions
 
 class Suite() :
   def __init__( self, filename ) :
     fp    = open( filename, 'r' )
     self.suite_ = json.load( fp )
     self.tests_ = {}
+    self.submitOptions_ = SubmitOptions( )
+    self.submitOptions_.account_    = "testing-account"
+    self.submitOptions_.submitType_ = SubmitOptions.SubmissionType.PBS
+    self.submitOptions_.debug_      = True
+
     for test, testDict in self.suite_.items() :
-      # print( test )
-      # print( testDict  )
-      self.tests_[ test ] = Test( test, testDict )
+      self.tests_[ test ] = Test( test, testDict, self.submitOptions_ )
   
   def run( self, test ) :
     if test not in self.tests_.keys() :

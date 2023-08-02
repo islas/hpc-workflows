@@ -19,7 +19,7 @@
           "resources"         : "resource_list",
           "timelimit"         : "hh:mm:ss"
         },
-        "script"       : "filepath",
+        "command"      : "filepath",
         "arguments"    : "-add args"
       }
     }
@@ -44,8 +44,8 @@
           "resources"         : "resource_list",
           "timelimit"         : "hh:mm:ss"
         },
-        "script"       : "filepath",
-        "arguments"    : "-add args"
+        "command"      : "sh",
+        "arguments"    : [ "-c", "echo bar; exit 0" ]
       },
       "step-1" :
        { 
@@ -56,8 +56,8 @@
           "resources"         : "resource_list",
           "timelimit"         : "hh:mm:ss"
         },
-        "script"       : "filepath",
-        "arguments"    : "-add args",
+        "command"      : "echo",
+        "arguments"    : [ "foobar" ],
         "dependencies" : { "step-0" : "afterany" }
       }
     }

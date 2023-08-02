@@ -3,25 +3,25 @@ from SubmitOptions import SubmitOptions
 
 class Test():
   
-  def __init__( self, name, testDict ) :
+  def __init__( self, name, testDict, defaultSubmitOptions = SubmitOptions() ) :
     self.name_      = name
     self.test_      = testDict
 
     self.steps_         = {}
-    self.submitOptions_ = None
+    self.submitOptions_ = defaultSubmitOptions
     
     self.parse()
 
   def parse( self ) :
     key = "submit_options"
     if key in self.test_ :
-      self.submitOptions_ = SubmitOptions( self.test_[ key ] )
+      self.submitOptions_.update( SubmitOptions( self.test_[ key ] ) )
     # We don't need to validate submission options yet
     
     key = "steps"
     if key in self.test_ :
       for stepname, stepDict in self.test_[ key ].items() :
-        self.steps_[ stepname ] = Step( stepname, stepDict, self.submitOptions_ )
+        self.steps_[ stepname ] = Step( self.name_, stepname, stepDict, self.submitOptions_ )
     
     # Now that steps are fully parsed, attempt to organize dependencies
     Step.sortDependencies( self.steps_ )

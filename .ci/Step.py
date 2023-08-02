@@ -1,10 +1,14 @@
 from enum import Enum
+import subprocess
+import sys
 
-import SubmitOptions
+from SubmitOptions import SubmitOptions
+
+SUBMIT_NAME = "{test}_{step}"
 
 class Step():
 
-  class DEP_TYPE( str, Enum ):
+  class DependencyType( str, Enum ):
     AFTER      = "after"
     AFTEROK    = "afterok"
     AFTERNOTOK = "afternotok"
@@ -13,31 +17,29 @@ class Step():
     #   return str( self.value )
     # @staticmethod
     # def fromString( s ) :
-    #   return DEP_TYPE[ s ]
-  
-  def __init__( self, name, stepDict, defaultSubmitOptions = None ) :
+    #   return DependencyType[ s ]
+
+
+  def __init__( self, testname, name, stepDict, defaultSubmitOptions = SubmitOptions() ) :
+    self.test_      = testname
     self.name_      = name
     self.step_      = stepDict
     self.submitted_ = False
-    self.script_        = None
+    self.jobid_     = -1
+    self.command_       = None
     self.arguments_     = None
     self.dependencies_  = {} # our steps we are dependent on and their type
     self.depSignOff_    = {} # steps we are dependent on will need to tell us when to go
     self.children_      = [] # steps that are dependent on us that we will need to sign off for
-    self.submitOptions_ = defaultSubmitOptions if not None else {}
-    
+    self.submitOptions_ = defaultSubmitOptions
+
     self.parse()
 
   def parse( self ) :
-    key = "submit_options"
-    if key in self.step_ :
-      self.submitOptions_.update( self.step_[ key ] )
 
-    self.submitOptions_.validate()
-    
-    key = "script"
+    key = "command"
     if key in self.step_ :
-      self.script_ = self.step_[ key ]
+      self.command_ = self.step_[ key ]
 
     key = "arguments"
     if key in self.step_ :
@@ -46,7 +48,39 @@ class Step():
     key = "dependencies"
     if key in self.step_ :
       for depStep, depType in self.step_[ key ].items() :
-        self.dependencies_[ depStep ] = Step.DEP_TYPE( depType )
+        self.dependencies_[ depStep ] = Step.DependencyType( depType )
+    
+    key = "submit_options"
+    if key in self.step_ :
+      self.submitOptions_.update( SubmitOptions( self.step_[ key ] ) )
+
+    # Now set things manually
+    self.submitOptions_.name_ = SUBMIT_NAME.format( test=self.test_, step=self.name_ )
+
+    valid = self.submitOptions_.validate()
+    if not valid :
+      err = "Error: Invalid submission options\n{0}".format( self.submitOptions_ )
+      print( err )
+      raise Exception( err )
+
+  def formatDependencies( self ) :
+    allDepsJobID = True
+    deps         = { depType : [] for depType in DependencyType }
+
+    for dep, jobid in self.depSignOff_.items() :
+      allDepsJobID = ( jobid != -1 ) and allDepsJobID
+      deps[ self.dependencies_[ dep ] ].append( jobid )
+
+    # only perform list comprehension if we have dependencies,
+    # then join all types with ","
+    depsFormat = ",".join(
+                          [ depType.value + ":" + ":".join( depsJobIDs ) 
+                            for depType, depsJobIDs in deps 
+                              if len( depsJobIDs ) > 0 
+                          ] 
+                          )
+
+    return allDepsJobID, depsFormat
   
   def runnable( self ) :
     canRun = False
@@ -55,25 +89,74 @@ class Step():
       if not self.depSignOff_ :
         canRun = True
       else:
-        allDepsJobID = True
-        for jobid in self.depSignOff_.values() :
-          allDepsJobID = ( jobid != -1 ) and allDepsJobID
-        
-        canRun = allDepsJobID
-    
+        # See if our dependencies are satisfied
+        canRun, self.submitOptions_.dependencies_ = self.formatDependencies()
+
     return canRun
   
   def run( self ) :
     # Do submission logic....
     print( "Submitting step {0}...".format( self.name_ ) )
     self.submitted_ = True
+  
+    output = ""
+    err    = ""
+    retVal = -1
+    args   = [ *self.submitOptions_.format(), self.command_, *self.arguments_ ]
+
+    if self.submitOptions_.debug_ :
+      print( "Arguments: {0}".format( args ) )
+
+    command = " ".join( [ arg if " " not in arg else "\"{0}\"".format( arg ) for arg in args ] )
+    print( "Running command:\n\t{0}".format( command ) )
+
+    if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
+      print( "*" * 40 )
+
+    ############################################################################
+    ##
+    ## Call step
+    ##
+    # proc = subprocess.Popen(
+    #                         args,
+    #                         stdin =subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None,
+    #                         stdout=subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None,
+    #                         stderr=subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None
+    #                         )
+    # output, err = proc.communicate()
+    # retVal      = proc.returncode
+    ##
+    ## 
+    ##
+    ############################################################################
+
+    if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
+      print( "*" * 40 )
+
+    # Process output
+    if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL :
+      # Find job id
+      self.jobid_ = 0
+    else:
+      self.jobid_ = 0
+
 
     # if submitted properly
-    if True and self.children_ :
+    if retVal == 0 and self.children_ :
       print( "Notifying children..." )
       # Go to all children and mark ok
       for child in self.children_ :
-        child.depSignOff_[ self.name_ ] = 0
+        child.depSignOff_[ self.name_ ] = self.jobid_
+    elif retVal != 0 :
+      err = ( "Error: Failed to run step '{0}' exit code {1}\n\tlog: {2}".format(
+                                                                                  self.name_,
+                                                                                  retVal,
+                                                                                  err if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else
+                                                                                    "See errors above"
+                                                                                  )
+            )
+      print( err )
+      raise Exception( err )
 
   @staticmethod
   def sortDependencies( steps ) :
