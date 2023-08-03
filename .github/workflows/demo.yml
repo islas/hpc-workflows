@@ -27,7 +27,7 @@ jobs:
         ./.ci/runner.py .ci/example.json test-id-0 LOCAL
     
     - name : Remove 'test' label
-      if : ${{ github.event.label == 'test' }}
+      if : ${{ github.event.label.name == 'test' }}
       env:
         PR_NUMBER: ${{ github.event.number }}
       run: |
