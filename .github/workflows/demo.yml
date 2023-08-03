@@ -16,6 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Run test 0
       run: |
+        cat .ci/Step.py
         echo "Hello World!"
         ./.ci/runner.py .ci/example.json test-id-0 LOCAL
     
