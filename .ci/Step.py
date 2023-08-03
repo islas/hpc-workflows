@@ -118,12 +118,16 @@ class Step( SubmitAction ):
     ##
     proc = subprocess.Popen(
                             args,
-                            stdin =subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None,
-                            stdout=subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None,
-                            stderr=subprocess.PIPE if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else None
+                            stdin =subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE
                             )
     output, err = proc.communicate()
     retVal      = proc.returncode
+
+    if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
+      # We don't mind doing this as the process should block us until we are ready to continue
+      sys.stdout.buffer.write( output )
     ##
     ## 
     ##
