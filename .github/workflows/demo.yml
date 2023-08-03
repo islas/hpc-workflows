@@ -7,13 +7,6 @@ on:
     types:    [ labeled ]
 
 jobs:
-  test:
-    runs-on: WSL
-    steps:
-      - name : test
-        run  : |
-          echo "Hello World!"
-
   build:
     runs-on: WSL
     permissions:
