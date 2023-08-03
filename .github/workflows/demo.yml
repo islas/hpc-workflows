@@ -22,9 +22,15 @@ jobs:
   label-remove:
     if : ${{ github.event.label == 'test' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions-ecosystem/action-remove-labels@v1
-      with:
-        labels: test
+    - name : Remove 'test' label
+      run: |
+        curl \
+          -X DELETE \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H 'Authorization: token ${{ github.token }}' \
+          https://api.github.com/repos/<owner>/<repo>/issues/<pr_number>/labels/<label_name>
     
