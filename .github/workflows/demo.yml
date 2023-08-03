@@ -7,6 +7,13 @@ on:
     types:    [ labeled ]
 
 jobs:
+  test:
+    runs-on: WSL
+    steps:
+      - name : test
+        run  : |
+          echo "Hello World!"
+
   build:
     # https://stackoverflow.com/a/62331521
     if : ${{ github.event.label == 'test' }}
