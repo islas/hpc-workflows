@@ -27,10 +27,12 @@ jobs:
       pull-requests: write
     steps:
     - name : Remove 'test' label
+      env:
+        PR_NUMBER: ${{ github.event.number }}
       run: |
         curl \
           -X DELETE \
           -H "Accept: application/vnd.github.v3+json" \
           -H 'Authorization: token ${{ github.token }}' \
-          https://api.github.com/repos/<owner>/<repo>/issues/<pr_number>/labels/<label_name>
+          https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels/test
     
