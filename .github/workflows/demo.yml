@@ -16,17 +16,18 @@ jobs:
 
   build:
     runs-on: WSL
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
     - uses: actions/checkout@v3
     - name: Run test 0
       run: |
         echo "Hello World!"
         ./.ci/runner.py .ci/example.json test-id-0 LOCAL
-    steps:
-    if : ${{ github.event.label == 'test' }}
+    
     - name : Remove 'test' label
-      contents: read
-      pull-requests: write
+      if : ${{ github.event.label == 'test' }}
       env:
         PR_NUMBER: ${{ github.event.number }}
       run: |
@@ -35,4 +36,4 @@ jobs:
           -H "Accept: application/vnd.github.v3+json" \
           -H 'Authorization: token ${{ github.token }}' \
           https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels/test
-    
+  
