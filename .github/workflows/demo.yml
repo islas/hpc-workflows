@@ -15,8 +15,6 @@ jobs:
           echo "Hello World!"
 
   build:
-    # https://stackoverflow.com/a/62331521
-    if : ${{ github.event.label == 'test' }}
     runs-on: WSL
     steps:
     - uses: actions/checkout@v3
@@ -24,15 +22,11 @@ jobs:
       run: |
         echo "Hello World!"
         ./.ci/runner.py .ci/example.json test-id-0 LOCAL
-
-  label-remove:
+    steps:
     if : ${{ github.event.label == 'test' }}
-    runs-on: ubuntu-latest
-    permissions:
+    - name : Remove 'test' label
       contents: read
       pull-requests: write
-    steps:
-    - name : Remove 'test' label
       env:
         PR_NUMBER: ${{ github.event.number }}
       run: |
