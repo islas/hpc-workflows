@@ -22,7 +22,7 @@ class SubmitAction() :
     print( *args, file=output, end="", **kwargs )
     contents = output.getvalue()
     output.close()
-    print( self.label_ + contents )
+    print( self.label_ + contents, flush=True )
 
   def parseSpecificOptions( self ) :
     # Children should override this for their respective parse()
