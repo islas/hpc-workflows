@@ -134,7 +134,7 @@ class Step( SubmitAction ):
     ############################################################################
 
     if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
-      self.log( "*" * 40 + "\n" )
+      self.log( "\n" + "*" * 40 )
 
 
     # if submitted properly
