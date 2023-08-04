@@ -1,6 +1,7 @@
 from enum import Enum
 import subprocess
 import sys
+import os
 import re
 
 from SubmitAction  import SubmitAction
@@ -100,7 +101,7 @@ class Step( SubmitAction ):
     output = ""
     err    = ""
     retVal = -1
-    args   = [ *self.submitOptions_.format(), self.command_, *self.arguments_ ]
+    args   = [ *self.submitOptions_.format(), os.path.abspath( self.command_ ), os.getcwd(), *self.arguments_ ]
 
     if self.submitOptions_.debug_ :
       self.log( "Arguments: {0}".format( args ) )
@@ -109,8 +110,7 @@ class Step( SubmitAction ):
     self.log( "Running command:" )
     self.log( "\t{0}".format( command ) )
 
-    if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
-      self.log(  "*" * 15 + "{:^15}".format( "START " + self.name_ ) + "*" * 15 + "\n" )
+    self.log(  "*" * 15 + "{:^15}".format( "START " + self.name_ ) + "*" * 15 + "\n" )
 
     ############################################################################
     ##
@@ -125,23 +125,22 @@ class Step( SubmitAction ):
     output, err = proc.communicate()
     retVal      = proc.returncode
 
-    if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
-      # We don't mind doing this as the process should block us until we are ready to continue
-      sys.stdout.buffer.write( output )
+    # We don't mind doing this as the process should block us until we are ready to continue
+    sys.stdout.buffer.write( output )
     ##
     ## 
     ##
     ############################################################################
 
-    if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
-      print( "\n", flush=True, end="" )
-      self.log(  "*" * 15 + "{:^15}".format( "STOP " + self.name_ ) + "*" * 15 )
+    print( "\n", flush=True, end="" )
+    self.log(  "*" * 15 + "{:^15}".format( "STOP " + self.name_ ) + "*" * 15 )
 
 
     # if submitted properly
     if retVal == 0 :
       # Process output
       if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL :
+        output = output.decode( "utf-8" )
         # Find job id
         self.jobid_ = int( jobidRegex.match( output ).group(1) )
       else:
