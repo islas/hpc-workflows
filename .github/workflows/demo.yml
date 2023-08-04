@@ -4,29 +4,23 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
     types:    [ labeled ]
 
 jobs:
   build:
-    # https://stackoverflow.com/a/62331521
-    if : ${{ github.event.label == 'test' }}
     runs-on: WSL
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
     - uses: actions/checkout@v3
     - name: Run test 0
       run: |
         echo "Hello World!"
-        ./.ci/runner.py .ci/example.json test-id-0 LOCAL
-
-  label-remove:
-    if : ${{ github.event.label == 'test' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
+        ./.ci/runner.py .ci/example.json test-id-0 -s LOCAL -d ..
+    
     - name : Remove 'test' label
+      if : ${{ github.event.label.name == 'test' }}
       env:
         PR_NUMBER: ${{ github.event.number }}
       run: |
@@ -35,4 +29,4 @@ jobs:
           -H "Accept: application/vnd.github.v3+json" \
           -H 'Authorization: token ${{ github.token }}' \
           https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels/test
-    
+  

@@ -4,9 +4,12 @@ from enum import Enum
 
 class SubmitOptions( ) :
   class SubmissionType( Enum ):
-    PBS   = 0
-    SLURM = 1
-    LOCAL = 2
+    PBS   = "PBS"
+    SLURM = "SLURM"
+    LOCAL = "LOCAL"
+
+    def __str__( self ) :
+      return self.value
 
     def format( self, subOpts ) :
       # https://github.com/python/cpython/issues/88508
