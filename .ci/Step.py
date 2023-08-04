@@ -134,7 +134,7 @@ class Step( SubmitAction ):
     ############################################################################
 
     if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
-      print( "\n", flush=True )
+      print( "\n", flush=True, end="" )
       self.log(  "*" * 15 + "{:^15}".format( "STOP " + self.name_ ) + "*" * 15 )
 
 
