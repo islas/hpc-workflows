@@ -110,7 +110,7 @@ class Step( SubmitAction ):
     self.log( "\t{0}".format( command ) )
 
     if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
-      self.log( "*" * 40 + "\n" )
+      self.log(  "*" * 15 + "{:^15}".format( "START " + self.name_ ) + "*" * 15 + "\n" )
 
     ############################################################################
     ##
@@ -134,7 +134,8 @@ class Step( SubmitAction ):
     ############################################################################
 
     if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
-      self.log( "\n" + "*" * 40 )
+      print( "\n", flush=True )
+      self.log(  "*" * 15 + "{:^15}".format( "STOP " + self.name_ ) + "*" * 15 )
 
 
     # if submitted properly
