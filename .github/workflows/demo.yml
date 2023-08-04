@@ -17,7 +17,7 @@ jobs:
     - name: Run test 0
       run: |
         echo "Hello World!"
-        ./.ci/runner.py .ci/example.json test-id-0 LOCAL
+        ./.ci/runner.py .ci/example.json test-id-0 -s LOCAL -d ..
     
     - name : Remove 'test' label
       if : ${{ github.event.label.name == 'test' }}
