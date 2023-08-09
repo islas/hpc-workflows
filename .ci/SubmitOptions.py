@@ -11,63 +11,6 @@ class SubmitOptions( ) :
     def __str__( self ) :
       return self.value
 
-    def format( self, subOpts ) :
-      # https://github.com/python/cpython/issues/88508
-      submitDict = {}
-      if self == self.PBS :
-        submitDict    = { "submit" : "qsub",   "resources"  : "-l select={0}",
-                          "name"   : "-N {0}", "dependency" : "-W depend={0}",
-                          "queue"  : "-q {0}", "account"    : "-A {0}",
-                          "output" : "-j oe -o {0}.log",
-                          "time"   : "-l walltime={0}" }
-      elif self == self.SLURM :
-        submitDict    = { "submit" : "sbtach", "resources"  : "--gres={0}",
-                          "name"   : "-J {0}", "dependency" : "-d {0}",
-                          "queue"  : "-p {0}", "account"    : "-A {0}",
-                          "output" : "-j -o {0}",
-                          "time"   : "-t {0}" }
-      elif self == self.LOCAL :
-        submitDict    = { "submit" : "",       "resources"  : "",
-                          "name"   : "",       "dependency" : "",
-                          "queue"  : "",       "account"    : "",
-                          "output" : "-o {0}.log",
-                          "time"   : "" }
-
-
-      if self == self.LOCAL :
-        return []
-      else :
-        cmd = [ submitDict[ "submit" ] ]
-
-        # Set through config
-        if subOpts.resources_ is not None :
-          cmd.extend( submitDict[ "resources" ].format( subOpts.resources_ ).split( " " ) )
-
-        if subOpts.queue_ is not None :
-          cmd.extend( submitDict[ "queue" ].format( subOpts.queue_ ).split( " " ) )
-
-        if subOpts.timelimit_ is not None :
-          cmd.extend( submitDict[ "time" ].format( subOpts.timelimit_ ).split( " " ) )
-
-        # Set via test runner secrets
-        if subOpts.account_ is not None :
-          cmd.extend( submitDict[ "account" ].format( subOpts.account_ ).split( " " ) )
-
-        # Set via step
-        if subOpts.name_ is not None :
-          cmd.extend( submitDict[ "name"   ].format( subOpts.name_ ).split( " " ) )
-          cmd.extend( submitDict[ "output" ].format( subOpts.name_ ).split( " " ) )
-
-
-        if subOpts.dependencies_ is not None :
-          cmd.extend( submitDict[ "dependency" ].format( subOpts.dependencies_ ).split( " " ) )
-
-        if self == self.PBS :
-          # Extra bit to delineate command + args
-          cmd.append( "--" )
-
-        return cmd
-
   def __init__( self, optDict={} ) :
     self.submit_            = optDict
     self.workingDirectory_  = None
@@ -133,7 +76,64 @@ class SubmitOptions( ) :
             )
 
   def format( self ) :
-    return self.submitType_.format( self )
+    # Why this can't be with the enum
+    # https://stackoverflow.com/a/45716067
+    # Why this can't be a dict value of the enum
+    # https://github.com/python/cpython/issues/88508
+    submitDict = {}
+    if self.submitType_ == self.SubmissionType.PBS :
+      submitDict    = { "submit" : "qsub",   "resources"  : "-l select={0}",
+                        "name"   : "-N {0}", "dependency" : "-W depend={0}",
+                        "queue"  : "-q {0}", "account"    : "-A {0}",
+                        "output" : "-j oe -o {0}.log",
+                        "time"   : "-l walltime={0}" }
+    elif self.submitType_ == self.SubmissionType.SLURM :
+      submitDict    = { "submit" : "sbtach", "resources"  : "--gres={0}",
+                        "name"   : "-J {0}", "dependency" : "-d {0}",
+                        "queue"  : "-p {0}", "account"    : "-A {0}",
+                        "output" : "-j -o {0}",
+                        "time"   : "-t {0}" }
+    elif self.submitType_ == self.SubmissionType.LOCAL :
+      submitDict    = { "submit" : "",       "resources"  : "",
+                        "name"   : "",       "dependency" : "",
+                        "queue"  : "",       "account"    : "",
+                        "output" : "-o {0}.log",
+                        "time"   : "" }
+
+
+    if self.submitType_ == self.SubmissionType.LOCAL :
+      return []
+    else :
+      cmd = [ submitDict[ "submit" ] ]
+
+      # Set through config
+      if self.resources_ is not None :
+        cmd.extend( submitDict[ "resources" ].format( self.resources_ ).split( " " ) )
+
+      if self.queue_ is not None :
+        cmd.extend( submitDict[ "queue" ].format( self.queue_ ).split( " " ) )
+
+      if self.timelimit_ is not None :
+        cmd.extend( submitDict[ "time" ].format( self.timelimit_ ).split( " " ) )
+
+      # Set via test runner secrets
+      if self.account_ is not None :
+        cmd.extend( submitDict[ "account" ].format( self.account_ ).split( " " ) )
+
+      # Set via step
+      if self.name_ is not None :
+        cmd.extend( submitDict[ "name"   ].format( self.name_ ).split( " " ) )
+        cmd.extend( submitDict[ "output" ].format( self.name_ ).split( " " ) )
+
+
+      if self.dependencies_ is not None :
+        cmd.extend( submitDict[ "dependency" ].format( self.dependencies_ ).split( " " ) )
+
+      if self.submitType_ == self.SubmissionType.PBS :
+        # Extra bit to delineate command + args
+        cmd.append( "--" )
+
+      return cmd
   
   def __str__( self ) :
     output = {
