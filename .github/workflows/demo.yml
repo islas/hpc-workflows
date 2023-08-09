@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    if : ${{ github.event.label.name == 'test' }} || ${{ github.event_name == 'push' }}
     runs-on: WSL
     permissions:
       contents: read
