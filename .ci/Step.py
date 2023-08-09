@@ -101,12 +101,12 @@ class Step( SubmitAction ):
     output = ""
     err    = ""
     retVal = -1
-    args   = [ 
-              *self.submitOptions_.format(),
-              os.path.abspath( self.command_ ),
-              os.getcwd(),
-              *self.arguments_
-              ]
+    args   = self.submitOptions_.format() 
+
+    args.append( os.path.abspath( self.command_ ) )
+    args.append( os.getcwd() )
+
+    args.extend( self.arguments_ )
 
     if self.submitOptions_.debug_ :
       self.log( "Arguments: {0}".format( args ) )
