@@ -2,6 +2,7 @@
 
 dir=$1
 cd $dir
+
 shift
-pwd
 echo $*
+echo "TEST $(basename $0) PASS"
