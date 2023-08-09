@@ -113,7 +113,7 @@ def main() :
 
   fp    = open( options.testsConfig, 'r' )
   # Go up one to get repo root - change this if you change the location of this script
-  root  = os.path.abspath( os.path.dirname( sys.argv[0] ) + "/" + options.dirOffset )
+  root  = os.path.abspath( os.path.dirname( options.testsConfig ) + "/" + options.dirOffset )
   
   testSuite = Suite( 
                     options.testsConfig,
