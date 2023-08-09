@@ -91,14 +91,6 @@ def main() :
   options = Options()
   parser.parse_args( namespace=options )
 
-  # testsConfig   = sys.argv[1]
-  # rootDirAdjust = sys.argv[2]
-  # test          = sys.argv[3]
-  # runType       = None
-  # account       = ""
-
-  # if len( sys.argv ) > 4 :
-  #   runType     = SubmitOptions.SubmissionType[ sys.argv[4] ]
   if options.submitType != SubmitOptions.SubmissionType.LOCAL and options.account is None:
     # We don't have an account && we are not running local
     err = "Error: No account provided for non-local run."
@@ -114,6 +106,7 @@ def main() :
   fp    = open( options.testsConfig, 'r' )
   # Go up one to get repo root - change this if you change the location of this script
   root  = os.path.abspath( os.path.dirname( options.testsConfig ) + "/" + options.dirOffset )
+  print( "Root directory is : {0}".format( root ) )
   
   testSuite = Suite( 
                     options.testsConfig,
