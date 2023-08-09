@@ -125,13 +125,14 @@ class Step( SubmitAction ):
                             args,
                             stdin =subprocess.PIPE,
                             stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE
+                            stderr=subprocess.STDOUT
                             )
-    output, err = proc.communicate()
-    retVal      = proc.returncode
+    for c in iter( lambda: proc.stdout.read(1), b"" ):
+      sys.stdout.buffer.write(c)
 
     # We don't mind doing this as the process should block us until we are ready to continue
-    sys.stdout.buffer.write( output )
+    output, err = proc.communicate()
+    retVal      = proc.returncode
     ##
     ## 
     ##
