@@ -7,9 +7,10 @@ import inspect
 from Test          import Test
 from SubmitOptions import SubmitOptions
 from SubmitAction  import SubmitAction
+import SubmitAction as sa
 
 class Suite( SubmitAction ) :
-  def __init__( self, name, options, defaultSubmitOptions = SubmitOptions(), parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, parent = "", rootDir = "./" ) :
     self.tests_ = {}
     super().__init__( name, options, defaultSubmitOptions, parent, rootDir )
 
@@ -59,10 +60,10 @@ def getOptionsParser():
   parser.add_argument( 
                       "-s", "--submit",
                       dest="submitType",
-                      help="Type of step command submission to use",
+                      help="Override type of submission to use for all steps submitted",
                       type=SubmitOptions.SubmissionType,
                       choices=list( SubmitOptions.SubmissionType),
-                      default=SubmitOptions.SubmissionType.LOCAL
+                      default=None
                       )
   parser.add_argument( 
                       "-a", "--account",
@@ -78,6 +79,14 @@ def getOptionsParser():
                       type=str,
                       default=""
                       )
+  parser.add_argument( 
+                      "-l", "--labelLength",
+                      dest="labelLength",
+                      help="Length of left-justify label string [file|test|step]",
+                      type=int,
+                      default=12
+                      )
+
   return parser
 
 
@@ -86,22 +95,29 @@ class Options(object):
   pass
 
 def main() :
-
   parser  = getOptionsParser()
   options = Options()
   parser.parse_args( namespace=options )
+  sa.LABEL_LENGTH = options.labelLength
+  print( sa.LABEL_LENGTH )
 
-  if options.submitType != SubmitOptions.SubmissionType.LOCAL and options.account is None:
+  opts = SubmitOptions()
+  opts.account_    = options.account
+
+  if options.submitType is None :
+    # Set default to LOCAL, but do not force
+    opts.submitType_ = SubmitOptions.SubmissionType.LOCAL
+    print( "Setting default submission type to {0} for steps with unspecified type".format( opts.submitType_ ) )
+  else :
+    opts.submitType_         = options.submitType
+    opts.lockSubmitType_     = True
+    print( "Forcing submission type to {0} for all steps".format( opts.submitType_ ) )
+  
+  if opts.submitType_ != SubmitOptions.SubmissionType.LOCAL and opts.account_ is None:
     # We don't have an account && we are not running local
     err = "Error: No account provided for non-local run."
     print( err )
     raise Exception( err )
-  # else:
-  #   # runType = SubmitOptions.SubmissionType.LOCAL
-
-  opts = SubmitOptions()
-  opts.account_    = options.account
-  opts.submitType_ = options.submitType
 
   fp    = open( options.testsConfig, 'r' )
   # Go up one to get repo root - change this if you change the location of this script
