@@ -99,7 +99,6 @@ def main() :
   options = Options()
   parser.parse_args( namespace=options )
   sa.LABEL_LENGTH = options.labelLength
-  print( sa.LABEL_LENGTH )
 
   opts = SubmitOptions()
   opts.account_    = options.account
