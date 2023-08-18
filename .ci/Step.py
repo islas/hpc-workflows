@@ -24,7 +24,7 @@ class Step( SubmitAction ):
     #   return DependencyType[ s ]
 
 
-  def __init__( self, name, options, defaultSubmitOptions = SubmitOptions(), parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, parent = "", rootDir = "./" ) :
     self.submitted_ = False
     self.jobid_     = -1
     self.command_       = None
@@ -54,11 +54,13 @@ class Step( SubmitAction ):
 
     # Now set things manually
     self.submitOptions_.name_ = SUBMIT_NAME.format( test=self.parent_, step=self.name_ )
+    self.log( "Set submission name to {0}".format( self.submitOptions_.name_ ) )
 
-    valid = self.submitOptions_.validate()
+    self.log( "Validating submission options..." )
+    valid, msg = self.submitOptions_.validate()
     if not valid :
-      err = "Error: Invalid submission options\n{0}".format( self.submitOptions_ )
-      print( err )
+      err = "Error: Invalid submission options [{msg}]\n{opts}".format( msg=msg, opts=self.submitOptions_ )
+      self.log( err )
       raise Exception( err )
 
 
@@ -93,15 +95,21 @@ class Step( SubmitAction ):
 
     return canRun
   
+  def executeInfo( self ) :
+    if self.submitOptions_.lockSubmitType_ and "submission" in self.submitOptions_.submit_ :
+      self.log( "{{ '{0}' : {1} }} overridden by cli".format( "submission", self.submitOptions_.submit_[ "submission" ] ) )
+
   def executeAction( self ) :
     # Do submission logic....
     self.log( "Submitting step {0}...".format( self.name_ ) )
+    self.log_push()
     self.submitted_ = True
+    self.executeInfo()
   
     output = ""
     err    = ""
     retVal = -1
-    args   = self.submitOptions_.format() 
+    args   = self.submitOptions_.format()
 
     args.append( os.path.abspath( self.command_ ) )
     args.append( os.getcwd() )
@@ -167,6 +175,8 @@ class Step( SubmitAction ):
             )
       print( err )
       raise Exception( err )
+    
+    self.log_pop()
     
     self.log( "Finished submitting step {0}\n".format( self.name_ ) )
 

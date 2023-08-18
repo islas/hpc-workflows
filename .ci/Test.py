@@ -7,7 +7,7 @@ from Step          import Step
 
 class Test( SubmitAction ):
   
-  def __init__( self, name, options, defaultSubmitOptions = SubmitOptions(), parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, parent = "", rootDir = "./" ) :
     self.steps_         = {}
     super().__init__( name, options, defaultSubmitOptions, parent, rootDir )
 
