@@ -3,6 +3,7 @@ import subprocess
 import sys
 import os
 import re
+import io
 
 from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions
@@ -129,6 +130,8 @@ class Step( SubmitAction ):
     ##
     ## Call step
     ##
+    # https://stackoverflow.com/a/18422264
+    output = io.BytesIO()
     proc = subprocess.Popen(
                             args,
                             stdin =subprocess.PIPE,
@@ -136,11 +139,12 @@ class Step( SubmitAction ):
                             stderr=subprocess.STDOUT
                             )
     for c in iter( lambda: proc.stdout.read(1), b"" ):
+      output.write( c )
       sys.stdout.buffer.write(c)
 
     # We don't mind doing this as the process should block us until we are ready to continue
-    output, err = proc.communicate()
-    retVal      = proc.returncode
+    dump, err = proc.communicate()
+    retVal    = proc.returncode
     ##
     ## 
     ##
@@ -154,9 +158,11 @@ class Step( SubmitAction ):
     if retVal == 0 :
       # Process output
       if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL :
-        output = output.decode( "utf-8" )
+        content = output.getvalue().decode( 'utf-8' )
+        output.close()
+        self.log( "Finding job ID in \"{0}\"".format( content ) )
         # Find job id
-        self.jobid_ = int( jobidRegex.match( output ).group(1) )
+        self.jobid_ = int( jobidRegex.match( content ).group(1) )
       else:
         self.jobid_ = 0
 
