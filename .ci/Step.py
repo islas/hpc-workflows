@@ -199,9 +199,18 @@ class Step( SubmitAction ):
   
   def postProcessResults( self ) :
     # We've been requested to output our results from this step
-    try:
-      self.log( "Opening log file {0}...".format( self.logfile_ ) )
+    self.log( "Results for {0}".format( self.name_ ) )
+    self.log_push()
+    self.log( "Opening log file {0}...".format( self.logfile_ ) )
+
+    try :
       f = open( self.logfile_, "rb" )
+    except : 
+      msg = "Logfile {0} does not exist, did submission fail?".format( self.logfile_ )
+      self.log( msg )
+      raise Exception( msg )
+
+    try :
       self.log( "Checking last line for success <KEY PHRASE> of format '{0}'".format( self.globalOpts_.key ) )
       # https://stackoverflow.com/a/54278929
       try:  # catch OSError in case of a one line file 
@@ -216,17 +225,19 @@ class Step( SubmitAction ):
       if findKey is None :
         errMark = "{banner} {msg} {banner}".format( banner="!" * 10, msg="ERROR" * 3 )
         self.log( errMark )
-        self.log( "Missing key {0} marking success".format( self.globalOpts_.key ) )
-        self.log( "Line: \"{0}\"".format( lastline ) )
-        self.log( "Step {0} has failed! See logfile {1}".format( self.name_, self.logfile_ ) )
+        self.log( "[FAILURE] : Missing key '{0}' marking success".format( self.globalOpts_.key ) )
+        self.log( "Line: \"{0}\"".format( lastline.rstrip() ) )
+        msg = "Step {0} has failed! See logfile {1}".format( self.name_, self.logfile_ )
+        self.log( msg )
         self.log( errMark )
         if not self.globalOpts_.nofatal :
-          raise Exception( errMark )
+          raise Exception( "\n{banner}\n{msg}\n{banner}".format( banner=errMark, msg=msg ) )
       else :
-        self.log( "SUCCESS : Step {step} reported {line}".format( step=self.name_, line=lastline ) )
+        self.log( "[SUCCESS] : Step {step} reported \"{line}\"".format( step=self.name_, line=lastline.rstrip() ) )
     except Exception as e :
-      self.log( "Logfile {0} does not exist, did submission fail?".format( self.logfile_ ) )
       raise e
+    
+    self.log_pop()
 
   @staticmethod
   def sortDependencies( steps ) :
