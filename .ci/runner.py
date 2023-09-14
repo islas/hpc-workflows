@@ -7,18 +7,18 @@ import inspect
 from Test          import Test
 from SubmitOptions import SubmitOptions
 from SubmitAction  import SubmitAction
-import SubmitAction as sa
+import SubmitOptions as so
 
 class Suite( SubmitAction ) :
-  def __init__( self, name, options, defaultSubmitOptions, parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.tests_ = {}
-    super().__init__( name, options, defaultSubmitOptions, parent, rootDir )
+    super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
 
   def parseSpecificOptions( self ) :
     for test, testDict in self.options_.items() :
       if test != "submit_options" :
-        self.tests_[ test ] = Test( test, testDict, self.submitOptions_, parent=self.name_, rootDir=self.rootDir_ )
+        self.tests_[ test ] = Test( test, testDict, self.submitOptions_, self.globalOpts_, parent=self.ancestry(), rootDir=self.rootDir_ )
 
   def run( self, test ) :
     self.setWorkingDirectory()
@@ -40,7 +40,12 @@ def getOptionsParser():
 
                                                             Scripts running from this framework should always take at least one 
                                                             prefix arguments ($1) before any other arguments which will be the 
-                                                            working directory that should immediate be cd'ed to
+                                                            working directory that should immediate be cd'ed to.
+
+                                                            Likewise, if a script is submitted to an HPC run (non-LOCAL) and requests automatic
+                                                            post-processing, this will always assume failure unless the <KEY PHRASE> is at the end
+                                                            of the logfile. Thus, scripts running in this mode should assume the same and only output
+                                                            success <KEY PHRASE> when completing successfully AT THE VERY END AS THE LAST LINE.
                                                             """ ),
                                   formatter_class=argparse.RawTextHelpFormatter
                                   )
@@ -86,6 +91,44 @@ def getOptionsParser():
                       type=int,
                       default=12
                       )
+  parser.add_argument( 
+                      "-g", "--global",
+                      dest="globalPrefix",
+                      help="Global prefix to name step submission names, added as <PREFIX>.<rest of name>",
+                      type=str,
+                      default=None
+                      )
+  parser.add_argument( 
+                      "-nf", "--nofatal",
+                      dest="nofatal",
+                      help="Force continuation of test even if scripts' return code is error",
+                      default=False,
+                      const=True,
+                      action='store_const'
+                      )
+  parser.add_argument( 
+                      "-nw", "--nowait",
+                      dest="nowait",
+                      help="HPC submission - Don't wait for all jobs completion, which is done via a final .results job with dependency on all jobs",
+                      default=False,
+                      const=True,
+                      action='store_const'
+                      )
+  parser.add_argument( 
+                      "-np", "--nopost",
+                      dest="nopost",
+                      help="HPC submission - Don't post-process log files for results using <KEY PHRASE>",
+                      default=False,
+                      const=True,
+                      action='store_const'
+                      )
+  parser.add_argument(
+                      "-k", "--key",
+                      dest="key",
+                      help="Post-processing <KEY PHRASE> regex to signal a script logfile passed successfully. Assumed failed if not last line of script logfile. (default : \"%(default)s\")",
+                      default="TEST ((?:\w+|[.-])+) PASS",
+                      type=str
+                      )
 
   return parser
 
@@ -98,7 +141,7 @@ def main() :
   parser  = getOptionsParser()
   options = Options()
   parser.parse_args( namespace=options )
-  sa.LABEL_LENGTH = options.labelLength
+  so.LABEL_LENGTH = options.labelLength
 
   opts = SubmitOptions()
   opts.account_    = options.account
@@ -122,11 +165,16 @@ def main() :
   # Go up one to get repo root - change this if you change the location of this script
   root  = os.path.abspath( os.path.dirname( options.testsConfig ) + "/" + options.dirOffset )
   print( "Root directory is : {0}".format( root ) )
-  
+
+  # Construct simplified name 
+  basename = os.path.splitext( os.path.basename( options.testsConfig ) )[0]
+
   testSuite = Suite( 
-                    options.testsConfig,
+                    basename,
                     json.load( fp ),
                     opts,
+                    options,
+                    parent=options.globalPrefix,
                     rootDir=root
                     )
 

@@ -2,18 +2,16 @@ import os
 import io
 import copy
 from SubmitOptions import SubmitOptions
-
-LABEL_LENGTH = 12
+import SubmitOptions as so
 
 class SubmitAction() :
-  def __init__( self, name, options, defaultSubmitOptions, parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
 
     self.name_          = name
-    self.label_            = "{0:<{1}}".format( "[{0}] ".format( self.name_ ), LABEL_LENGTH )
+    self.globalOpts_    = globalOpts # options passed in at CLI
+    self.label_            = "{0:<{1}}".format( "[{0}] ".format( self.name_ ), so.LABEL_LENGTH )
     self.labelIndentation_ = "  "
     self.labelLevel_       = 0
-    self.log( "Initializing" )
-    self.log_push()
 
     self.parent_        = parent
     self.options_       = options
@@ -23,7 +21,12 @@ class SubmitAction() :
     self.printDir_         = False
 
     self.parse()
-    self.log_pop()
+  
+  def ancestry( self ) :
+    if self.parent_ :
+      return "{0}.{1}".format( self.parent_, self.name_ )
+    else :
+      return self.name_
 
   def log( self, *args, **kwargs ) :
     # https://stackoverflow.com/a/39823534
@@ -45,7 +48,7 @@ class SubmitAction() :
   def parse( self ) :
     key = "submit_options"
     if key in self.options_ :
-      self.submitOptions_.update( SubmitOptions( self.options_[ key ] ).selectHostSpecificSubmitOptions() )
+      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.name_ ).selectHostSpecificSubmitOptions(), print=self.log )
 
     # Now call child parse
     self.parseSpecificOptions()

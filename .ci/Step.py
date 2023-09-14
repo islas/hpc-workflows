@@ -8,7 +8,6 @@ import io
 from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions
 
-SUBMIT_NAME = "{test}.{step}"
 jobidRegex  = re.compile( r"(\d{5,})" )
 
 class Step( SubmitAction ):
@@ -18,23 +17,26 @@ class Step( SubmitAction ):
     AFTEROK    = "afterok"
     AFTERNOTOK = "afternotok"
     AFTERANY   = "afterany"
-    # def __str__( self ) :
-    #   return str( self.value )
+    def __str__( self ) :
+      return str( self.value )
+    def __repr__( self ) :
+      return str( self.value )
     # @staticmethod
     # def fromString( s ) :
     #   return DependencyType[ s ]
 
 
-  def __init__( self, name, options, defaultSubmitOptions, parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.submitted_ = False
     self.jobid_     = -1
     self.command_       = None
     self.arguments_     = None
+    self.logfile_       = None # Filled out after submitted
     self.dependencies_  = {} # our steps we are dependent on and their type
     self.depSignOff_    = {} # steps we are dependent on will need to tell us when to go
     self.children_      = [] # steps that are dependent on us that we will need to sign off for
 
-    super().__init__( name, options, defaultSubmitOptions, parent, rootDir )
+    super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
     self.printDir_ = True
 
@@ -54,10 +56,8 @@ class Step( SubmitAction ):
         self.dependencies_[ depStep ] = Step.DependencyType( depType )
 
     # Now set things manually
-    self.submitOptions_.name_ = SUBMIT_NAME.format( test=self.parent_, step=self.name_ )
-    self.log( "Set submission name to {0}".format( self.submitOptions_.name_ ) )
+    self.submitOptions_.name_ = self.ancestry()
 
-    self.log( "Validating submission options..." )
     valid, msg = self.submitOptions_.validate()
     if not valid :
       err = "Error: Invalid submission options [{msg}]\n{opts}".format( msg=msg, opts=self.submitOptions_ )
@@ -110,19 +110,26 @@ class Step( SubmitAction ):
     output = ""
     err    = ""
     retVal = -1
-    args   = self.submitOptions_.format()
+    args, additionalArgs   = self.submitOptions_.format( print=self.log )
+    workingDir = os.getcwd()
 
+    self.log( "Script : {0}".format( self.command_ ) )
     args.append( os.path.abspath( self.command_ ) )
-    args.append( os.getcwd() )
+    args.append( workingDir )
 
-    args.extend( self.arguments_ )
+    if self.arguments_ :
+      args.extend( self.arguments_ )
+
+    # Additional args added by submit_options
+    if additionalArgs :
+      args.extend( additionalArgs )
 
     if self.submitOptions_.debug_ :
       self.log( "Arguments: {0}".format( args ) )
 
     command = " ".join( [ arg if " " not in arg else "\"{0}\"".format( arg ) for arg in args ] )
     self.log( "Running command:" )
-    self.log( "\t{0}".format( command ) )
+    self.log( "  {0}".format( command ) )
 
     self.log(  "*" * 15 + "{:^15}".format( "START " + self.name_ ) + "*" * 15 + "\n" )
 
@@ -153,6 +160,7 @@ class Step( SubmitAction ):
     print( "\n", flush=True, end="" )
     self.log(  "*" * 15 + "{:^15}".format( "STOP " + self.name_ ) + "*" * 15 )
 
+    self.logfile_ = "{0}/{1}".format( workingDir, self.submitOptions_.getOutputFilename() )
 
     # if submitted properly
     if retVal == 0 :
@@ -160,7 +168,7 @@ class Step( SubmitAction ):
       if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL :
         content = output.getvalue().decode( 'utf-8' )
         output.close()
-        self.log( "Finding job ID in \"{0}\"".format( content ) )
+        self.log( "Finding job ID in \"{0}\"".format( content.rstrip() ) )
         # Find job id
         self.jobid_ = int( jobidRegex.match( content ).group(1) )
       else:
@@ -179,12 +187,56 @@ class Step( SubmitAction ):
                                                                                     "See errors above"
                                                                                   )
             )
-      print( err )
-      raise Exception( err )
+      self.log( err )
+
+      if not self.globalOpts_.nofatal :
+        raise Exception( err )
     
     self.log_pop()
     
     self.log( "Finished submitting step {0}\n".format( self.name_ ) )
+  
+  def postProcessResults( self ) :
+    # We've been requested to output our results from this step
+    self.log( "Results for {0}".format( self.name_ ) )
+    self.log_push()
+    self.log( "Opening log file {0}...".format( self.logfile_ ) )
+
+    try :
+      f = open( self.logfile_, "rb" )
+    except : 
+      msg = "Logfile {0} does not exist, did submission fail?".format( self.logfile_ )
+      self.log( msg )
+      raise Exception( msg )
+
+    try :
+      self.log( "Checking last line for success <KEY PHRASE> of format '{0}'".format( self.globalOpts_.key ) )
+      # https://stackoverflow.com/a/54278929
+      try:  # catch OSError in case of a one line file 
+        f.seek( -2, os.SEEK_END )
+        while f.read(1) != b'\n' :
+          f.seek( -2, os.SEEK_CUR )
+      except OSError:
+          f.seek(0)
+      lastline = f.readline().decode()
+
+      findKey = re.match( self.globalOpts_.key, lastline )
+      if findKey is None :
+        errMark = "{banner} {msg} {banner}".format( banner="!" * 10, msg="ERROR" * 3 )
+        self.log( errMark )
+        self.log( "[FAILURE] : Missing key '{0}' marking success".format( self.globalOpts_.key ) )
+        self.log( "Line: \"{0}\"".format( lastline.rstrip() ) )
+        msg = "Step {0} has failed! See logfile {1}".format( self.name_, self.logfile_ )
+        self.log( msg )
+        self.log( errMark )
+        if not self.globalOpts_.nofatal :
+          raise Exception( "\n{banner}\n{msg}\n{banner}".format( banner=errMark, msg=msg ) )
+      else :
+        self.log( "[SUCCESS] : Step {step} reported \"{line}\"".format( step=self.name_, line=lastline.rstrip() ) )
+    except Exception as e :
+      raise e
+    
+    self.log_pop()
 
   @staticmethod
   def sortDependencies( steps ) :
