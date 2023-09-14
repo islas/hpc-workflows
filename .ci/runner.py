@@ -18,7 +18,7 @@ class Suite( SubmitAction ) :
   def parseSpecificOptions( self ) :
     for test, testDict in self.options_.items() :
       if test != "submit_options" :
-        self.tests_[ test ] = Test( test, testDict, self.submitOptions_, self.globalOpts_, parent=self.name_, rootDir=self.rootDir_ )
+        self.tests_[ test ] = Test( test, testDict, self.submitOptions_, self.globalOpts_, parent=self.ancestry(), rootDir=self.rootDir_ )
 
   def run( self, test ) :
     self.setWorkingDirectory()
@@ -92,6 +92,13 @@ def getOptionsParser():
                       default=12
                       )
   parser.add_argument( 
+                      "-g", "--global",
+                      dest="globalPrefix",
+                      help="Global prefix to name step submission names, added as <PREFIX>.<rest of name>",
+                      type=str,
+                      default=None
+                      )
+  parser.add_argument( 
                       "-nf", "--nofatal",
                       dest="nofatal",
                       help="Force continuation of test even if scripts' return code is error",
@@ -158,12 +165,16 @@ def main() :
   # Go up one to get repo root - change this if you change the location of this script
   root  = os.path.abspath( os.path.dirname( options.testsConfig ) + "/" + options.dirOffset )
   print( "Root directory is : {0}".format( root ) )
-  
+
+  # Construct simplified name 
+  basename = os.path.splitext( os.path.basename( options.testsConfig ) )[0]
+
   testSuite = Suite( 
-                    options.testsConfig,
+                    basename,
                     json.load( fp ),
                     opts,
                     options,
+                    parent=options.globalPrefix,
                     rootDir=root
                     )
 

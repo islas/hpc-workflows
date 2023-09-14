@@ -20,7 +20,7 @@ class Test( SubmitAction ):
         self.log( "Keyword 'results' not allowed as step name, reason: reserved" )
         exit( 1 )
       for stepname, stepDict in self.options_[ key ].items() :
-        self.steps_[ stepname ] = Step( stepname, stepDict, self.submitOptions_, self.globalOpts_, parent=self.name_, rootDir=self.rootDir_ )
+        self.steps_[ stepname ] = Step( stepname, stepDict, self.submitOptions_, self.globalOpts_, parent=self.ancestry(), rootDir=self.rootDir_ )
     
     # Now that steps are fully parsed, attempt to organize dependencies
     Step.sortDependencies( self.steps_ )
@@ -87,7 +87,7 @@ class Test( SubmitAction ):
                                         resultsDict,
                                         self.submitOptions_,
                                         self.globalOpts_,
-                                        parent=self.name_,
+                                        parent=self.ancestry(),
                                         rootDir=self.rootDir_
                                         )
         self.log( "Rescanning dependencies under test {0}...".format( self.name_ ) )

@@ -21,6 +21,12 @@ class SubmitAction() :
     self.printDir_         = False
 
     self.parse()
+  
+  def ancestry( self ) :
+    if self.parent_ :
+      return "{0}.{1}".format( self.parent_, self.name_ )
+    else :
+      return self.name_
 
   def log( self, *args, **kwargs ) :
     # https://stackoverflow.com/a/39823534

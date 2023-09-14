@@ -8,7 +8,6 @@ import io
 from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions
 
-SUBMIT_NAME = "{test}.{step}"
 jobidRegex  = re.compile( r"(\d{5,})" )
 
 class Step( SubmitAction ):
@@ -57,7 +56,7 @@ class Step( SubmitAction ):
         self.dependencies_[ depStep ] = Step.DependencyType( depType )
 
     # Now set things manually
-    self.submitOptions_.name_ = SUBMIT_NAME.format( test=self.parent_, step=self.name_ )
+    self.submitOptions_.name_ = self.ancestry()
 
     valid, msg = self.submitOptions_.validate()
     if not valid :
