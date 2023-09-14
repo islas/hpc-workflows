@@ -197,6 +197,37 @@ class Step( SubmitAction ):
     self.log_pop()
     
     self.log( "Finished submitting step {0}\n".format( self.name_ ) )
+  
+  def postProcessResults( self ) :
+    # We've been requested to output our results from this step
+    try:
+      self.log( "Opening log file {0}...".format( self.logfile_ ) )
+      f = open( self.logfile_, "rb" )
+      self.log( "Checking last line for success <KEY PHRASE> of format '{0}'".format( self.globalOpts_.key ) )
+      # https://stackoverflow.com/a/54278929
+      try:  # catch OSError in case of a one line file 
+        f.seek( -2, os.SEEK_END )
+        while f.read(1) != b'\n' :
+          f.seek( -2, os.SEEK_CUR )
+      except OSError:
+          f.seek(0)
+      lastline = f.readline().decode()
+
+      findKey = re.match( self.globalOpts_.key, lastline )
+      if findKey is None :
+        errMark = "{banner} {msg} {banner}".format( banner="!" * 10, msg="ERROR" * 3 )
+        self.log( errMark )
+        self.log( "Missing key {0} marking success".format( self.globalOpts_.key ) )
+        self.log( "Line: \"{0}\"".format( lastline ) )
+        self.log( "Step {0} has failed! See logfile {1}".format( self.name_, self.logfile_ ) )
+        self.log( errMark )
+        if not self.globalOpts_.nofatal :
+          raise Exception( errMark )
+      else :
+        self.log( "SUCCESS : Step {step} reported {line}".format( step=self.name_, line=lastline ) )
+    except Exception as e :
+      self.log( "Logfile {0} does not exist, did submission fail?".format( self.logfile_ ) )
+      raise e
 
   @staticmethod
   def sortDependencies( steps ) :

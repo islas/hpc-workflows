@@ -40,7 +40,12 @@ def getOptionsParser():
 
                                                             Scripts running from this framework should always take at least one 
                                                             prefix arguments ($1) before any other arguments which will be the 
-                                                            working directory that should immediate be cd'ed to
+                                                            working directory that should immediate be cd'ed to.
+
+                                                            Likewise, if a script is submitted to an HPC run (non-LOCAL) and requests automatic
+                                                            post-processing, this will always assume failure unless the <KEY PHRASE> is at the end
+                                                            of the logfile. Thus, scripts running in this mode should assume the same and only output
+                                                            success <KEY PHRASE> when completing successfully AT THE VERY END AS THE LAST LINE.
                                                             """ ),
                                   formatter_class=argparse.RawTextHelpFormatter
                                   )
@@ -85,6 +90,37 @@ def getOptionsParser():
                       help="Length of left-justify label string [file|test|step]",
                       type=int,
                       default=12
+                      )
+  parser.add_argument( 
+                      "-nf", "--nofatal",
+                      dest="nofatal",
+                      help="Force continuation of test even if scripts' return code is error",
+                      default=False,
+                      const=True,
+                      action='store_const'
+                      )
+  parser.add_argument( 
+                      "-nw", "--nowait",
+                      dest="nowait",
+                      help="HPC submission - Don't wait for all jobs completion, which is done via a final .results job with dependency on all jobs",
+                      default=False,
+                      const=True,
+                      action='store_const'
+                      )
+  parser.add_argument( 
+                      "-np", "--nopost",
+                      dest="nopost",
+                      help="HPC submission - Don't post-process log files for results using <KEY PHRASE>",
+                      default=False,
+                      const=True,
+                      action='store_const'
+                      )
+  parser.add_argument(
+                      "-k", "--key",
+                      dest="key",
+                      help="Post-processing <KEY PHRASE> regex to signal a script logfile passed successfully. Assumed failed if not last line of script logfile. (default : \"%(default)s\")",
+                      default="TEST ((?:\w+|[.-])+) PASS",
+                      type=str
                       )
 
   return parser

@@ -34,6 +34,7 @@ class SubmitOptions( ) :
     self.queue_             = None
     self.resources_         = None
     self.timelimit_         = None
+    self.wait_              = None
     
     # Should be set at test level 
     self.debug_             = None
@@ -116,6 +117,7 @@ class SubmitOptions( ) :
     if rhs.queue_               is not None : self.queue_             = rhs.queue_
     if rhs.resources_           is not None : self.resources_         = rhs.resources_
     if rhs.timelimit_           is not None : self.timelimit_         = rhs.timelimit_
+    if rhs.wait_                is not None : self.wait_              = rhs.wait_
     
     # Should be set at test level 
     # Never do this so children cannot override parent
@@ -192,20 +194,23 @@ class SubmitOptions( ) :
       submitDict    = { "submit" : "qsub",   "resources"  : "-l select={0}",
                         "name"   : "-N {0}", "dependency" : "-W depend={0}",
                         "queue"  : "-q {0}", "account"    : "-A {0}",
-                        "output" : "-j oe -o {0}.log",
-                        "time"   : "-l walltime={0}" }
+                        "output" : "-j oe -o {0}",
+                        "time"   : "-l walltime={0}",
+                        "wait"   : "-W block=true" }
     elif self.submitType_ == self.SubmissionType.SLURM :
       submitDict    = { "submit" : "sbtach", "resources"  : "--gres={0}",
                         "name"   : "-J {0}", "dependency" : "-d {0}",
                         "queue"  : "-p {0}", "account"    : "-A {0}",
                         "output" : "-j -o {0}",
-                        "time"   : "-t {0}" }
+                        "time"   : "-t {0}",
+                        "wait"   : "-W" }
     elif self.submitType_ == self.SubmissionType.LOCAL :
       submitDict    = { "submit" : "",       "resources"  : "",
                         "name"   : "",       "dependency" : "",
                         "queue"  : "",       "account"    : "",
-                        "output" : "-o {0}.log",
-                        "time"   : "" }
+                        "output" : "-o {0}",
+                        "time"   : "",
+                        "wait"   : "" }
 
     additionalArgs = []
     
@@ -239,6 +244,9 @@ class SubmitOptions( ) :
 
       if self.timelimit_ is not None :
         cmd.extend( submitDict[ "time" ].format( self.timelimit_ ).split( " " ) )
+      
+      if self.wait_ is not None :
+        cmd.extend( submitDict[ "wait" ].format( self.wait_ ).split( " " ) )
 
       # Set via test runner secrets
       if self.account_ is not None :
@@ -265,6 +273,7 @@ class SubmitOptions( ) :
               "queue"             : self.queue_,
               "resources"         : self.resources_,
               "timelimit"         : self.timelimit_,
+              "wait"              : self.wait_,
               "submitType"        : self.submitType_,
               "lockSubmitType"    : self.lockSubmitType_,
               "debug"             : self.debug_,
