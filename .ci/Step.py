@@ -32,6 +32,7 @@ class Step( SubmitAction ):
     self.jobid_     = -1
     self.command_       = None
     self.arguments_     = None
+    self.logfile_       = None # Filled out after submitted
     self.dependencies_  = {} # our steps we are dependent on and their type
     self.depSignOff_    = {} # steps we are dependent on will need to tell us when to go
     self.children_      = [] # steps that are dependent on us that we will need to sign off for
@@ -112,12 +113,18 @@ class Step( SubmitAction ):
     output = ""
     err    = ""
     retVal = -1
-    args   = self.submitOptions_.format()
+    args, additionalArgs   = self.submitOptions_.format( print=self.log )
+    workingDir = os.getcwd()
 
     args.append( os.path.abspath( self.command_ ) )
-    args.append( os.getcwd() )
+    args.append( workingDir )
 
-    args.extend( self.arguments_ )
+    if self.arguments_ :
+      args.extend( self.arguments_ )
+
+    # Additional args added by submit_options
+    if additionalArgs :
+      args.extend( additionalArgs )
 
     if self.submitOptions_.debug_ :
       self.log( "Arguments: {0}".format( args ) )
@@ -155,6 +162,7 @@ class Step( SubmitAction ):
     print( "\n", flush=True, end="" )
     self.log(  "*" * 15 + "{:^15}".format( "STOP " + self.name_ ) + "*" * 15 )
 
+    self.logfile_ = "{0}/{1}".format( workingDir, self.submitOptions_.getOutputFilename() )
 
     # if submitted properly
     if retVal == 0 :
@@ -181,8 +189,10 @@ class Step( SubmitAction ):
                                                                                     "See errors above"
                                                                                   )
             )
-      print( err )
-      raise Exception( err )
+      self.log( err )
+
+      if not self.globalOpts_.nofatal :
+        raise Exception( err )
     
     self.log_pop()
     

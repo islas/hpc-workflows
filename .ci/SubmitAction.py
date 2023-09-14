@@ -2,8 +2,7 @@ import os
 import io
 import copy
 from SubmitOptions import SubmitOptions
-
-LABEL_LENGTH = 12
+import SubmitOptions as so
 
 class SubmitAction() :
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
@@ -46,7 +45,7 @@ class SubmitAction() :
   def parse( self ) :
     key = "submit_options"
     if key in self.options_ :
-      self.submitOptions_.update( SubmitOptions( self.options_[ key ] ).selectHostSpecificSubmitOptions() )
+      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.name_ ).selectHostSpecificSubmitOptions(), print=self.log )
 
     # Now call child parse
     self.parseSpecificOptions()

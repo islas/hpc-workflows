@@ -3,6 +3,20 @@ import socket
 
 from enum import Enum
 
+# https://stackoverflow.com/a/3233356
+import collections.abc
+
+LABEL_LENGTH = 12
+
+# Update mapping dest with source
+def recursiveUpdate( dest, source ):
+  for k, v in source.items():
+    if isinstance( v, collections.abc.Mapping ):
+      dest[k] = recursiveUpdate( dest.get( k, {} ), v )
+    else:
+      dest[k] = v
+  return dest
+
 class SubmitOptions( ) :
   class SubmissionType( Enum ):
     PBS   = "PBS"
@@ -11,8 +25,10 @@ class SubmitOptions( ) :
 
     def __str__( self ) :
       return self.value
+  
+  ARGUMENTS_ORIGIN_KEY = "arguments_origin"
 
-  def __init__( self, optDict={}, isHostSpecific=False, lockSubmitType=False ) :
+  def __init__( self, optDict={}, isHostSpecific=False, lockSubmitType=False, origin=None ) :
     self.submit_            = optDict
     self.workingDirectory_  = None
     self.queue_             = None
@@ -31,12 +47,15 @@ class SubmitOptions( ) :
     self.name_             = None
     self.dependencies_     = None
 
+    # Should normally be restricted to host-specific options
+    self.arguments_        = {}
+
     # Allow host-specific submit options
     self.isHostSpecific_      = isHostSpecific
     self.hostSpecificOptions_ = {}
-    self.parse()
+    self.parse( origin=origin )
 
-  def parse( self, log=False ):
+  def parse( self, log=False, origin=None ):
     submitKeys = []
 
     key = "working_directory"
@@ -59,6 +78,18 @@ class SubmitOptions( ) :
     if key in self.submit_ :
       self.timelimit_ = self.submit_[ key ]
     
+    key = "wait"
+    submitKeys.append( key )
+    if key in self.submit_ :
+      self.wait_ = self.submit_[ key ]
+    
+    key = "arguments"
+    submitKeys.append( key )
+    if key in self.submit_ :
+      self.arguments_ = self.submit_[ key ]
+      if origin is not None :
+        self.arguments_[ SubmitOptions.ARGUMENTS_ORIGIN_KEY ] = { argKey : origin for argKey in self.arguments_.keys() }
+    
     # Allow parsing of per-action submission
     key = "submission"
     submitKeys.append( key )
@@ -74,13 +105,13 @@ class SubmitOptions( ) :
         if not self.isHostSpecific_ :
           # ok to parse
           self.hostSpecificOptions_[ key ] = SubmitOptions( value, isHostSpecific=True )
-          self.hostSpecificOptions_[ key ].parse()
+          self.hostSpecificOptions_[ key ].parse( origin=origin )
         else :
           print( "Warning: Host-specific options cannot have sub-host-specific options" )
 
 
   # Updates and overrides current with values from rhs if they exist
-  def update( self, rhs ) :
+  def update( self, rhs, print=print ) :
     if rhs.workingDirectory_    is not None : self.workingDirectory_ = rhs.workingDirectory_
     if rhs.queue_               is not None : self.queue_             = rhs.queue_
     if rhs.resources_           is not None : self.resources_         = rhs.resources_
@@ -98,10 +129,13 @@ class SubmitOptions( ) :
     # Should be set via the step
     if rhs.name_                is not None : self.name_             = rhs.name_
     if rhs.dependencies_        is not None : self.dependencies_     = rhs.dependencies_
-    if rhs.hostSpecificOptions_             : self.hostSpecificOptions_.update( rhs.hostSpecificOptions_ )
+
+    # These are both dictionaries
+    if rhs.arguments_                       : recursiveUpdate( self.arguments_, rhs.arguments_ )
+    if rhs.hostSpecificOptions_             : recursiveUpdate( self.hostSpecificOptions_, rhs.hostSpecificOptions_ )
 
     # This keeps things consistent but should not affect anything
-    self.submit_.update( rhs.submit_ )
+    recursiveUpdate( self.submit_, rhs.submit_ )
     self.parse( log=True )
   
   # Check non-optional fields
@@ -144,8 +178,11 @@ class SubmitOptions( ) :
       currentSubmitOptions.update( self.hostSpecificOptions_[ hostSpecificOptKey ] )
 
     return currentSubmitOptions
+  
+  def getOutputFilename( self ) :
+    return "{0}.log".format( self.name_ )
 
-  def format( self ) :
+  def format( self, print=print ) :
     # Why this can't be with the enum
     # https://stackoverflow.com/a/45716067
     # Why this can't be a dict value of the enum
@@ -170,9 +207,26 @@ class SubmitOptions( ) :
                         "output" : "-o {0}.log",
                         "time"   : "" }
 
+    additionalArgs = []
+    
+    if self.arguments_ :
+      # Format them and pass them out in alphabetical order
+      longestPack = len( max( [ key for key in self.arguments_.keys() if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY ], key=len ) )
+      for key, value in sorted( self.arguments_.items() ) :
+        if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY :
+          print( 
+                "From {origin:<{length}} adding arguments pack {key:<{packlength}} : {val}".format(
+                                                                                        origin=self.arguments_[SubmitOptions.ARGUMENTS_ORIGIN_KEY][key],
+                                                                                        length=LABEL_LENGTH,
+                                                                                        packlength=longestPack + 2,
+                                                                                        key="'{0}'".format( key ),
+                                                                                        val=value
+                                                                                        )
+                )
+          additionalArgs.extend( value )
 
     if self.submitType_ == self.SubmissionType.LOCAL :
-      return []
+      return [], additionalArgs
     else :
       cmd = [ submitDict[ "submit" ] ]
 
@@ -193,7 +247,7 @@ class SubmitOptions( ) :
       # Set via step
       if self.name_ is not None :
         cmd.extend( submitDict[ "name"   ].format( self.name_ ).split( " " ) )
-        cmd.extend( submitDict[ "output" ].format( self.name_ ).split( " " ) )
+        cmd.extend( submitDict[ "output" ].format( self.getOutputFilename() ).split( " " ) )
 
 
       if self.dependencies_ is not None :
@@ -203,7 +257,7 @@ class SubmitOptions( ) :
         # Extra bit to delineate command + args
         cmd.append( "--" )
 
-      return cmd
+      return cmd, additionalArgs
 
   def __str__( self ) :
     output = {
@@ -217,6 +271,7 @@ class SubmitOptions( ) :
               "account"           : self.account_,
               "name"              : self.name_,
               "dependencies"      : self.dependencies_,
+              "arguments"         : self.arguments_,
               "union_parse"       : self.submit_ }
 
     return str( output )
