@@ -27,7 +27,7 @@ class Step( SubmitAction ):
     #   return DependencyType[ s ]
 
 
-  def __init__( self, name, options, defaultSubmitOptions, parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.submitted_ = False
     self.jobid_     = -1
     self.command_       = None
@@ -36,7 +36,7 @@ class Step( SubmitAction ):
     self.depSignOff_    = {} # steps we are dependent on will need to tell us when to go
     self.children_      = [] # steps that are dependent on us that we will need to sign off for
 
-    super().__init__( name, options, defaultSubmitOptions, parent, rootDir )
+    super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
     self.printDir_ = True
 

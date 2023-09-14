@@ -7,18 +7,18 @@ import inspect
 from Test          import Test
 from SubmitOptions import SubmitOptions
 from SubmitAction  import SubmitAction
-import SubmitAction as sa
+import SubmitOptions as so
 
 class Suite( SubmitAction ) :
-  def __init__( self, name, options, defaultSubmitOptions, parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.tests_ = {}
-    super().__init__( name, options, defaultSubmitOptions, parent, rootDir )
+    super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
 
   def parseSpecificOptions( self ) :
     for test, testDict in self.options_.items() :
       if test != "submit_options" :
-        self.tests_[ test ] = Test( test, testDict, self.submitOptions_, parent=self.name_, rootDir=self.rootDir_ )
+        self.tests_[ test ] = Test( test, testDict, self.submitOptions_, self.globalOpts_, parent=self.name_, rootDir=self.rootDir_ )
 
   def run( self, test ) :
     self.setWorkingDirectory()
@@ -127,6 +127,7 @@ def main() :
                     options.testsConfig,
                     json.load( fp ),
                     opts,
+                    options,
                     rootDir=root
                     )
 

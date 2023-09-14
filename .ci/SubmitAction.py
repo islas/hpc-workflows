@@ -6,10 +6,11 @@ from SubmitOptions import SubmitOptions
 LABEL_LENGTH = 12
 
 class SubmitAction() :
-  def __init__( self, name, options, defaultSubmitOptions, parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
 
     self.name_          = name
-    self.label_            = "{0:<{1}}".format( "[{0}] ".format( self.name_ ), LABEL_LENGTH )
+    self.globalOpts_    = globalOpts # options passed in at CLI
+    self.label_            = "{0:<{1}}".format( "[{0}] ".format( self.name_ ), so.LABEL_LENGTH )
     self.labelIndentation_ = "  "
     self.labelLevel_       = 0
     self.log( "Initializing" )
