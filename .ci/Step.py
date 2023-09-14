@@ -18,8 +18,10 @@ class Step( SubmitAction ):
     AFTEROK    = "afterok"
     AFTERNOTOK = "afternotok"
     AFTERANY   = "afterany"
-    # def __str__( self ) :
-    #   return str( self.value )
+    def __str__( self ) :
+      return str( self.value )
+    def __repr__( self ) :
+      return str( self.value )
     # @staticmethod
     # def fromString( s ) :
     #   return DependencyType[ s ]
