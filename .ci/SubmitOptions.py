@@ -98,7 +98,6 @@ class SubmitOptions( ) :
       if not self.lockSubmitType_ :
         self.submitType_ = SubmitOptions.SubmissionType( self.submit_[ key ] )
 
-        # raise Exception(1)
 
     # Process all other keys as host-specific options
     for key, value in self.submit_.items() :

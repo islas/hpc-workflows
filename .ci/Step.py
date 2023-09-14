@@ -58,9 +58,7 @@ class Step( SubmitAction ):
 
     # Now set things manually
     self.submitOptions_.name_ = SUBMIT_NAME.format( test=self.parent_, step=self.name_ )
-    self.log( "Set submission name to {0}".format( self.submitOptions_.name_ ) )
 
-    self.log( "Validating submission options..." )
     valid, msg = self.submitOptions_.validate()
     if not valid :
       err = "Error: Invalid submission options [{msg}]\n{opts}".format( msg=msg, opts=self.submitOptions_ )
@@ -116,6 +114,7 @@ class Step( SubmitAction ):
     args, additionalArgs   = self.submitOptions_.format( print=self.log )
     workingDir = os.getcwd()
 
+    self.log( "Script : {0}".format( self.command_ ) )
     args.append( os.path.abspath( self.command_ ) )
     args.append( workingDir )
 
@@ -131,7 +130,7 @@ class Step( SubmitAction ):
 
     command = " ".join( [ arg if " " not in arg else "\"{0}\"".format( arg ) for arg in args ] )
     self.log( "Running command:" )
-    self.log( "\t{0}".format( command ) )
+    self.log( "  {0}".format( command ) )
 
     self.log(  "*" * 15 + "{:^15}".format( "START " + self.name_ ) + "*" * 15 + "\n" )
 
@@ -170,7 +169,7 @@ class Step( SubmitAction ):
       if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL :
         content = output.getvalue().decode( 'utf-8' )
         output.close()
-        self.log( "Finding job ID in \"{0}\"".format( content ) )
+        self.log( "Finding job ID in \"{0}\"".format( content.rstrip() ) )
         # Find job id
         self.jobid_ = int( jobidRegex.match( content ).group(1) )
       else:

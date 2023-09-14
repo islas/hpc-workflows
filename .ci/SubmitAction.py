@@ -12,8 +12,6 @@ class SubmitAction() :
     self.label_            = "{0:<{1}}".format( "[{0}] ".format( self.name_ ), so.LABEL_LENGTH )
     self.labelIndentation_ = "  "
     self.labelLevel_       = 0
-    self.log( "Initializing" )
-    self.log_push()
 
     self.parent_        = parent
     self.options_       = options
@@ -23,7 +21,6 @@ class SubmitAction() :
     self.printDir_         = False
 
     self.parse()
-    self.log_pop()
 
   def log( self, *args, **kwargs ) :
     # https://stackoverflow.com/a/39823534
