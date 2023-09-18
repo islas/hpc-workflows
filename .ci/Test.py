@@ -10,6 +10,7 @@ class Test( SubmitAction ):
   
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.steps_         = {}
+    self.masterlog_     = None
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
   def parseSpecificOptions( self ) :
@@ -24,6 +25,9 @@ class Test( SubmitAction ):
     
     # Now that steps are fully parsed, attempt to organize dependencies
     Step.sortDependencies( self.steps_ )
+
+    # Master logfile
+    self.masterlog_ = os.path.abspath( "{0}/{1}".format( self.rootDir_, self.name_ + ".log" ) )
 
 
   def executeAction( self ) :
@@ -107,6 +111,7 @@ class Test( SubmitAction ):
 
   def postProcessResults( self, stepOrder ) :
     # Do we need to post-process HPC submission files
+    errs = False
     if not self.globalOpts_.nopost :
       if self.globalOpts_.nowait :
         self.log( "Post-processing requires waiting for HPC submissions, skipped" )
@@ -122,9 +127,30 @@ class Test( SubmitAction ):
           self.log( "Outputting results..." )
           self.log_push()
 
+          errLogs = {}
+          msgs    = []
           for stepname in stepOrder :
             if stepname != "results" and self.steps_[ stepname ].submitOptions_ != SubmitOptions.SubmissionType.LOCAL :
-              self.steps_[ stepname ].postProcessResults()
+              success, err = self.steps_[ stepname ].postProcessResults()
+              if not success :
+                errs = True
+                errLogs[ stepname ] = {}
+                errLogs[ stepname ][ "logfile" ] = self.steps_[ stepname ].logfile_
+                msgs.append( err )
           
+          if errs :
+            self.log( "Steps [ {steps} ] failed".format( ", ".join( errLogs.keys() ) ) )
+            self.log( "Writing relevant logfiles to view in master log file : " )
+            self.log( self.masterlog_ )
+
+            with open( self.masterlog_, "w" ) as f :
+              for step, log in errLogs.items() :
+                f.write( "{step}  {log}".format( step=step, log=log ) )
+            
+            if not self.globalOpts_.nofatal :
+              raise Exception( "\n".join( msgs ) )
           self.log_pop()
+          if not errs :
+            # We got here without errors
+            self.log( "[SUCCESS] : Test {0} completed successfully".format( self.name_ ) )
 
