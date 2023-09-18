@@ -131,6 +131,9 @@ class Step( SubmitAction ):
     self.log( "Running command:" )
     self.log( "  {0}".format( command ) )
 
+    if self.name_ == "results" :
+      self.log( "*ATTENTION* : This is a blocking/sync step and will wait for all jobs to complete" )
+
     self.log(  "*" * 15 + "{:^15}".format( "START " + self.name_ ) + "*" * 15 + "\n" )
 
     ############################################################################
@@ -200,7 +203,11 @@ class Step( SubmitAction ):
     # We've been requested to output our results from this step
     self.log( "Results for {0}".format( self.name_ ) )
     self.log_push()
-    self.log( "Opening log file {0}...".format( self.logfile_ ) )
+    self.log( "Opening log file {0}".format( self.logfile_ ) )
+
+    err     = "Uknown"
+    success = False
+
 
     try :
       f = open( self.logfile_, "rb" )
@@ -222,21 +229,25 @@ class Step( SubmitAction ):
 
       findKey = re.match( self.globalOpts_.key, lastline )
       if findKey is None :
-        errMark = "{banner} {msg} {banner}".format( banner="!" * 10, msg="ERROR" * 3 )
+        errMark = "{banner} {msg} {banner}".format( banner="!" * 10, msg=" ".join( ["ERROR"] * 3 ) )
         self.log( errMark )
         self.log( "[FAILURE] : Missing key '{0}' marking success".format( self.globalOpts_.key ) )
         self.log( "Line: \"{0}\"".format( lastline.rstrip() ) )
         msg = "Step {0} has failed! See logfile {1}".format( self.name_, self.logfile_ )
         self.log( msg )
         self.log( errMark )
-        if not self.globalOpts_.nofatal :
-          raise Exception( "\n{banner}\n{msg}\n{banner}".format( banner=errMark, msg=msg ) )
+        
+        err     = "\n{banner}\n{msg}\n{banner}".format( banner=errMark, msg=msg )
+        success = False
       else :
         self.log( "[SUCCESS] : Step {step} reported \"{line}\"".format( step=self.name_, line=lastline.rstrip() ) )
+        err = None
+        success = True
     except Exception as e :
       raise e
     
     self.log_pop()
+    return success, err
 
   @staticmethod
   def sortDependencies( steps ) :
