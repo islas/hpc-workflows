@@ -139,13 +139,12 @@ class Test( SubmitAction ):
                 msgs.append( err )
           
           if errs :
-            self.log( "Steps [ {steps} ] failed".format( ", ".join( errLogs.keys() ) ) )
+            self.log( "Steps [ {steps} ] failed".format( steps=", ".join( errLogs.keys() ) ) )
             self.log( "Writing relevant logfiles to view in master log file : " )
             self.log( self.masterlog_ )
 
             with open( self.masterlog_, "w" ) as f :
-              for step, log in errLogs.items() :
-                f.write( "{step}  {log}".format( step=step, log=log ) )
+              f.write( str( errLogs ) )
             
             if not self.globalOpts_.nofatal :
               raise Exception( "\n".join( msgs ) )
