@@ -27,7 +27,7 @@ class Test( SubmitAction ):
     Step.sortDependencies( self.steps_ )
 
     # Master logfile
-    self.masterlog_ = os.path.abspath( "{0}/{1}".format( self.rootDir_, self.name_ + ".log" ) )
+    self.masterlog_ = os.path.abspath( "{0}/{1}".format( self.rootDir_, self.ancestry() + ".log" ) )
 
 
   def executeAction( self ) :
