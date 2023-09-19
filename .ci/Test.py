@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions
@@ -144,7 +145,7 @@ class Test( SubmitAction ):
             self.log( self.masterlog_ )
 
             with open( self.masterlog_, "w" ) as f :
-              f.write( str( errLogs ) )
+              json.dumps( errLogs, f )
             
             if not self.globalOpts_.nofatal :
               raise Exception( "\n".join( msgs ) )
