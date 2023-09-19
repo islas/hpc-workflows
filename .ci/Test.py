@@ -145,7 +145,7 @@ class Test( SubmitAction ):
             self.log( self.masterlog_ )
 
             with open( self.masterlog_, "w" ) as f :
-              json.dumps( errLogs, f )
+              json.dump( errLogs, f )
             
             if not self.globalOpts_.nofatal :
               raise Exception( "\n".join( msgs ) )
