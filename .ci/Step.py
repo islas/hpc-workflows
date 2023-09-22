@@ -25,6 +25,8 @@ class Step( SubmitAction ):
     # def fromString( s ) :
     #   return DependencyType[ s ]
 
+  def scope( self ) :
+    return "step"
 
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.submitted_ = False
@@ -131,9 +133,6 @@ class Step( SubmitAction ):
     self.log( "Running command:" )
     self.log( "  {0}".format( command ) )
 
-    if self.name_ == "results" :
-      self.log( "*ATTENTION* : This is a blocking/sync step and will wait for all jobs to complete" )
-
     self.log(  "*" * 15 + "{:^15}".format( "START " + self.name_ ) + "*" * 15 + "\n" )
 
     ############################################################################
@@ -199,6 +198,34 @@ class Step( SubmitAction ):
     
     self.log( "Finished submitting step {0}\n".format( self.name_ ) )
   
+  def checkJobComplete( self ) :
+    if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
+      self.log( "Step is local run, already finished (why are you here?)" )
+      return True
+    else:
+      # Probably different ways to check for PBS/SLURM
+      if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.PBS :
+        proc = subprocess.Popen(
+                                [ "qstat", str( self.jobid_ ) ],
+                                stdin =subprocess.PIPE,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE
+                                )
+        output, err = proc.communicate()
+        retVal    = proc.returncode
+        ouptut    = output.decode( "utf-8" )
+        if retVal > 0 or output == "" : # How else to tell if something is complete in PBS?
+          self.log( "Job ID {0} no longer in scheduler queue, assumed complete".format( self.jobid_ ) )
+          return True
+        else :
+          return False
+      elif self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.SLURM :
+        self.log( "Don't know how to process SLURM job completion, assumed complete" )
+        return True
+    
+    self.log( "Unknown completion, assumed true to avoid infinite loop" )
+    return True
+
   def postProcessResults( self ) :
     # We've been requested to output our results from this step
     self.log( "Results for {0}".format( self.name_ ) )

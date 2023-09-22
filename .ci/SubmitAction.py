@@ -4,12 +4,17 @@ import copy
 from SubmitOptions import SubmitOptions
 import SubmitOptions as so
 
-class SubmitAction() :
+class SubmitAction( ) :
+
+  def scope( self ) :
+    return "none"
+
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
 
     self.name_          = name
     self.globalOpts_    = globalOpts # options passed in at CLI
-    self.label_            = "{0:<{1}}".format( "[{0}] ".format( self.name_ ), so.LABEL_LENGTH )
+    # Add 8 for [item::] characters
+    self.label_            = "{0:<{1}}".format( "[{0}::{1}] ".format( self.scope(), self.name_ ), so.LABEL_LENGTH + 8 )
     self.labelIndentation_ = "  "
     self.labelLevel_       = 0
 

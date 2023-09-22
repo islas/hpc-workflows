@@ -10,6 +10,9 @@ from SubmitAction  import SubmitAction
 import SubmitOptions as so
 
 class Suite( SubmitAction ) :
+  def scope( self ) :
+    return "file"
+
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.tests_ = {}
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
