@@ -25,6 +25,8 @@ class Step( SubmitAction ):
     # def fromString( s ) :
     #   return DependencyType[ s ]
 
+  def scope( self ) :
+    return "step"
 
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.submitted_ = False

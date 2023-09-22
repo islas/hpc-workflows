@@ -8,6 +8,9 @@ from Step          import Step
 
 
 class Test( SubmitAction ):
+
+  def scope( self ) :
+    return "test"
   
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.steps_         = {}
