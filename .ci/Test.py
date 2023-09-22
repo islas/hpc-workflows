@@ -91,9 +91,9 @@ class Test( SubmitAction ):
           self.steps_[ stepname ].log_pop()
           if finished :
             completedSteps.append( stepname )
-
-      # Wait N seconds before checking all steps again
-      time.sleep( HPC_POLL_PERIOD_SECONDS )
+      if len( completedSteps ) != len( stepOrder ) :
+        # Wait N seconds before checking all steps again
+        time.sleep( HPC_POLL_PERIOD_SECONDS )
 
     self.log( "All HPC steps complete" )
     self.log_pop()
