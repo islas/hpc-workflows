@@ -7,7 +7,7 @@ from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions
 from Step          import Step
 
-HPC_DELAY_PERIOD_SECONDS = 20
+HPC_DELAY_PERIOD_SECONDS = 60
 HPC_POLL_PERIOD_SECONDS = 120
 
 class Test( SubmitAction ):
@@ -83,6 +83,8 @@ class Test( SubmitAction ):
     completedSteps = [ stepname for stepname in stepOrder if self.steps_[ stepname ].submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL ]
 
     while len( completedSteps ) != len( stepOrder ) :
+      # Wait N seconds before checking all steps again
+      time.sleep( HPC_POLL_PERIOD_SECONDS )
 
       for stepname in stepOrder :
         if stepname not in completedSteps :
@@ -91,9 +93,6 @@ class Test( SubmitAction ):
           self.steps_[ stepname ].log_pop()
           if finished :
             completedSteps.append( stepname )
-      if len( completedSteps ) != len( stepOrder ) :
-        # Wait N seconds before checking all steps again
-        time.sleep( HPC_POLL_PERIOD_SECONDS )
 
     self.log( "All HPC steps complete" )
     self.log_pop()
