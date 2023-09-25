@@ -1,5 +1,6 @@
 import copy
 import socket
+import re
 
 from enum import Enum
 
@@ -214,9 +215,23 @@ class SubmitOptions( ) :
     additionalArgs = []
     
     if self.arguments_ :
-      # Format them and pass them out in alphabetical order
-      longestPack = len( max( [ key for key in self.arguments_.keys() if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY ], key=len ) )
-      for key, value in sorted( self.arguments_.items() ) :
+      # Find all argument packs that match our ancestry
+      argpacksToUse = []
+      for argpack in self.arguments_.keys() :
+        if "::" in argpack :
+          # print( "Checking scope-specific argument pack {0}".format( argpack ) )
+          # Take everything before :: and treat it as a regex to match ancestry
+          scopeRegex = argpack.split( "::" )[0]
+          if re.match( scopeRegex, self.name_ ) is not None :
+            argpacksToUse.append( ( argpack, argpack.split( "::" )[1] ) )
+        else :
+          # Generic pack, send it off!
+          argpacksToUse.append( ( argpack, argpack ) )
+
+
+      # Format them and pass them out in alphabetical order based on name, NOT REGEX
+      longestPack = len( max( [ key[0] for key in argpacksToUse if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY ], key=len ) )
+      for key, sortname in sorted( argpacksToUse, key=lambda pack : pack[1] ) :
         if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY :
           print( 
                 "From {origin:<{length}} adding arguments pack {key:<{packlength}} : {val}".format(
@@ -224,10 +239,10 @@ class SubmitOptions( ) :
                                                                                         length=LABEL_LENGTH,
                                                                                         packlength=longestPack + 2,
                                                                                         key="'{0}'".format( key ),
-                                                                                        val=value
+                                                                                        val=self.arguments_[key]
                                                                                         )
                 )
-          additionalArgs.extend( value )
+          additionalArgs.extend( self.arguments_[key] )
 
     if self.submitType_ == self.SubmissionType.LOCAL :
       return [], additionalArgs
