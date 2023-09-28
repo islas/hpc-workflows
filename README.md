@@ -1,2 +1,18 @@
 # CI/CD Agnostic Testing Framework
 Built on python and sh, this framework aims to divorce the testing environment and control for running regression tests from the CI/CD tools (Github Workflows, Azure DevOps, Jenkins, etc.) allowing for portable usage. Likewise as this can exist outside those tools, the testing framework allows configuration for running tests in either a complex job-submission style HPC system or a local run, better allowing debugging of failing tests beyond logs available from said tools. The added benefit in this is immense as the local tests will replicate the CI/CD build as close as possible with differences only arising from changes in user-CI/CD environment and any job parallelization done.
+
+## Why not Bazel, Earthly, Docker, etc...?
+
+### Firstly : more dependencies
+Yes you could say "well now it becomes one dependency, just download <insert your alt tool>" but now you have everything THAT tool is built on + learning that tool's syntax, setup, etc. This is meant to be as barebones as possible with generally simple rules in the json layout - _THAT'S IT_. 
+
+Chances are you have `python3` and `sh` on your system so after that it's on you to figure out the rest of your dependencies as normal. That's normally where Docker/other tools to manage your dependencies come in. You don't need a swiss-army-knife-do-it-all-get-my-dependencies-and-make-me-coffee toolchain. This just runs scripts, no more no less. You need dependencies solved? Either write your solution in `sh` or make use of another tool to solve _that problem_ (PS you can probably still make use of this software _inside that tool_ because it's so simple.
+
+### Second : HPC runs
+Almost all solutions out there assume single-node dedicated isolation of environments (containers) to solve their problem. Beyond the dependencies that brings as noted in #1, imagine trying to do this on a multi-node HPC system that takes 1000s of CPUs and sprinkle in a couple of GPUs. Make use of Singularity? Congrats, now your users need Singularity and any complexity that brings. Yes containerization _can_ be useful and _can_ be used with this system but it solves something different (isolated environment recreation vs replication of testing procedures). Both can be done together and/or separate, but as it stands no solutions that solve CI/CD agnostic testing solve it for natively running on an HPC system.
+
+### Third : ease of setup
+There is none aside from cloning this code. Same could be said for other systems, but afterwards what's next? Reading syntax documentation on how to write `test.my-custom-yaml` or some other esoteric markup (or maybe even straight coding-based) language. It's json, don't know how to write it a quick glance at [the wiki page](https://en.wikipedia.org/wiki/JSON#Syntax) tells you almost everything you need to know. Need to know the options and how they work, look at the [example.json](.ci/example.json) or [template.json](.ci/template.json) for more documentation.
+
+### Fourth and finally : flexibility
+This does not require running containers nor prohibit usage of containers. Can run _trully_ locally on a machine in user environment or a container or an HPC job, even in in an interactive HPC session. So if one is dead set on usage of containers to solve their dependencies, this can just as easily be incorporated into that workflow. Want to run a specific step that failed? Just run the exact command that the test did. Don't want to run it as an HPC job? Just don't submit and run it locally. You don't even need this code at that point since you're copy-pasting shell commands from your test scripts and thus can more directly run your tests independent of intricate test frameworks/harnesses.
