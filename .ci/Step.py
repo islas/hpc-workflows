@@ -150,6 +150,7 @@ class Step( SubmitAction ):
     for c in iter( lambda: proc.stdout.read(1), b"" ):
       output.write( c )
       sys.stdout.buffer.write(c)
+      sys.stdout.flush()
 
     # We don't mind doing this as the process should block us until we are ready to continue
     dump, err = proc.communicate()
