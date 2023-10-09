@@ -320,7 +320,7 @@ class Step( SubmitAction ):
         success = False
       else :
         self.log( "{succ} : Step {step} reported \"{line}\"".format( succ=SubmitAction.SUCCESS_STR, step=self.name_, line=lastline.rstrip() ) )
-        err = None
+        err = lastline.rstrip()
         success = True
     except Exception as e :
       raise e
