@@ -5,6 +5,8 @@ from SubmitOptions import SubmitOptions
 import SubmitOptions as so
 
 class SubmitAction( ) :
+  SUCCESS_STR = "[SUCCESS]"
+  FAILURE_STR = "[FAILURE]"
 
   def scope( self ) :
     return "none"
@@ -17,6 +19,7 @@ class SubmitAction( ) :
     self.label_            = "{0:<{1}}".format( "[{0}::{1}] ".format( self.scope(), self.name_ ), so.LABEL_LENGTH + 8 )
     self.labelIndentation_ = "  "
     self.labelLevel_       = 0
+    self.logfile_        = None
 
     self.parent_        = parent
     self.options_       = options
@@ -58,6 +61,9 @@ class SubmitAction( ) :
     # Now call child parse
     self.parseSpecificOptions()
 
+    # Now generate masterlog name
+    self.logfile_ = os.path.abspath( "{0}/{1}".format( self.rootDir_, self.ancestry() + ".log" ) )
+
   def setWorkingDirectory( self ) :
     self.log( "Preparing working directory" )
     self.log_push()
@@ -78,4 +84,4 @@ class SubmitAction( ) :
 
   def run( self ) :
     self.setWorkingDirectory()
-    self.executeAction()
+    return self.executeAction()

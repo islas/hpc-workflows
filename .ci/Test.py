@@ -2,6 +2,8 @@ import os
 import sys
 import json
 import time
+from collections import OrderedDict
+from datetime import timedelta
 
 from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions
@@ -17,7 +19,6 @@ class Test( SubmitAction ):
   
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.steps_         = {}
-    self.masterlog_     = None
     self.waitResults_    = False
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
@@ -34,9 +35,6 @@ class Test( SubmitAction ):
     # Now that steps are fully parsed, attempt to organize dependencies
     Step.sortDependencies( self.steps_ )
 
-    # Master logfile
-    self.masterlog_ = os.path.abspath( "{0}/{1}".format( self.rootDir_, self.ancestry() + ".log" ) )
-
 
   def executeAction( self ) :
     self.checkWaitResults()
@@ -52,7 +50,7 @@ class Test( SubmitAction ):
 
     self.log( "No remaining steps, test submission complete" )
 
-    self.postProcessResults( steps )
+    return self.postProcessResults( steps )
 
   def checkWaitResults( self ) :
     # Do we need to add a results step?
@@ -74,6 +72,10 @@ class Test( SubmitAction ):
     self.log_pop()
   
   def waitOnSteps( self, stepOrder ) :
+    if self.globalOpts_.dryRun :
+      self.log( "Doing dry-run, assumed complete" )
+      return
+
     self.log( "Waiting for HPC jobs to finish..." )
     self.log_push()
     self.log( "*ATTENTION* : This is a blocking/sync phase to wait for all jobs to complete - BE PATIENT" )
@@ -107,33 +109,138 @@ class Test( SubmitAction ):
         # Wait for grid steps to complete
         self.waitOnSteps( stepOrder )
 
-        # We go through the steps in the order submitted
-        self.log( "Outputting results..." )
-        self.log_push()
+      # All results are ready
+      # We go through the steps in the order submitted
+      self.log( "Outputting results..." )
+      self.log_push()
 
-        errLogs = {}
-        msgs    = []
-        for stepname in stepOrder :
-          if stepname != "results" and self.steps_[ stepname ].submitOptions_ != SubmitOptions.SubmissionType.LOCAL :
-            success, err = self.steps_[ stepname ].postProcessResults()
-            if not success :
-              errs = True
-              errLogs[ stepname ] = {}
-              errLogs[ stepname ][ "logfile" ] = self.steps_[ stepname ].logfile_
-              msgs.append( err )
-        
-        if errs :
-          self.log( "Steps [ {steps} ] failed".format( steps=", ".join( errLogs.keys() ) ) )
-          self.log( "Writing relevant logfiles to view in master log file : " )
-          self.log( self.masterlog_ )
+      stepsLog = OrderedDict()
+      for stepname in stepOrder :
+        if stepname != "results" :
+          success, err = self.steps_[ stepname ].postProcessResults()
+          stepsLog[ stepname ] = {}
+          stepsLog[ stepname ][ "logfile" ] = self.steps_[ stepname ].logfile_
+          stepsLog[ stepname ][ "success" ] = success
+          stepsLog[ stepname ][ "message" ] = err
 
-          with open( self.masterlog_, "w" ) as f :
-            json.dump( errLogs, f )
-          
-          if not self.globalOpts_.nofatal :
-            raise Exception( "\n".join( msgs ) )
-        self.log_pop()
-        if not errs :
-          # We got here without errors
-          self.log( "[SUCCESS] : Test {0} completed successfully".format( self.name_ ) )
+      self.log( "Writing relevant logfiles to view in master log file : " )
+      self.log_push()
+      self.log( self.logfile_ )
+      self.log_pop()
+
+      with open( self.logfile_, "w" ) as f :
+        json.dump( stepsLog, f )
+
+      errs = self.reportErrs( stepsLog )
+
+      if errs and not self.globalOpts_.nofatal :
+        exit( 1 )
+
+      self.log_pop()
+    return not errs
+  
+  def reportErrs( self, stepsLog ) :
+    success = True
+    for stepname, stepResult in stepsLog.items() :
+      success = success and stepResult[ "success" ]
+    if not success :
+      self.log( "{fail} : Steps [ {steps} ] failed".format(
+                                                            fail=SubmitAction.FAILURE_STR,
+                                                            steps=", ".join( [ key for key in stepResult if not testLogs[key]["success"] ] ) 
+                                                            )
+              )
+      self.log( "\n".join( msgs ) )
+    else :
+      # We got here without errors
+        self.log( "{succ} : Test {name} completed successfully".format( succ=SubmitAction.SUCCESS_STR, name=self.name_ ) )
+
+    return not success
+
+  def getMaxHPCResources( self ) :
+    # NOTE NOTE NOTE NOTE NOTE
+    # I have made some assumptions about when things can run
+    # with regards to dependency type - this could be fixed but requires
+    # more complex logic. For now, try not to add too many divergent branches of testing
+    self.log( "Computing maximum HPC resources per runnable step phase..." )
+
+    # Walk through all steps and determine what HPC resources would be needed
+    checked  = { }
+
+    # Maybe use one day for complex branch analysis...
+    # deps     = { depType : {} for depType in Step.DependencyType }
+
+    # # Get all variations of dependencies
+    # for step in self.steps_ :
+    #   for stepname, depType in step.dependencies_ :
+    #     deps[ depType ][ stepname ] = None
+
+    maxResources = ""
+    maxTimelimit = timedelta()
+    hpcSubmit = [ step.submitOptions_.submitType_ for step in self.steps_.values() if step.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL ]
+    if not hpcSubmit :
+      self.log( "No HPC steps in this test" )
+      return maxResources, maxTimelimit
+
+    longestStep = len( max( [ stepname for stepname in self.steps_.keys() ], key=len ) )
+    phase = 0
+    self.log( "Joining steps..." )
+    self.log_push()
+    while len( checked ) != len( self.steps_ ) :
+      # Gather set of runnables
+      runnable = [ step for step in self.steps_.values() if step.runnable() ]
+
+      # Add all concurrent resources together
+      currentResources = SubmitOptions.joinHPCResourcesOp( runnable, lambda rhs,lhs : rhs + lhs, print=self.log  )
+      currentTimelimit = max( [ SubmitOptions.parseTimelimit( step.submitOptions_.timelimit_, hpcSubmit[0] ) for step in runnable ] )
+      # Get maximum
+      maxResources = SubmitOptions.joinHPCResourcesStrOp(
+                                                          maxResources,
+                                                          currentResources,
+                                                          hpcSubmit[0],
+                                                          max,
+                                                          print=self.log
+                                                          )
+      # Add to current timelimit
+      maxTimelimit += currentTimelimit
+      self.log( "[PHASE {phase}] Resources for [ {steps} ] : '{res}'".format(
+                                                                              phase=phase,
+                                                                              steps="".join(
+                                                                                            "{0:>{1}}".format(
+                                                                                                              step, longestStep + ( 1 if len( runnable ) > 1 else 0 ) )
+                                                                                                              for step in ",[:space:]".join(
+                                                                                                                 [ step.name_ for step in runnable ]
+                                                                                                              ).split( '[:space:]' )
+                                                                                            ),
+                                                                              res=currentResources
+                                                                              )
+                )
+      phase += 1
+
+      # Add to checked
+      checked.update( { step.name_ : step for step in runnable } )
+
+      # For all runnable assume ran
+      for step in runnable :
+        step.jobid_     = 0
+        step.retval_    = 0
+        step.submitted_ = True
+        step.notifyChildren( )
+    
+    # Reset the pipeline
+    for step in self.steps_.values() :
+      step.resetRunnable()
+    self.log_pop()
+    self.log( "Maximum HPC resources required will be '{0}' with timelimit '{1}'".format(
+                                                                                          maxResources,
+                                                                                          SubmitOptions.formatTimelimit(
+                                                                                            maxTimelimit,
+                                                                                            hpcSubmit[0]
+                                                                                          )
+                                                                                        )
+              )
+    return maxResources, maxTimelimit
+
+
+
+
 

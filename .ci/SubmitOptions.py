@@ -1,13 +1,27 @@
 import copy
 import socket
 import re
-
+import math
+import heapq
+from collections import OrderedDict
 from enum import Enum
+from datetime import timedelta
 
 # https://stackoverflow.com/a/3233356
 import collections.abc
 
 LABEL_LENGTH = 12
+
+PBS_RESOURCE_REGEX_STR = r"(?P<start>[ ]*-l[ ]+)?(?P<res>\w+)=(?P<amount>.*?)(?=:|[ ]*-l[ ]|$)"
+PBS_RESOURCE_REGEX     = re.compile( PBS_RESOURCE_REGEX_STR )
+
+# http://docs.adaptivecomputing.com/torque/4-1-3/Content/topics/2-jobs/requestingRes.htm
+PBS_RESOURCE_SIZE_REGEX_STR = r"(?P<numeric>\d+)(?P<multi>(?P<scale>k|m|g|t)?(?P<unit>b|w))"
+PBS_RESOURCE_SIZE_REGEX     = re.compile( PBS_RESOURCE_SIZE_REGEX_STR, re.I )
+
+PBS_TIMELIMIT_REGEX_STR    = r"^(?P<hh>\d+):(?P<mm>\d+):(?P<ss>\d+)$"
+PBS_TIMELIMIT_REGEX        = re.compile( PBS_TIMELIMIT_REGEX_STR )
+PBS_TIMELIMIT_FORMAT_STR   = "{:02}:{:02}:{:02}"
 
 # Update mapping dest with source
 def recursiveUpdate( dest, source ):
@@ -48,6 +62,7 @@ class SubmitOptions( ) :
     # Should be set via the step
     self.name_             = None
     self.dependencies_     = None
+    self.logfile_          = None
 
     # Should normally be restricted to host-specific options
     self.arguments_        = {}
@@ -180,9 +195,7 @@ class SubmitOptions( ) :
       currentSubmitOptions.update( self.hostSpecificOptions_[ hostSpecificOptKey ] )
 
     return currentSubmitOptions
-  
-  def getOutputFilename( self ) :
-    return "{0}.log".format( self.name_ )
+
 
   def format( self, print=print ) :
     # Why this can't be with the enum
@@ -191,14 +204,14 @@ class SubmitOptions( ) :
     # https://github.com/python/cpython/issues/88508
     submitDict = {}
     if self.submitType_ == self.SubmissionType.PBS :
-      submitDict    = { "submit" : "qsub",   "resources"  : "-l select={0}",
+      submitDict    = { "submit" : "qsub",   "resources"  : "{0}",
                         "name"   : "-N {0}", "dependency" : "-W depend={0}",
                         "queue"  : "-q {0}", "account"    : "-A {0}",
                         "output" : "-j oe -o {0}",
                         "time"   : "-l walltime={0}",
                         "wait"   : "-W block=true" }
     elif self.submitType_ == self.SubmissionType.SLURM :
-      submitDict    = { "submit" : "sbtach", "resources"  : "--gres={0}",
+      submitDict    = { "submit" : "sbtach", "resources"  : "{0}",
                         "name"   : "-J {0}", "dependency" : "-d {0}",
                         "queue"  : "-p {0}", "account"    : "-A {0}",
                         "output" : "-j -o {0}",
@@ -269,7 +282,7 @@ class SubmitOptions( ) :
       # Set via step
       if self.name_ is not None :
         cmd.extend( submitDict[ "name"   ].format( self.name_ ).split( " " ) )
-        cmd.extend( submitDict[ "output" ].format( self.getOutputFilename() ).split( " " ) )
+        cmd.extend( submitDict[ "output" ].format( self.logfile_ ).split( " " ) )
 
 
       if self.dependencies_ is not None :
@@ -299,5 +312,239 @@ class SubmitOptions( ) :
 
     return str( output )
 
+  @staticmethod
+  def parseTimelimit( timelimit, submitType ) :
+    timeMatch = None
+    if submitType == SubmitOptions.SubmissionType.PBS :
+      timeMatch = PBS_TIMELIMIT_REGEX.match( timelimit )
+    elif submitType == SubmitOptions.SubmissionType.SLURM :
+      pass
+    if timeMatch is not None :
+      timeGroups = timeMatch.groupdict()
+      return timedelta(
+                        hours  =int( timeGroups["hh"] ),
+                        minutes=int( timeGroups["mm"] ),
+                        seconds=int( timeGroups["ss"] )
+                      )
+    else :
+      return None
+  
+  @staticmethod
+  def formatTimelimit( timelimit, submitType ) :
+    totalSeconds = timelimit.total_seconds()
+    if submitType == SubmitOptions.SubmissionType.PBS :
+      return '{:02}:{:02}:{:02}'.format(
+                                        int(totalSeconds//3600),
+                                        int(totalSeconds%3600//60),
+                                        int(totalSeconds%60)
+                                        )
+    elif submitType == SubmitOptions.SubmissionType.SLURM :
+      return None
+
+  @staticmethod
+  def resourceMemSizeDict( amountStr, submitType ) :
+    memMatch = None 
+    if submitType == SubmitOptions.SubmissionType.PBS :
+      memMatch = PBS_RESOURCE_SIZE_REGEX.match( amountStr )
+    elif submitType == SubmitOptions.SubmissionType.SLURM :
+      pass
+
+    if memMatch is not None :
+      return { k : ( v.lower() if v is not None else v ) for k,v in memMatch.groupdict().items() }
+    else :
+      return None
+
+  @staticmethod
+  def resourceMemSizeBase( amountDict ) :
+    multipliers   = { None : 1, "k" : 1024, "m" : 1024**2, "g" : 1024**3, "t" : 1024**4 }
+    return multipliers[ amountDict["scale" ] ] * int( amountDict["numeric"] )
+
+  @staticmethod
+  def resourceMemSizeFormat( amountDict ) :
+    memSizeFormat = "{num}{scale}{unit}"
+    return memSizeFormat.format(
+                                num=amountDict["numeric"],
+                                scale=amountDict[ "scale" ] if amountDict[ "scale" ] else "",
+                                unit=amountDict["unit"]
+                                )
+  
+  @staticmethod
+  def resourceMemSizeReduce( amountDict ) :
+    multipliers   = { None : 1, "k" : 1024, "m" : 1024**2, "g" : 1024**3, "t" : 1024**4 }
+
+    totalAmount = SubmitOptions.resourceMemSizeBase( amountDict )
+    
+    # Convert to simplified size, round up if needed
+    log2 = math.log( totalAmount, 2 )
+    scale = None
+    if log2 > 30.0 :
+      # Do it in gibi
+      scale = "g"
+    elif log2 > 20.0 :
+      # mebi
+      scale = "m"
+    elif log2 > 10.0 :
+      # kibi
+      scale = "k"
+    
+    reducedDict = {
+                    "numeric" : math.ceil( totalAmount / float( multipliers[ scale ] ) ),
+                    "scale"   : scale,
+                    "unit"    : amountDict["unit"]
+                  }
+    return reducedDict
+
+
+  @staticmethod
+  def breakdownResources( resourceStr, submitType ) :
+    resourceBreakDown = OrderedDict()
+    if   submitType == SubmitOptions.SubmissionType.PBS :
+      currentKey        = ""
+      # Fill first amount up, generating resource groups
+      for resFound in PBS_RESOURCE_REGEX.finditer( resourceStr ) :
+        groups = resFound.groupdict( )
+        if groups[ "start" ] is not None :
+          currentKey = groups["res"]
+        
+        if currentKey not in resourceBreakDown :
+          resourceBreakDown[currentKey] = {}
+        resourceBreakDown[ currentKey ][ groups[ "res" ] ] = groups[ "amount" ]
+
+    elif submitType == SubmitOptions.SubmissionType.SLURM :
+      pass
+
+    return resourceBreakDown
+  
+  @staticmethod
+  def formatResourceBreakdown( resourceBreakDown, submitType ) :
+    finalResources = ""
+    if   submitType == SubmitOptions.SubmissionType.PBS :
+      # Do PBS-specific merging
+      finalResources = "-l " + " -l ".join( [ ":".join( [ "{0}={1}".format( k,v ) for k,v in resources.items() ] ) for resources in resourceBreakDown.values() ] )
+    elif submitType == SubmitOptions.SubmissionType.SLURM :
+      pass
+    
+    return finalResources
+
+  @staticmethod
+  def joinHPCResourcesMax( resourceStrs, submitType, maxN, print=print ) :
+    allBreakdowns = [ SubmitOptions.breakdownResources( res, submitType ) for res in resourceStrs ]
+
+    # # Flatten and get all keys
+    # allResourceTypes = list( set( [ res for breakdown in allBreakdowns for resGroup in breakdown.values() for res in resGroup.keys() ] ) )
+
+    organizedResources = {}
+    for breakdown in allBreakdowns :
+      for group, resources in breakdown.items() :
+        if group not in organizedResources :
+          organizedResources[ group ] = {}
+        for resource, amount in resources.items() :
+          if resource not in organizedResources[ group ] :
+            organizedResources[ group ][ resource ] = []
+          # Accumulate all resources' amounts into lists
+          organizedResources[ group ][ resource ].append( amount )
+
+    finalBreakdown = {}
+    for group, resources in organizedResources.items() :
+      finalBreakdown[ group ] = {}
+      for resource, amounts in resources.items() : 
+        try :
+          finalBreakdown[ group ][ resource ] = sum( [ int(amount) for amount in heapq.nlargest( maxN, amounts ) ] )
+        except ValueError :
+          resMem = SubmitOptions.resourceMemSizeDict( amounts[0], submitType )
+          if resMem is not None :
+            amountsAsDicts = [ SubmitOptions.resourceMemSizeDict( amount, submitType ) for amount in amounts ]
+            baseAmount = sum( [ SubmitOptions.resourceMemSizeBase( memDict ) for memDict in
+                                heapq.nlargest(
+                                                maxN,
+                                                amountsAsDicts,
+                                                key=lambda amount : SubmitOptions.resourceMemSizeBase( amount )
+                                                )
+                              ]
+                            )
+            finalBreakdown[ group ][ resource ] = SubmitOptions.resourceMemSizeFormat(
+                                                    SubmitOptions.resourceMemSizeReduce(
+                                                      {
+                                                        "numeric" : baseAmount,
+                                                        "scale"   : None,
+                                                        "unit"    : resMem[ "unit" ]
+                                                      }
+                                                    )
+                                                  )
+
+          else :
+            print( "Unable to sort resource type {0}, using {1}".format( resource, amounts[0] ) )
+            finalBreakdown[ group ][ resource ] = amounts[0]
+
+    return SubmitOptions.formatResourceBreakdown( finalBreakdown, submitType )
+
+
+  @staticmethod
+  def joinHPCResourcesOp( steps, op, print=print ) :
+    resources = ""
+    for step in steps :
+      resources = SubmitOptions.joinHPCResourcesStrOp( resources, step.submitOptions_.resources_, step.submitOptions_.submitType_, op, print=print )
+    return resources
+
+  @staticmethod
+  def joinHPCResourcesStrOp( res1, res2, submitType, op, print=print ) :
+    finalResources = ""
+    finalResourceBreakdown = OrderedDict()
+
+    # Only join if both are not empty, else take the not empty one
+    if res1 and res2 :
+      finalResourceBreakdown = SubmitOptions.breakdownResources( res1, submitType )
+      mergeResourceBreakdown = SubmitOptions.breakdownResources( res2, submitType )
+      
+      # Loop merge and add if possible
+      for group, resources in mergeResourceBreakdown.items() :
+        if group in finalResourceBreakdown :
+          for res, amount in resources.items() :
+            if res in finalResourceBreakdown[ group ] :
+              # Now for the tricky part
+              try :
+                finalAmount = op( int( amount ), int( finalResourceBreakdown[ group ][ res ] ) )
+                finalResourceBreakdown[ group ][ res ] = finalAmount
+              except ValueError:
+                # Not an int value, size value?
+                resMem = SubmitOptions.resourceMemSizeDict( amount, submitType )
+                if resMem is not None :
+                  finalAmountMem = SubmitOptions.resourceMemSizeDict( finalResourceBreakdown[ group ][ res ], submitType )
+                  if resMem[ "unit" ] == finalAmountMem[ "unit" ] :
+                    # Can add
+                    rhsAmount = SubmitOptions.resourceMemSizeBase( resMem )
+                    lhsAmount = SubmitOptions.resourceMemSizeBase( finalAmountMem )
+
+                    totalAmount = op( rhsAmount, lhsAmount )
+                    finalResourceBreakdown[ group ][ res ] = SubmitOptions.resourceMemSizeFormat( 
+                                                                SubmitOptions.resourceMemSizeReduce(
+                                                                                                    {
+                                                                                                      "numeric" : totalAmount,
+                                                                                                      "scale"   : None,
+                                                                                                      "unit"    : resMem["unit"]
+                                                                                                    }
+                                                                                                  )
+                                                                                                )
+                  else :
+                    msg = "Error : cannot perform operation with values {0} and {1}".format( rhs["multi"], lhs["multi"] )
+                    print( msg )
+                    raise Exception( msg )
+                else :
+                  # Not sure how to add, leave as is
+                  print( "Unsure how to operate on resources {0} and {1} together, defaulting to {0}".format( finalResourceBreakdown[ group ][ res ], amount ) )
+            else :
+              # Just add
+              finalResourceBreakdown[ group ][ res ] = amount
+        else :
+          # Just add
+          finalResourceBreakdown[ group ] = resources
+      
+      # Generate the final resource in our HPC format
+      finalResources = SubmitOptions.formatResourceBreakdown( finalResourceBreakdown, submitType )
+
+    else :
+      finalResources = res1 if res1 else res2
+
+    return finalResources
 
 

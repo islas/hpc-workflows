@@ -64,5 +64,60 @@
         "dependencies" : { "step-0" : "afterany", "step-1" : "afterany" }
       }
     }
+  },
+  "test-id-1" :
+  {
+    "steps" :
+    {
+      "step-0" :
+       { 
+        "submit_options" :
+        { 
+          "working_directory" : "./tests",
+          "resources"         : "1:ncpus=1",
+          "timelimit"         : "00:01:00",
+          "cheyenne" :
+          {
+            "submission"        : "LOCAL"
+          },
+          "derecho" :
+          {
+            "submission" : "SLURM"
+          }
+        },
+        "command"      : "./test_0.sh",
+        "arguments"    : [ "-ne", "\\nfoobar\\tbarbar\\n\\n" ]
+      },
+      "step-1" :
+       { 
+        "submit_options" :
+        { 
+          "resources"         : "1:ncpus=1",
+          "timelimit"         : "00:05:00",
+          "cheyenne" :
+          {
+            "submission"        : "LOCAL"
+          }
+        },
+        "command"      : "tests/test_0.sh",
+        "arguments"    : [ "Hello", "World!" ],
+        "dependencies" : { "step-0" : "afterany" }
+      },
+      "step-2" :
+       { 
+        "submit_options" :
+        { 
+          "working_directory" : "./tests",
+          "resources"         : "1:ncpus=1",
+          "cheyenne" :
+          {
+            "submission"        : "LOCAL"
+          }
+        },
+        "command"      : "./test_0.sh",
+        "arguments"    : [ "Final step" ],
+        "dependencies" : { "step-0" : "afterany", "step-1" : "afterany" }
+      }
+    }
   }
 }

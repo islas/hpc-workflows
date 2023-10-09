@@ -30,13 +30,15 @@ class Step( SubmitAction ):
 
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.submitted_ = False
-    self.jobid_     = -1
+    self.jobid_     = None
+    self.retval_    = None
     self.command_       = None
     self.arguments_     = None
-    self.logfile_       = None # Filled out after submitted
     self.dependencies_  = {} # our steps we are dependent on and their type
     self.depSignOff_    = {} # steps we are dependent on will need to tell us when to go
     self.children_      = [] # steps that are dependent on us that we will need to sign off for
+    # DO NOT MODIFY THIS UNLESS YOU UNDERSTAND THE IMPLICATIONS
+    self.addWorkingDirArg_ = True
 
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
@@ -71,9 +73,9 @@ class Step( SubmitAction ):
     allDepsJobID = True
     deps         = { depType : [] for depType in Step.DependencyType }
 
-    for dep, jobid in self.depSignOff_.items() :
-      allDepsJobID = ( jobid != -1 ) and allDepsJobID
-      deps[ self.dependencies_[ dep ] ].append( jobid )
+    for dep, signoff in self.depSignOff_.items() :
+      allDepsJobID = ( signoff[ "jobid" ] is not None ) and allDepsJobID
+      deps[ self.dependencies_[ dep ] ].append( signoff[ "jobid" ] )
 
     # only perform list comprehension if we have dependencies,
     # then join all types with ","
@@ -98,6 +100,14 @@ class Step( SubmitAction ):
 
     return canRun
   
+  def resetRunnable( self ) :
+    self.submitted_ = False
+    self.jobid_     = None
+    if self.depSignOff_ :
+      for key in self.depSignOff_.keys() :
+        self.depSignOff_[ key ][ "jobid"  ] = None
+        self.depSignOff_[ key ][ "retval" ] = None
+  
   def executeInfo( self ) :
     if self.submitOptions_.lockSubmitType_ and "submission" in self.submitOptions_.submit_ :
       self.log( "{{ '{0}' : {1} }} overridden by cli".format( "submission", self.submitOptions_.submit_[ "submission" ] ) )
@@ -109,15 +119,19 @@ class Step( SubmitAction ):
     self.submitted_ = True
     self.executeInfo()
   
-    output = ""
+    redirect = ( self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL and not self.globalOpts_.inlineLocal )
+    output = None
     err    = ""
-    retVal = -1
+    self.retval_ = -1
+    self.submitOptions_.logfile_ = self.logfile_
     args, additionalArgs   = self.submitOptions_.format( print=self.log )
     workingDir = os.getcwd()
+    
 
     self.log( "Script : {0}".format( self.command_ ) )
     args.append( os.path.abspath( self.command_ ) )
-    args.append( workingDir )
+    if self.addWorkingDirArg_ :
+      args.append( workingDir )
 
     if self.arguments_ :
       args.extend( self.arguments_ )
@@ -129,77 +143,108 @@ class Step( SubmitAction ):
     if self.submitOptions_.debug_ :
       self.log( "Arguments: {0}".format( args ) )
 
+
     command = " ".join( [ arg if " " not in arg else "\"{0}\"".format( arg ) for arg in args ] )
     self.log( "Running command:" )
     self.log( "  {0}".format( command ) )
-
     self.log(  "*" * 15 + "{:^15}".format( "START " + self.name_ ) + "*" * 15 + "\n" )
 
-    ############################################################################
-    ##
-    ## Call step
-    ##
-    # https://stackoverflow.com/a/18422264
-    output = io.BytesIO()
-    proc = subprocess.Popen(
-                            args,
-                            stdin =subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT
-                            )
-    for c in iter( lambda: proc.stdout.read(1), b"" ):
-      output.write( c )
-      sys.stdout.buffer.write(c)
-      sys.stdout.flush()
+    if not self.globalOpts_.dryRun :
+      ############################################################################
+      ##
+      ## Call step
+      ##
+      # https://stackoverflow.com/a/18422264
+      if redirect :
+        output = open( self.logfile_, "w+", buffering=1 )
+        self.log( "Local step will be redirected to logfile {0}".format( self.logfile_ ) )
+      else :
+        # Just keep in memory as a string
+        output = io.BytesIO()
+      proc = subprocess.Popen(
+                              args,
+                              stdin =subprocess.PIPE,
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.STDOUT
+                              )
+      for c in iter( lambda: proc.stdout.read(1), b"" ):
+        if redirect :
+          output.write( c.decode( 'utf-8' ) )
+          output.flush()
+        else :
+          output.write( c )
+          sys.stdout.buffer.write(c)
+          sys.stdout.flush()
 
-    # We don't mind doing this as the process should block us until we are ready to continue
-    dump, err = proc.communicate()
-    retVal    = proc.returncode
-    ##
-    ## 
-    ##
-    ############################################################################
+      # We don't mind doing this as the process should block us until we are ready to continue
+      dump, err    = proc.communicate()
+      self.retval_ = proc.returncode
+      ##
+      ## 
+      ##
+      ############################################################################
+    else :
+      self.log( "Doing dry-run, no ouptut" )
+      self.retval_ = 0
+      output       = "12345"
 
     print( "\n", flush=True, end="" )
     self.log(  "*" * 15 + "{:^15}".format( "STOP " + self.name_ ) + "*" * 15 )
 
-    self.logfile_ = "{0}/{1}".format( workingDir, self.submitOptions_.getOutputFilename() )
-
     # if submitted properly
-    if retVal == 0 :
+    if self.retval_ == 0 :
       # Process output
       if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL :
-        content = output.getvalue().decode( 'utf-8' )
-        output.close()
+        content = None
+        if not self.globalOpts_.dryRun :
+          if redirect :
+            output.seek(0)
+            content = output.read()
+          else : 
+            content = output.getvalue().decode( 'utf-8' )
+          output.close()
+        else :
+          content = output
+
         self.log( "Finding job ID in \"{0}\"".format( content.rstrip() ) )
         # Find job id
         self.jobid_ = int( jobidRegex.match( content ).group(1) )
       else:
         self.jobid_ = 0
-
-      if self.children_ :
-        self.log( "Notifying children..." )
-        # Go to all children and mark ok
-        for child in self.children_ :
-          child.depSignOff_[ self.name_ ] = self.jobid_
     else:
-      err = ( "Error: Failed to run step '{0}' exit code {1}\n\tlog: {2}".format(
+      msg = ( "Error: Failed to run step '{0}' exit code {1}\n\tlog: {2}".format(
                                                                                   self.name_,
-                                                                                  retVal,
+                                                                                  self.retval_,
                                                                                   err if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else
                                                                                     "See errors above"
                                                                                   )
             )
-      self.log( err )
+      self.log( msg )
 
       if not self.globalOpts_.nofatal :
         raise Exception( err )
     
+    # If we get this far sign off
+    if self.children_ :
+      self.log( "Notifying children..." )
+      self.notifyChildren( )
+
     self.log_pop()
     
     self.log( "Finished submitting step {0}\n".format( self.name_ ) )
+
+  def notifyChildren( self ) :
+    if self.children_ :
+      # Go to all children and mark ok
+      for child in self.children_ :
+        child.depSignOff_[ self.name_ ][ "jobid"  ] = self.jobid_
+        child.depSignOff_[ self.name_ ][ "retval" ] = self.retval_
   
   def checkJobComplete( self ) :
+    if self.globalOpts_.dryRun :
+      self.log( "Doing dry-run, assumed complete" )
+      return True
+
     if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
       self.log( "Step is local run, already finished (why are you here?)" )
       return True
@@ -231,6 +276,12 @@ class Step( SubmitAction ):
     # We've been requested to output our results from this step
     self.log( "Results for {0}".format( self.name_ ) )
     self.log_push()
+
+    if self.globalOpts_.dryRun :
+      self.log( "Doing dry-run, assumed success" )
+      self.log_pop()
+      return True, "Ok"
+
     self.log( "Opening log file {0}".format( self.logfile_ ) )
 
     err     = "Uknown"
@@ -259,7 +310,7 @@ class Step( SubmitAction ):
       if findKey is None :
         errMark = "{banner} {msg} {banner}".format( banner="!" * 10, msg=" ".join( ["ERROR"] * 3 ) )
         self.log( errMark )
-        self.log( "[FAILURE] : Missing key '{0}' marking success".format( self.globalOpts_.key ) )
+        self.log( "{fail} : Missing key '{key}' marking success".format( fail=SubmitAction.FAILURE_STR, key=self.globalOpts_.key ) )
         self.log( "Line: \"{0}\"".format( lastline.rstrip() ) )
         msg = "Step {0} has failed! See logfile {1}".format( self.name_, self.logfile_ )
         self.log( msg )
@@ -268,7 +319,7 @@ class Step( SubmitAction ):
         err     = "\n{banner}\n{msg}\n{banner}".format( banner=errMark, msg=msg )
         success = False
       else :
-        self.log( "[SUCCESS] : Step {step} reported \"{line}\"".format( step=self.name_, line=lastline.rstrip() ) )
+        self.log( "{succ} : Step {step} reported \"{line}\"".format( succ=SubmitAction.SUCCESS_STR, step=self.name_, line=lastline.rstrip() ) )
         err = None
         success = True
     except Exception as e :
@@ -290,7 +341,7 @@ class Step( SubmitAction ):
             raise Exception( err )
           else:
             # Add dependency to sign off list
-            step.depSignOff_[ depStep ] = -1
+            step.depSignOff_[ depStep ] = { "jobid" : None, "retval" : None }
             
             # Add step to parent dependency
             for parentStep in steps.values() :
