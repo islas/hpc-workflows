@@ -305,7 +305,7 @@ class Suite( SubmitAction ) :
         testSuiteLogs[ test ][ "message" ] = individualTestOpts[testIdx].redirect
 
       with open( self.logfile_, "w" ) as testSuiteLogfile :
-        json.dump( testSuiteLogs, testSuiteLogfile )
+        json.dump( testSuiteLogs, testSuiteLogfile, indent=2 )
 
     return True, [ self.tests_[ test ].logfile_ for test in tests ]
 

@@ -129,7 +129,7 @@ class Test( SubmitAction ):
       self.log_pop()
 
       with open( self.logfile_, "w" ) as f :
-        json.dump( stepsLog, f )
+        json.dump( stepsLog, f, indent=2 )
 
       errs = self.reportErrs( stepsLog )
 
