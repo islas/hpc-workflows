@@ -220,11 +220,7 @@ class Suite( SubmitAction ) :
             self.log_push()
             self.log( testLog[ "message" ] )
             self.log_pop()
-
-            with open( testLog["logfile"], "r" ) as stepsLogfile :
-              stepsLog = json.load( stepsLogfile, object_pairs_hook=OrderedDict )
-
-            self.tests_[ test ].reportErrs( stepsLog )
+            self.tests_[ test ].reportErrs( testLog["logfile"][ "steps" ] )
 
         return success, [ testLog["logfile"] for testLog in testSuiteLogs.values() ]
 
@@ -303,6 +299,11 @@ class Suite( SubmitAction ) :
         testSuiteLogs[ test ][ "logfile" ] = self.testsStatus_[ test ][ "logfile" ]
         # This isn't in the testStatus_ since it doesn't make sense to output that per-test
         testSuiteLogs[ test ][ "message" ] = individualTestOpts[testIdx].redirect
+
+        stepsLog = None
+        with open( testSuiteLogs[ test ]["logfile"], "r" ) as stepsLogfile :
+          stepsLog = json.load( stepsLogfile, object_pairs_hook=OrderedDict )
+        testSuiteLogs[ test ][ "steps" ] = stepsLog
 
       with open( self.logfile_, "w" ) as testSuiteLogfile :
         json.dump( testSuiteLogs, testSuiteLogfile, indent=2 )
