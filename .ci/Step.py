@@ -223,7 +223,7 @@ class Step( SubmitAction ):
       self.log( msg )
 
       if not self.globalOpts_.nofatal :
-        raise Exception( err )
+        raise Exception( msg )
     
     # If we get this far sign off
     if self.children_ :
