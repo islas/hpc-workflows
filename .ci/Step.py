@@ -169,7 +169,7 @@ class Step( SubmitAction ):
                               )
       for c in iter( lambda: proc.stdout.read(1), b"" ):
         if redirect :
-          output.write( c.decode( 'utf-8' ) )
+          output.write( c.decode( 'utf-8', 'replace' ) )
           output.flush()
         else :
           output.write( c )
