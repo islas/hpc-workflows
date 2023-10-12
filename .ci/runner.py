@@ -57,8 +57,7 @@ class Suite( SubmitAction ) :
   # Something happened, unsure if this is even recoverable, my guess is not
   def testError( self, e ) :
     self.log( "{fail} : Unknown test failed with exception '{err}'".format( fail=SubmitAction.FAILURE_STR, err=str(e) ) )
-    if not self.globalOpts_.nofatal :
-      raise e
+    raise e
   
   ##############################################################################
   #
