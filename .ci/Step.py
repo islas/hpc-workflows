@@ -212,6 +212,7 @@ class Step( SubmitAction ):
       else:
         self.jobid_ = 0
     else:
+      self.jobid_ = -1
       msg = ( "Error: Failed to run step '{0}' exit code {1}\n\tlog: {2}".format(
                                                                                   self.name_,
                                                                                   self.retval_,
