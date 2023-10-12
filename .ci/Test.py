@@ -146,10 +146,10 @@ class Test( SubmitAction ):
     if not success :
       self.log( "{fail} : Steps [ {steps} ] failed".format(
                                                             fail=SubmitAction.FAILURE_STR,
-                                                            steps=", ".join( [ key for key in stepResult if not testLogs[key]["success"] ] ) 
+                                                            steps=", ".join( [ key for key in stepsLog.keys() if not stepsLog[key]["success"] ] ) 
                                                             )
               )
-      self.log( "\n".join( msgs ) )
+      self.log( "\n".join( [ logs["message"] for step, logs in stepsLog.items() if not logs["success"] ] ) )
     else :
       # We got here without errors
         self.log( "{succ} : Test {name} completed successfully".format( succ=SubmitAction.SUCCESS_STR, name=self.name_ ) )
