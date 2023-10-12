@@ -306,7 +306,10 @@ class Suite( SubmitAction ) :
 
       with open( self.logfile_, "w" ) as testSuiteLogfile :
         json.dump( testSuiteLogs, testSuiteLogfile, indent=2 )
+      
+      return not ( False in [ testLog[ "success"] for testLog in testSuiteLogs.values() ] ), [ testSuiteLogs[ test ][ "logfile" ] for test in tests ]
 
+    # Unsure where all logs will be, maybe probably
     return True, [ self.tests_[ test ].logfile_ for test in tests ]
 
   # main entry point for testing
@@ -375,6 +378,8 @@ def runSuite( options ) :
                           rootDir=root
                           )
         success, logs = testSuite.run( options.tests )
+        if success and options.message :
+          print( options.message )
   else :
     testSuite = Suite( 
                           basename,
@@ -385,9 +390,8 @@ def runSuite( options ) :
                           rootDir=root
                           )
     success, logs = testSuite.run( options.tests )
-  
-  if success and options.message :
-    print( options.message )
+    if success and options.message :
+      print( options.message ) 
 
   return ( success, options.tests, logs )
 
