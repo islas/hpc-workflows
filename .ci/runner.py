@@ -138,7 +138,9 @@ class Suite( SubmitAction ) :
     posArgs = {}
     optArgs = {}
     hpcJoinOpts = copy.deepcopy( self.globalOpts_ )
+    # Overwrite certain options to force running in a particular state
     hpcJoinOpts.joinHPC = None
+    hpcJoinOpts.submitType = SubmitOptions.SubmissionType.LOCAL
 
     for key, value in vars( hpcJoinOpts ).items() :
       # Do our positional args first
