@@ -434,7 +434,7 @@ def getOptionsParser():
                       default=[]
                       )
   parser.add_argument( 
-                      "-s", "--submit",
+                      "-s", "--submitType",
                       dest="submitType",
                       help="Override type of submission to use for all steps submitted",
                       type=SubmitOptions.SubmissionType,
@@ -456,7 +456,7 @@ def getOptionsParser():
                       default=""
                       )
   parser.add_argument( 
-                      "-j", "--join",
+                      "-j", "--joinHPC",
                       dest="joinHPC",
                       help="Join test submissions into single collective HPC submission, use additional argument (MUST USE '=') to override submission resources, e.g -j='-l select=1'",
                       type=str,
@@ -479,7 +479,7 @@ def getOptionsParser():
                       default=12
                       )
   parser.add_argument( 
-                      "-g", "--global",
+                      "-g", "--globalPrefix",
                       dest="globalPrefix",
                       help="Global prefix to name step submission names, added as <PREFIX>.<rest of name>",
                       type=str,
