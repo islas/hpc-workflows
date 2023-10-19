@@ -32,14 +32,16 @@ def recursiveUpdate( dest, source ):
       dest[k] = v
   return dest
 
-class SubmitOptions( ) :
-  class SubmissionType( Enum ):
-    PBS   = "PBS"
-    SLURM = "SLURM"
-    LOCAL = "LOCAL"
+# Move this out of nested class for pickle
+class SubmissionType( Enum ):
+  PBS   = "PBS"
+  SLURM = "SLURM"
+  LOCAL = "LOCAL"
 
-    def __str__( self ) :
-      return self.value
+  def __str__( self ) :
+    return self.value
+
+class SubmitOptions( ) :
   
   ARGUMENTS_ORIGIN_KEY = "arguments_origin"
 
@@ -112,7 +114,7 @@ class SubmitOptions( ) :
     submitKeys.append( key )
     if key in self.submit_ :
       if not self.lockSubmitType_ :
-        self.submitType_ = SubmitOptions.SubmissionType( self.submit_[ key ] )
+        self.submitType_ = SubmissionType( self.submit_[ key ] )
 
 
     # Process all other keys as host-specific options
@@ -164,7 +166,7 @@ class SubmitOptions( ) :
       err   = "submission type"
     elif self.name_     is None :
       err = "submission job name"
-    elif self.submitType_ is not self.SubmissionType.LOCAL :
+    elif self.submitType_ is not SubmissionType.LOCAL :
       if self.account_ is None :
         err = "account"
       elif self.queue_ is None :
@@ -203,21 +205,21 @@ class SubmitOptions( ) :
     # Why this can't be a dict value of the enum
     # https://github.com/python/cpython/issues/88508
     submitDict = {}
-    if self.submitType_ == self.SubmissionType.PBS :
+    if self.submitType_ == SubmissionType.PBS :
       submitDict    = { "submit" : "qsub",   "resources"  : "{0}",
                         "name"   : "-N {0}", "dependency" : "-W depend={0}",
                         "queue"  : "-q {0}", "account"    : "-A {0}",
                         "output" : "-j oe -o {0}",
                         "time"   : "-l walltime={0}",
                         "wait"   : "-W block=true" }
-    elif self.submitType_ == self.SubmissionType.SLURM :
+    elif self.submitType_ == SubmissionType.SLURM :
       submitDict    = { "submit" : "sbtach", "resources"  : "{0}",
                         "name"   : "-J {0}", "dependency" : "-d {0}",
                         "queue"  : "-p {0}", "account"    : "-A {0}",
                         "output" : "-j -o {0}",
                         "time"   : "-t {0}",
                         "wait"   : "-W" }
-    elif self.submitType_ == self.SubmissionType.LOCAL :
+    elif self.submitType_ == SubmissionType.LOCAL :
       submitDict    = { "submit" : "",       "resources"  : "",
                         "name"   : "",       "dependency" : "",
                         "queue"  : "",       "account"    : "",
@@ -257,7 +259,7 @@ class SubmitOptions( ) :
                 )
           additionalArgs.extend( self.arguments_[key] )
 
-    if self.submitType_ == self.SubmissionType.LOCAL :
+    if self.submitType_ == SubmissionType.LOCAL :
       return [], additionalArgs
     else :
       cmd = [ submitDict[ "submit" ] ]
@@ -288,7 +290,7 @@ class SubmitOptions( ) :
       if self.dependencies_ is not None :
         cmd.extend( submitDict[ "dependency" ].format( self.dependencies_ ).split( " " ) )
 
-      if self.submitType_ == self.SubmissionType.PBS :
+      if self.submitType_ == SubmissionType.PBS :
         # Extra bit to delineate command + args
         cmd.append( "--" )
 
@@ -315,9 +317,9 @@ class SubmitOptions( ) :
   @staticmethod
   def parseTimelimit( timelimit, submitType ) :
     timeMatch = None
-    if submitType == SubmitOptions.SubmissionType.PBS :
+    if submitType == SubmissionType.PBS :
       timeMatch = PBS_TIMELIMIT_REGEX.match( timelimit )
-    elif submitType == SubmitOptions.SubmissionType.SLURM :
+    elif submitType == SubmissionType.SLURM :
       pass
     if timeMatch is not None :
       timeGroups = timeMatch.groupdict()
@@ -332,21 +334,21 @@ class SubmitOptions( ) :
   @staticmethod
   def formatTimelimit( timelimit, submitType ) :
     totalSeconds = timelimit.total_seconds()
-    if submitType == SubmitOptions.SubmissionType.PBS :
+    if submitType == SubmissionType.PBS :
       return '{:02}:{:02}:{:02}'.format(
                                         int(totalSeconds//3600),
                                         int(totalSeconds%3600//60),
                                         int(totalSeconds%60)
                                         )
-    elif submitType == SubmitOptions.SubmissionType.SLURM :
+    elif submitType == SubmissionType.SLURM :
       return None
 
   @staticmethod
   def resourceMemSizeDict( amountStr, submitType ) :
     memMatch = None 
-    if submitType == SubmitOptions.SubmissionType.PBS :
+    if submitType == SubmissionType.PBS :
       memMatch = PBS_RESOURCE_SIZE_REGEX.match( amountStr )
-    elif submitType == SubmitOptions.SubmissionType.SLURM :
+    elif submitType == SubmissionType.SLURM :
       pass
 
     if memMatch is not None :
@@ -398,7 +400,7 @@ class SubmitOptions( ) :
   @staticmethod
   def breakdownResources( resourceStr, submitType ) :
     resourceBreakDown = OrderedDict()
-    if   submitType == SubmitOptions.SubmissionType.PBS :
+    if   submitType == SubmissionType.PBS :
       currentKey        = ""
       # Fill first amount up, generating resource groups
       for resFound in PBS_RESOURCE_REGEX.finditer( resourceStr ) :
@@ -410,7 +412,7 @@ class SubmitOptions( ) :
           resourceBreakDown[currentKey] = {}
         resourceBreakDown[ currentKey ][ groups[ "res" ] ] = groups[ "amount" ]
 
-    elif submitType == SubmitOptions.SubmissionType.SLURM :
+    elif submitType == SubmissionType.SLURM :
       pass
 
     return resourceBreakDown
@@ -418,10 +420,10 @@ class SubmitOptions( ) :
   @staticmethod
   def formatResourceBreakdown( resourceBreakDown, submitType ) :
     finalResources = ""
-    if   submitType == SubmitOptions.SubmissionType.PBS :
+    if   submitType == SubmissionType.PBS :
       # Do PBS-specific merging
       finalResources = "-l " + " -l ".join( [ ":".join( [ "{0}={1}".format( k,v ) for k,v in resources.items() ] ) for resources in resourceBreakDown.values() ] )
-    elif submitType == SubmitOptions.SubmissionType.SLURM :
+    elif submitType == SubmissionType.SLURM :
       pass
     
     return finalResources

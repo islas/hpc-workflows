@@ -6,7 +6,7 @@ from collections import OrderedDict
 from datetime import timedelta
 
 from SubmitAction  import SubmitAction
-from SubmitOptions import SubmitOptions
+from SubmitOptions import SubmitOptions, SubmissionType
 from Step          import Step
 
 HPC_DELAY_PERIOD_SECONDS = 60
@@ -61,7 +61,7 @@ class Test( SubmitAction ):
     self.log( "Checking if results wait is required" )
     self.log_push()
     # Get all current steps submission type
-    subs = [ step.submitOptions_.submitType_ for step in self.steps_.values() if step.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL ]
+    subs = [ step.submitOptions_.submitType_ for step in self.steps_.values() if step.submitOptions_.submitType_ != SubmissionType.LOCAL ]
     
     if len( subs ) > 0 :
       self.log( "Final results will wait for all jobs complete" )
@@ -82,7 +82,7 @@ class Test( SubmitAction ):
     time.sleep( HPC_DELAY_PERIOD_SECONDS )
 
     # Filter steps already done
-    completedSteps = [ stepname for stepname in stepOrder if self.steps_[ stepname ].submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL ]
+    completedSteps = [ stepname for stepname in stepOrder if self.steps_[ stepname ].submitOptions_.submitType_ == SubmissionType.LOCAL ]
 
     while len( completedSteps ) != len( stepOrder ) :
       # Wait N seconds before checking all steps again
@@ -176,7 +176,7 @@ class Test( SubmitAction ):
 
     maxResources = ""
     maxTimelimit = timedelta()
-    hpcSubmit = [ step.submitOptions_.submitType_ for step in self.steps_.values() if step.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL ]
+    hpcSubmit = [ step.submitOptions_.submitType_ for step in self.steps_.values() if step.submitOptions_.submitType_ != SubmissionType.LOCAL ]
     if not hpcSubmit :
       self.log( "No HPC steps in this test" )
       return maxResources, maxTimelimit

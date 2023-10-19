@@ -12,7 +12,7 @@ from datetime import timedelta
 
 from Test          import Test
 from Step          import Step
-from SubmitOptions import SubmitOptions
+from SubmitOptions import SubmitOptions, SubmissionType
 from SubmitAction  import SubmitAction
 import SubmitOptions as so
 
@@ -57,7 +57,8 @@ class Suite( SubmitAction ) :
   # Something happened, unsure if this is even recoverable, my guess is not
   def testError( self, e ) :
     self.log( "{fail} : Unknown test failed with exception '{err}'".format( fail=SubmitAction.FAILURE_STR, err=str(e) ) )
-    raise e
+    print( e )
+    exit( 1 )
   
   ##############################################################################
   #
@@ -70,7 +71,7 @@ class Suite( SubmitAction ) :
   ##############################################################################
   def runHPCJoin( self, tests ) :
     # All steps must have the same submission type
-    hpcSubmit = [ step.submitOptions_.submitType_ for test in tests for step in self.tests_[ test ].steps_.values() if step.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL ]
+    hpcSubmit = [ step.submitOptions_.submitType_ for test in tests for step in self.tests_[ test ].steps_.values() if step.submitOptions_.submitType_ != SubmissionType.LOCAL ]
     allEqual  = ( not hpcSubmit or hpcSubmit.count( hpcSubmit[0] ) == len( hpcSubmit ) )
 
     if not allEqual :
@@ -80,7 +81,7 @@ class Suite( SubmitAction ) :
 
     if not hpcSubmit :
       self.log( "No HPC steps in any of these tests" )
-      return False
+      return False, [ "no logfile" ]
 
     self.log( "Computing maximum HPC resources per test..." )
     self.log_push()
@@ -140,7 +141,7 @@ class Suite( SubmitAction ) :
     hpcJoinOpts = copy.deepcopy( self.globalOpts_ )
     # Overwrite certain options to force running in a particular state
     hpcJoinOpts.joinHPC = None
-    hpcJoinOpts.submitType = SubmitOptions.SubmissionType.LOCAL
+    hpcJoinOpts.submitType = SubmissionType.LOCAL
 
     for key, value in vars( hpcJoinOpts ).items() :
       # Do our positional args first
@@ -268,17 +269,22 @@ class Suite( SubmitAction ) :
 
     self.log( "Spawning process pool of size {0} to perform {1} tests".format( self.globalOpts_.pool, len(tests) ) )
     self.log_push()
+    results = {}
     with Pool( processes=self.globalOpts_.pool ) as pool :
       for individualTest in individualTestOpts :
         self.log( "Launching test {0}".format( individualTest.tests[0] ) )
-        pool.apply_async( 
-                          runSuite,
-                          ( individualTest, ),
-                          callback=self.testComplete,
-                          error_callback=self.testError
-                          )
+        results[individualTest.tests[0]] = pool.apply_async(
+                                                            runSuite,
+                                                            ( individualTest, ),
+                                                            callback=self.testComplete
+                                                            )
       
       self.log( "Waiting for tests to complete - BE PATIENT" )
+
+      # When using an error_callback, it hangs, this instead will force quit
+      for testname, res in results.items() :
+        res.get()
+
       pool.close()
       pool.join()
 
@@ -343,13 +349,13 @@ def runSuite( options ) :
 
   if options.submitType is None :
     # Set default to LOCAL, but do not force
-    opts.submitType_ = SubmitOptions.SubmissionType.LOCAL
+    opts.submitType_ = SubmissionType.LOCAL
   else :
     opts.submitType_         = options.submitType
     opts.lockSubmitType_     = True
     print( "Forcing submission type to {0} for all steps".format( opts.submitType_ ) )
   
-  if opts.submitType_ != SubmitOptions.SubmissionType.LOCAL and opts.account_ is None:
+  if opts.submitType_ != SubmissionType.LOCAL and opts.account_ is None:
     # We don't have an account && we are not running local
     err = "Error: No account provided for non-local run."
     print( err )
@@ -367,6 +373,7 @@ def runSuite( options ) :
   basename = os.path.splitext( os.path.basename( options.testsConfig ) )[0]
 
   success = False
+  logs    = []
   # Done at the highest level
   if options.redirect is not None :
     with open( options.redirect, "w" ) as redirect :
@@ -437,8 +444,8 @@ def getOptionsParser():
                       "-s", "--submitType",
                       dest="submitType",
                       help="Override type of submission to use for all steps submitted",
-                      type=SubmitOptions.SubmissionType,
-                      choices=list( SubmitOptions.SubmissionType),
+                      type=SubmissionType,
+                      choices=list( SubmissionType),
                       default=None
                       )
   parser.add_argument( 
@@ -561,6 +568,8 @@ class Options(object):
   pass
 
 def main() :
+  print( "Using Python version : " )
+  print( sys.version )
   parser  = getOptionsParser()
   options = Options()
   parser.parse_args( namespace=options )

@@ -6,7 +6,7 @@ import re
 import io
 
 from SubmitAction  import SubmitAction
-from SubmitOptions import SubmitOptions
+from SubmitOptions import SubmitOptions, SubmissionType
 
 jobidRegex  = re.compile( r"(\d{5,})" )
 
@@ -119,7 +119,7 @@ class Step( SubmitAction ):
     self.submitted_ = True
     self.executeInfo()
   
-    redirect = ( self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL and not self.globalOpts_.inlineLocal )
+    redirect = ( self.submitOptions_.submitType_ == SubmissionType.LOCAL and not self.globalOpts_.inlineLocal )
     output = None
     err    = ""
     self.retval_ = -1
@@ -194,7 +194,7 @@ class Step( SubmitAction ):
     # if submitted properly
     if self.retval_ == 0 :
       # Process output
-      if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL :
+      if self.submitOptions_.submitType_ != SubmissionType.LOCAL :
         content = None
         if not self.globalOpts_.dryRun :
           if redirect :
@@ -216,7 +216,7 @@ class Step( SubmitAction ):
       msg = ( "Error: Failed to run step '{0}' exit code {1}\n\tlog: {2}".format(
                                                                                   self.name_,
                                                                                   self.retval_,
-                                                                                  err if self.submitOptions_.submitType_ != SubmitOptions.SubmissionType.LOCAL else
+                                                                                  err if self.submitOptions_.submitType_ != SubmissionType.LOCAL else
                                                                                     "See errors above"
                                                                                   )
             )
@@ -246,12 +246,12 @@ class Step( SubmitAction ):
       self.log( "Doing dry-run, assumed complete" )
       return True
 
-    if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.LOCAL :
+    if self.submitOptions_.submitType_ == SubmissionType.LOCAL :
       self.log( "Step is local run, already finished (why are you here?)" )
       return True
     else:
       # Probably different ways to check for PBS/SLURM
-      if self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.PBS :
+      if self.submitOptions_.submitType_ == SubmissionType.PBS :
         proc = subprocess.Popen(
                                 [ "qstat", str( self.jobid_ ) ],
                                 stdin =subprocess.PIPE,
@@ -266,7 +266,7 @@ class Step( SubmitAction ):
           return True
         else :
           return False
-      elif self.submitOptions_.submitType_ == SubmitOptions.SubmissionType.SLURM :
+      elif self.submitOptions_.submitType_ == SubmissionType.SLURM :
         self.log( "Don't know how to process SLURM job completion, assumed complete" )
         return True
     
