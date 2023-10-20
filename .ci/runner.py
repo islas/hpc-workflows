@@ -359,8 +359,7 @@ def runSuite( options ) :
     # We don't have an account && we are not running local
     err = "Error: No account provided for non-local run."
     print( err )
-    else :
-      raise Exception( err )
+    raise Exception( err )
 
   fp    = open( options.testsConfig, 'r' )
   # Go up one to get repo root - change this if you change the location of this script
