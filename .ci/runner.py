@@ -359,8 +359,6 @@ def runSuite( options ) :
     # We don't have an account && we are not running local
     err = "Error: No account provided for non-local run."
     print( err )
-    if options.nofatal :
-      return ( False, options.tests )
     else :
       raise Exception( err )
 
@@ -503,7 +501,7 @@ def getOptionsParser():
   parser.add_argument( 
                       "-nf", "--nofatal",
                       dest="nofatal",
-                      help="Force continuation of test even if scripts' return code is error",
+                      help="HPC submission - Force continuation of test even if submission return code is error",
                       default=False,
                       const=True,
                       action='store_const'
