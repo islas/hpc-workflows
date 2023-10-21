@@ -571,7 +571,10 @@ def main() :
   options = Options()
   parser.parse_args( namespace=options )
 
-  runSuite( options )
+  success, tests, logs = runSuite( options )
+
+  if not success :
+    exit( 1 )
 
 if __name__ == '__main__' :
   main()
