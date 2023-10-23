@@ -324,7 +324,7 @@ class Suite( SubmitAction ) :
   def run( self, tests ) :
     for test in tests :
       if test not in self.tests_.keys() :
-        msg = "Error: no test named '{0}'".format( tests )
+        msg = "Error: no test named '{0}'".format( test )
         self.log( msg )
         raise Exception( msg )
 
@@ -359,10 +359,7 @@ def runSuite( options ) :
     # We don't have an account && we are not running local
     err = "Error: No account provided for non-local run."
     print( err )
-    if options.nofatal :
-      return ( False, options.tests )
-    else :
-      raise Exception( err )
+    raise Exception( err )
 
   fp    = open( options.testsConfig, 'r' )
   # Go up one to get repo root - change this if you change the location of this script
@@ -503,7 +500,7 @@ def getOptionsParser():
   parser.add_argument( 
                       "-nf", "--nofatal",
                       dest="nofatal",
-                      help="Force continuation of test even if scripts' return code is error",
+                      help="HPC submission - Force continuation of test even if submission return code is error",
                       default=False,
                       const=True,
                       action='store_const'
@@ -574,7 +571,10 @@ def main() :
   options = Options()
   parser.parse_args( namespace=options )
 
-  runSuite( options )
+  success, tests, logs = runSuite( options )
+
+  if not success :
+    exit( 1 )
 
 if __name__ == '__main__' :
   main()

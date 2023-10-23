@@ -27,8 +27,9 @@ class Test( SubmitAction ):
     key = "steps"
     if key in self.options_ :
       if key == "results" :
-        self.log( "Keyword 'results' not allowed as step name, reason: reserved" )
-        exit( 1 )
+        msg = "Keyword 'results' not allowed as step name, reason: reserved"
+        self.log( msg )
+        raise Exception( msg )
       for stepname, stepDict in self.options_[ key ].items() :
         self.steps_[ stepname ] = Step( stepname, stepDict, self.submitOptions_, self.globalOpts_, parent=self.ancestry(), rootDir=self.rootDir_ )
     
@@ -132,9 +133,6 @@ class Test( SubmitAction ):
         json.dump( stepsLog, f, indent=2 )
 
       errs = self.reportErrs( stepsLog )
-
-      if errs and not self.globalOpts_.nofatal :
-        exit( 1 )
 
       self.log_pop()
     return not errs

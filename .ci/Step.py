@@ -222,7 +222,7 @@ class Step( SubmitAction ):
             )
       self.log( msg )
 
-      if not self.globalOpts_.nofatal :
+      if self.submitOptions_.submitType_ != SubmissionType.LOCAL and not self.globalOpts_.nofatal :
         raise Exception( msg )
     
     # If we get this far sign off
@@ -294,7 +294,7 @@ class Step( SubmitAction ):
     except : 
       msg = "Logfile {0} does not exist, did submission fail?".format( self.logfile_ )
       self.log( msg )
-      raise Exception( msg )
+      return success, msg
 
     try :
       self.log( "Checking last line for success <KEY PHRASE> of format '{0}'".format( self.globalOpts_.key ) )
