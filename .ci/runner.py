@@ -324,7 +324,7 @@ class Suite( SubmitAction ) :
   def run( self, tests ) :
     for test in tests :
       if test not in self.tests_.keys() :
-        msg = "Error: no test named '{0}'".format( tests )
+        msg = "Error: no test named '{0}'".format( test )
         self.log( msg )
         raise Exception( msg )
 
