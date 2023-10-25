@@ -255,6 +255,7 @@ class Suite( SubmitAction ) :
       self.log( "Requested mapping tests to alternate directories" )
       # Get new test config location to guarantee identical running inside new dir
       relTestConfig = os.path.relpath( self.globalOpts_.testsConfig, start=self.rootDir_ )
+      self.log( "Relative path to test config to use in alt directories : " + relTestConfig )
       testDirs      = []
       if len( self.globalOpts_.altdirs ) != len( tests ) :
         self.log( "Alternate directories not provided or amount less than number of tests, naming automatically" )
@@ -360,6 +361,8 @@ def runSuite( options ) :
     err = "Error: No account provided for non-local run."
     print( err )
     raise Exception( err )
+  # Quickly convert to abs path
+  options.testsConfig = os.path.abspath( options.testsConfig )
 
   fp    = open( options.testsConfig, 'r' )
   # Go up one to get repo root - change this if you change the location of this script
