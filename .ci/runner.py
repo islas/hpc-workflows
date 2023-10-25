@@ -16,6 +16,8 @@ from SubmitOptions import SubmitOptions, SubmissionType
 from SubmitAction  import SubmitAction
 import SubmitOptions as so
 
+ABS_FILEPATH = os.path.realpath( __file__ )
+
 class Suite( SubmitAction ) :
 
   AUTO_REDIRECT_TEMPLATE = "{root}/{test}_stdout.log"
@@ -170,6 +172,7 @@ class Suite( SubmitAction ) :
         else :
           args.append( "{val}".format( val=v ) )
 
+    self.log( "Using current file as launch executable : " + ABS_FILEPATH )
     stepDict = {
                   "submit_options" : 
                   {
@@ -177,7 +180,7 @@ class Suite( SubmitAction ) :
                     "resources"  : maxResources,
                     "timelimit"  : maxTimelimitStr
                   },
-                  "command"   : os.path.realpath( __file__ ),
+                  "command"   : ABS_FILEPATH,
                   "arguments" : args
                 }
     testDict = {
