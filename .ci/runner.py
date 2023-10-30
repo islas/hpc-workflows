@@ -116,9 +116,12 @@ class Suite( SubmitAction ) :
     psuedoJobs = [ copy.deepcopy(maxTimePerTest[test]) for test in tests ]
     psuedoRunning  = []
     maxTimelimit   = timedelta()
-    while len( psuedoJobs ) > 0 :
-      while len( psuedoRunning ) < self.globalOpts_.pool :
+    # Continue while we have jobs in queue or running
+    while len( psuedoJobs ) > 0 or len( psuedoRunning ) > 0 :
+      # If we have slots in our pool and jobs left, fill in
+      while len( psuedoRunning ) < self.globalOpts_.pool and len( psuedoJobs ) > 0 :
         psuedoRunning.append( psuedoJobs.pop(0) )
+
       # Find smallest job
       runFor = copy.deepcopy( min( [ timelimit for timelimit in psuedoRunning ] ) )
       maxTimelimit += runFor
