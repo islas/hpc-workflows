@@ -228,7 +228,7 @@ class Suite( SubmitAction ) :
             self.log_push()
             self.log( testLog[ "message" ] )
             self.log_pop()
-            self.tests_[ test ].reportErrs( testLog["logfile"][ "steps" ] )
+            self.tests_[ test ].reportErrs( testLog[ "steps" ] )
 
         return success, [ testLog["logfile"] for testLog in testSuiteLogs.values() ]
 
