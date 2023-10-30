@@ -2,6 +2,7 @@
 
 import json
 import sys
+import os
 import inspect
 
 def dumpFile( filename, bannerMsg="", banner="!" * 80 ) :
@@ -44,9 +45,11 @@ for test, testlog in logs.items() :
 
     print( "\n".join([( "#" * 80 )]*3 ) )
 
+print( "\n", flush=True, end="" )
+
 # Exit with bad status so people know where to look since that might be 
 # an issue as this will look "successful"
-refLogs  = getLogsPrintedStr( logs, masterLog )
+refLogs  = getLogsPrintedStr( logs, os.path.abspath( masterLog ) )
 howToUse = inspect.cleandoc(
            """~ How to use brief ~
                 Search for (remove single quotes): 
