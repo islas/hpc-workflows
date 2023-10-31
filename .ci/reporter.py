@@ -57,5 +57,10 @@ howToUse = inspect.cleandoc(
                   * '###########' (up to 80) to find beginning of a test
                   * '!!!!!!!!!! ERROR ERROR ERROR !!!!!!!!!!' to find test infrastructure reason for failure
            """ )
-
-raise Exception( "Test did not pass, refer to the printed logs above using :\n{help}\n\nOr refer to log files : \n{reflogs}".format( help=howToUse, reflogs=refLogs ) )
+print( "Test did not pass, refer to the printed logs above using :\n{help}\n\nOr refer to log files : \n{reflogs}".format( help=howToUse, reflogs=refLogs ), flush=True )
+# Force wait for stdout to be finished
+try:
+  os.fsync( sys.stdout.fileno() )
+except:
+  pass
+raise Exception( "FAILURE! Logs printed above for reference" )
