@@ -28,8 +28,13 @@ class Suite( SubmitAction ) :
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.tests_       = {}
     self.testsStatus_ = {}
-    
+
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
+
+    self.metadata_   =  {
+                          "rel_file"     : os.path.relpath( self.globalOpts_.testsConfig, start=self.rootDir_ ),
+                          "rel_offset"   : self.globalOpts_.dirOffset
+                        }
 
     self.log( "Root directory is : {0}".format( self.rootDir_ ) )
 
@@ -216,6 +221,7 @@ class Suite( SubmitAction ) :
         with open( self.logfile_, "r" ) as hpcSuiteLog :
           testSuiteLogs = json.load( hpcSuiteLog, object_pairs_hook=OrderedDict )
         
+        metadata = testSuiteLogs.pop( "metadata" )
         success = True
         for test, testLog in testSuiteLogs.items() :
 
@@ -259,9 +265,7 @@ class Suite( SubmitAction ) :
 
     if self.globalOpts_.altdirs is not None :
       self.log( "Requested mapping tests to alternate directories" )
-      # Get new test config location to guarantee identical running inside new dir
-      relTestConfig = os.path.relpath( self.globalOpts_.testsConfig, start=self.rootDir_ )
-      self.log( "Relative path to test config to use in alt directories : " + relTestConfig )
+      self.log( "Relative path to test config to use in alt directories : " + self.metadata_[ "rel_file" ] )
       testDirs      = []
       if len( self.globalOpts_.altdirs ) != len( tests ) :
         self.log( "Alternate directories not provided or amount less than number of tests, naming automatically" )
@@ -271,7 +275,7 @@ class Suite( SubmitAction ) :
         testDirs = [ altdir for altdir in self.globalOpts_.altdirs ]
 
       for testIdx, opt in enumerate( individualTestOpts ) :
-          opt.testsConfig = self.rootDir_ + "/" + testDirs[testIdx] + "/" + relTestConfig
+          opt.testsConfig = self.rootDir_ + "/" + testDirs[testIdx] + "/" + self.metadata_[ "rel_file" ]
     self.log_pop()
 
     self.log( "Spawning process pool of size {0} to perform {1} tests".format( self.globalOpts_.pool, len(tests) ) )
@@ -306,13 +310,18 @@ class Suite( SubmitAction ) :
       self.log_pop()
       # TODO Fill this in
       # Get all test logs
-      testSuiteLogs = {}
+      testSuiteLogs = { "metadata" : self.metadata_ }
+      failedTests   = []
       for testIdx, test in enumerate( tests ) :
         testSuiteLogs[ test ] = {}
         testSuiteLogs[ test ][ "success" ] = self.testsStatus_[ test ][ "success" ]
         testSuiteLogs[ test ][ "logfile" ] = self.testsStatus_[ test ][ "logfile" ]
         # This isn't in the testStatus_ since it doesn't make sense to output that per-test
-        testSuiteLogs[ test ][ "message" ] = individualTestOpts[testIdx].redirect
+        testSuiteLogs[ test ][ "stdout"  ] = individualTestOpts[testIdx].redirect
+        testSuiteLogs[ test ][ "line"    ] = SubmitAction.getLastLine( individualTestOpts[testIdx].redirect )
+
+        if not self.testsStatus_[ test ][ "success" ] :
+          failedTests.append( test )
 
         stepsLog = None
         with open( testSuiteLogs[ test ]["logfile"], "r" ) as stepsLogfile :
