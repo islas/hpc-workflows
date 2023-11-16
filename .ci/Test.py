@@ -122,7 +122,9 @@ class Test( SubmitAction ):
           stepsLog[ stepname ] = {}
           stepsLog[ stepname ][ "logfile" ] = self.steps_[ stepname ].logfile_
           stepsLog[ stepname ][ "success" ] = success
-          stepsLog[ stepname ][ "message" ] = err
+          stepsLog[ stepname ][ "line"    ] = err
+      
+      self.log_pop()
 
       self.log( "Writing relevant logfiles to view in master log file : " )
       self.log_push()

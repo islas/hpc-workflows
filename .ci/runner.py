@@ -226,9 +226,9 @@ class Suite( SubmitAction ) :
             self.log_push()
             self.log( "Test output can be found at : " )
             self.log_push()
-            self.log( testLog[ "message" ] )
+            self.log( testLog[ "stdout" ] )
             self.log_pop()
-            self.tests_[ test ].reportErrs( testLog[ "steps" ] )
+            self.tests_[ test ].reportErrs( testLog[ "steps" ], simple=True )
 
         return success, [ testLog["logfile"] for testLog in testSuiteLogs.values() ]
 
