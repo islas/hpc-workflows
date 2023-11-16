@@ -213,13 +213,10 @@ class Step( SubmitAction ):
         self.jobid_ = 0
     else:
       self.jobid_ = -1
-      msg = ( "Error: Failed to run step '{0}' exit code {1}\n\tlog: {2}".format(
-                                                                                  self.name_,
-                                                                                  self.retval_,
-                                                                                  err if self.submitOptions_.submitType_ != SubmissionType.LOCAL else
-                                                                                    "See errors above"
-                                                                                  )
-            )
+      msg = "Error: Failed to run step '{0}' exit code {1}".format(
+                                                                    self.name_,
+                                                                    self.retval_ 
+                                                                  )
       self.log( msg )
 
       if self.submitOptions_.submitType_ != SubmissionType.LOCAL and not self.globalOpts_.nofatal :
