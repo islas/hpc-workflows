@@ -315,7 +315,7 @@ class Suite( SubmitAction ) :
       self.log_push()
       self.log( self.logfile_ )
       self.log_pop()
-      # TODO Fill this in
+
       # Get all test logs
       testSuiteLogs = { "metadata" : self.metadata_ }
       failedTests   = []
@@ -602,7 +602,6 @@ def getOptionsParser():
                       const=True,
                       action='store_const'
                       )
-
   return parser
 
 class Options(object):
