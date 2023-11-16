@@ -107,4 +107,8 @@ try:
   os.fsync( sys.stdout.fileno() )
 except:
   pass
-raise Exception( "FAILURE! Logs printed above for reference" )
+
+print( "FAILURE!" )
+# Exit with bad status so people know where to look since that might be 
+# an issue as this will look "successful"
+exit( 1 )
