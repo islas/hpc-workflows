@@ -28,8 +28,13 @@ class Suite( SubmitAction ) :
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.tests_       = {}
     self.testsStatus_ = {}
-    
+
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
+
+    self.metadata_   =  {
+                          "rel_file"     : os.path.relpath( self.globalOpts_.testsConfig, start=self.rootDir_ ),
+                          "rel_offset"   : self.globalOpts_.dirOffset
+                        }
 
     self.log( "Root directory is : {0}".format( self.rootDir_ ) )
 
@@ -189,6 +194,11 @@ class Suite( SubmitAction ) :
     testDict = {
                   "steps" : { "submit" : stepDict }
                 }
+
+    # Make our current key check for multitest pass
+    self.log( "Setting keyphrase for passing to internally defined one")
+    hpcJoinOpts.key = "\[file::(\w+)\][ ]*\[SUCCESS\] : All tests passed"
+
     hpcJoinTest = Test( "joinHPC_" + "_".join( tests ), testDict, self.submitOptions_, hpcJoinOpts, parent=self.ancestry(), rootDir=self.rootDir_ )
     # No argpacks
     hpcJoinTest.steps_["submit"].submitOptions_.arguments_ = {}
@@ -216,6 +226,7 @@ class Suite( SubmitAction ) :
         with open( self.logfile_, "r" ) as hpcSuiteLog :
           testSuiteLogs = json.load( hpcSuiteLog, object_pairs_hook=OrderedDict )
         
+        metadata = testSuiteLogs.pop( "metadata" )
         success = True
         for test, testLog in testSuiteLogs.items() :
 
@@ -226,9 +237,9 @@ class Suite( SubmitAction ) :
             self.log_push()
             self.log( "Test output can be found at : " )
             self.log_push()
-            self.log( testLog[ "message" ] )
+            self.log( testLog[ "stdout" ] )
             self.log_pop()
-            self.tests_[ test ].reportErrs( testLog[ "steps" ] )
+            self.tests_[ test ].reportErrs( testLog[ "steps" ], simple=True )
 
         return success, [ testLog["logfile"] for testLog in testSuiteLogs.values() ]
 
@@ -253,15 +264,15 @@ class Suite( SubmitAction ) :
     individualTestOpts = [ copy.deepcopy( self.globalOpts_ ) for i in range( len( tests ) ) ]
     # Then apply individual tests to specific options
     for testIdx, opt in enumerate( individualTestOpts ) :
-      opt.tests    = [tests[testIdx]]
-      opt.redirect = Suite.AUTO_REDIRECT_TEMPLATE.format( root=self.rootDir_, test=tests[testIdx] )
+      opt.tests       = [tests[testIdx]]
+      opt.redirect    = Suite.AUTO_REDIRECT_TEMPLATE.format( root=self.rootDir_, test=tests[testIdx] )
+      opt.forceSingle = True
       self.log( "Automatically redirecting {0} to {1}".format(  opt.tests[0], opt.redirect ) )
+
 
     if self.globalOpts_.altdirs is not None :
       self.log( "Requested mapping tests to alternate directories" )
-      # Get new test config location to guarantee identical running inside new dir
-      relTestConfig = os.path.relpath( self.globalOpts_.testsConfig, start=self.rootDir_ )
-      self.log( "Relative path to test config to use in alt directories : " + relTestConfig )
+      self.log( "Relative path to test config to use in alt directories : " + self.metadata_[ "rel_file" ] )
       testDirs      = []
       if len( self.globalOpts_.altdirs ) != len( tests ) :
         self.log( "Alternate directories not provided or amount less than number of tests, naming automatically" )
@@ -271,7 +282,7 @@ class Suite( SubmitAction ) :
         testDirs = [ altdir for altdir in self.globalOpts_.altdirs ]
 
       for testIdx, opt in enumerate( individualTestOpts ) :
-          opt.testsConfig = self.rootDir_ + "/" + testDirs[testIdx] + "/" + relTestConfig
+          opt.testsConfig = self.rootDir_ + "/" + testDirs[testIdx] + "/" + self.metadata_[ "rel_file" ]
     self.log_pop()
 
     self.log( "Spawning process pool of size {0} to perform {1} tests".format( self.globalOpts_.pool, len(tests) ) )
@@ -304,15 +315,20 @@ class Suite( SubmitAction ) :
       self.log_push()
       self.log( self.logfile_ )
       self.log_pop()
-      # TODO Fill this in
+
       # Get all test logs
-      testSuiteLogs = {}
+      testSuiteLogs = { "metadata" : self.metadata_ }
+      failedTests   = []
       for testIdx, test in enumerate( tests ) :
         testSuiteLogs[ test ] = {}
         testSuiteLogs[ test ][ "success" ] = self.testsStatus_[ test ][ "success" ]
         testSuiteLogs[ test ][ "logfile" ] = self.testsStatus_[ test ][ "logfile" ]
         # This isn't in the testStatus_ since it doesn't make sense to output that per-test
-        testSuiteLogs[ test ][ "message" ] = individualTestOpts[testIdx].redirect
+        testSuiteLogs[ test ][ "stdout"  ] = individualTestOpts[testIdx].redirect
+        testSuiteLogs[ test ][ "line"    ] = SubmitAction.getLastLine( individualTestOpts[testIdx].redirect )
+
+        if not self.testsStatus_[ test ][ "success" ] :
+          failedTests.append( test )
 
         stepsLog = None
         with open( testSuiteLogs[ test ]["logfile"], "r" ) as stepsLogfile :
@@ -322,6 +338,13 @@ class Suite( SubmitAction ) :
       with open( self.logfile_, "w" ) as testSuiteLogfile :
         json.dump( testSuiteLogs, testSuiteLogfile, indent=2 )
       
+      # Now dump metadata so we can do list comprehension
+      testSuiteLogs.pop( "metadata" )
+      if failedTests :
+        self.log( "{fail} : Tests [ {tests} ] failed".format( fail=SubmitAction.FAILURE_STR, tests=", ".join( failedTests ) ) )
+      else :
+        self.log( "{succ} : All tests passed".format( succ=SubmitAction.SUCCESS_STR ) )
+
       return not ( False in [ testLog[ "success"] for testLog in testSuiteLogs.values() ] ), [ testSuiteLogs[ test ][ "logfile" ] for test in tests ]
 
     # Unsure where all logs will be, maybe probably
@@ -336,16 +359,20 @@ class Suite( SubmitAction ) :
         raise Exception( msg )
 
     self.setWorkingDirectory()
-    success = False
 
-    if len( tests ) == 1 :
-      if hasattr( self.globalOpts_, 'joinHPC' ) :
-        self.log( "Only one test to run, joinHPC ignored" )
-      return self.tests_[ tests[0] ].run(), [ self.tests_[ tests[0] ].logfile_ ]
-    elif hasattr( self.globalOpts_, 'joinHPC' ) :
-      return self.runHPCJoin( tests )
+    # Let joining steps into a single HPC job take precedence
+    if self.globalOpts_.forceSingle :
+      success = True
+      logs    = []
+      for test in tests :
+        success = success and self.tests_[ test ].run()
+        logs.append( self.tests_[ test ].logfile_ )
+      return success, logs
     else :
-      return self.runMultitest( tests )
+      if hasattr( self.globalOpts_, 'joinHPC' ) :
+        return self.runHPCJoin( tests )
+      else :
+        return self.runMultitest( tests )
 
 # A separated helper function to wrap this in a callable format
 def runSuite( options ) :
@@ -393,8 +420,8 @@ def runSuite( options ) :
                           rootDir=root
                           )
         success, logs = testSuite.run( options.tests )
-        if success and options.message :
-          print( options.message )
+        # if success and options.message :
+        #   print( options.message )
   else :
     testSuite = Suite( 
                           basename,
@@ -405,8 +432,8 @@ def runSuite( options ) :
                           rootDir=root
                           )
     success, logs = testSuite.run( options.tests )
-    if success and options.message :
-      print( options.message ) 
+    # if success and options.message :
+    #   print( options.message ) 
 
   return ( success, options.tests, logs )
 
@@ -559,14 +586,22 @@ def getOptionsParser():
                       const=True,
                       action='store_const'
                       )
-  parser.add_argument(
-                      "-m", "--message",
-                      dest="message",
-                      help="Message to output at the end of running tests if successful, helpful for signalling with same logic as steps",
-                      default=None,
-                      type=str
-                      )
+  # parser.add_argument(
+  #                     "-m", "--message",
+  #                     dest="message",
+  #                     help="Message to output at the end of running tests if successful, helpful for signalling with same logic as steps",
+  #                     default=None,
+  #                     type=str
+  #                     )
 
+  parser.add_argument(
+                      "-fc", "--forceSingle",
+                      dest="forceSingle",
+                      help="Force multi-testing to run in single-process mode",
+                      default=False,
+                      const=True,
+                      action='store_const'
+                      )
   return parser
 
 class Options(object):

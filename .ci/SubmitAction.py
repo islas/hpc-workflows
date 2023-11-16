@@ -85,3 +85,18 @@ class SubmitAction( ) :
   def run( self ) :
     self.setWorkingDirectory()
     return self.executeAction()
+  
+  @staticmethod
+  def getLastLine( filename ) :
+    lastline = None
+    with open( filename, "rb" ) as f :
+      # https://stackoverflow.com/a/54278929
+      try:  # catch OSError in case of a one line file 
+        f.seek( -2, os.SEEK_END )
+        while f.read(1) != b'\n' :
+          f.seek( -2, os.SEEK_CUR )
+      except OSError:
+          f.seek(0)
+      lastline = f.readline().decode()
+
+    return lastline.rstrip()

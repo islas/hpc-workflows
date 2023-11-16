@@ -122,7 +122,9 @@ class Test( SubmitAction ):
           stepsLog[ stepname ] = {}
           stepsLog[ stepname ][ "logfile" ] = self.steps_[ stepname ].logfile_
           stepsLog[ stepname ][ "success" ] = success
-          stepsLog[ stepname ][ "message" ] = err
+          stepsLog[ stepname ][ "line"    ] = err
+      
+      self.log_pop()
 
       self.log( "Writing relevant logfiles to view in master log file : " )
       self.log_push()
@@ -133,21 +135,24 @@ class Test( SubmitAction ):
         json.dump( stepsLog, f, indent=2 )
 
       errs = self.reportErrs( stepsLog )
-
-      self.log_pop()
     return not errs
   
-  def reportErrs( self, stepsLog ) :
+  def reportErrs( self, stepsLog, simple=False ) :
     success = True
     for stepname, stepResult in stepsLog.items() :
       success = success and stepResult[ "success" ]
     if not success :
+      if not simple :
+        for stepname, stepResult in stepsLog.items() :
+          if not stepResult[ "success" ] :
+            self.steps_[ stepname ].log_push()
+            self.steps_[ stepname ].reportErrs( stepResult[ "success" ], stepResult[ "line" ] )
+            self.steps_[ stepname ].log_pop()
       self.log( "{fail} : Steps [ {steps} ] failed".format(
                                                             fail=SubmitAction.FAILURE_STR,
                                                             steps=", ".join( [ key for key in stepsLog.keys() if not stepsLog[key]["success"] ] ) 
                                                             )
               )
-      self.log( "\n".join( [ logs["message"] for step, logs in stepsLog.items() if not logs["success"] ] ) )
     else :
       # We got here without errors
         self.log( "{succ} : Test {name} completed successfully".format( succ=SubmitAction.SUCCESS_STR, name=self.name_ ) )
@@ -200,7 +205,7 @@ class Test( SubmitAction ):
                                                           )
       # Add to current timelimit
       maxTimelimit += currentTimelimit
-      self.log( "[PHASE {phase}] Resources for [ {steps} ] : '{res}'".format(
+      self.log( "[PHASE {phase}] Resources for [ {steps} ] : '{res}', timelimit = {time}".format(
                                                                               phase=phase,
                                                                               steps="".join(
                                                                                             "{0:>{1}}".format(
@@ -209,7 +214,8 @@ class Test( SubmitAction ):
                                                                                                                  [ step.name_ for step in runnable ]
                                                                                                               ).split( '[:space:]' )
                                                                                             ),
-                                                                              res=currentResources
+                                                                              res=currentResources,
+                                                                              time=currentTimelimit
                                                                               )
                 )
       phase += 1
