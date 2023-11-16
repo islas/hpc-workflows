@@ -205,7 +205,7 @@ class Test( SubmitAction ):
                                                           )
       # Add to current timelimit
       maxTimelimit += currentTimelimit
-      self.log( "[PHASE {phase}] Resources for [ {steps} ] : '{res}'".format(
+      self.log( "[PHASE {phase}] Resources for [ {steps} ] : '{res}', timelimit = {time}".format(
                                                                               phase=phase,
                                                                               steps="".join(
                                                                                             "{0:>{1}}".format(
@@ -214,7 +214,8 @@ class Test( SubmitAction ):
                                                                                                                  [ step.name_ for step in runnable ]
                                                                                                               ).split( '[:space:]' )
                                                                                             ),
-                                                                              res=currentResources
+                                                                              res=currentResources,
+                                                                              time=currentTimelimit
                                                                               )
                 )
       phase += 1
