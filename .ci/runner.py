@@ -259,9 +259,11 @@ class Suite( SubmitAction ) :
     individualTestOpts = [ copy.deepcopy( self.globalOpts_ ) for i in range( len( tests ) ) ]
     # Then apply individual tests to specific options
     for testIdx, opt in enumerate( individualTestOpts ) :
-      opt.tests    = [tests[testIdx]]
-      opt.redirect = Suite.AUTO_REDIRECT_TEMPLATE.format( root=self.rootDir_, test=tests[testIdx] )
+      opt.tests       = [tests[testIdx]]
+      opt.redirect    = Suite.AUTO_REDIRECT_TEMPLATE.format( root=self.rootDir_, test=tests[testIdx] )
+      opt.forceSingle = True
       self.log( "Automatically redirecting {0} to {1}".format(  opt.tests[0], opt.redirect ) )
+
 
     if self.globalOpts_.altdirs is not None :
       self.log( "Requested mapping tests to alternate directories" )
@@ -345,16 +347,20 @@ class Suite( SubmitAction ) :
         raise Exception( msg )
 
     self.setWorkingDirectory()
-    success = False
 
-    if len( tests ) == 1 :
-      if hasattr( self.globalOpts_, 'joinHPC' ) :
-        self.log( "Only one test to run, joinHPC ignored" )
-      return self.tests_[ tests[0] ].run(), [ self.tests_[ tests[0] ].logfile_ ]
-    elif hasattr( self.globalOpts_, 'joinHPC' ) :
-      return self.runHPCJoin( tests )
+    # Let joining steps into a single HPC job take precedence
+    if self.globalOpts_.forceSingle :
+      success = True
+      logs    = []
+      for test in tests :
+        success = success and self.tests_[ test ].run()
+        logs.append( self.tests_[ test ].logfile_ )
+      return success, logs
     else :
-      return self.runMultitest( tests )
+      if hasattr( self.globalOpts_, 'joinHPC' ) :
+        return self.runHPCJoin( tests )
+      else :
+        return self.runMultitest( tests )
 
 # A separated helper function to wrap this in a callable format
 def runSuite( options ) :
@@ -569,11 +575,12 @@ def getOptionsParser():
                       action='store_const'
                       )
   parser.add_argument(
-                      "-m", "--message",
-                      dest="message",
-                      help="Message to output at the end of running tests if successful, helpful for signalling with same logic as steps",
-                      default=None,
-                      type=str
+                      "-fc", "--forceSingle",
+                      dest="forceSingle",
+                      help="Force multi-testing to run in single-process mode",
+                      default=False,
+                      const=True,
+                      action='store_const'
                       )
 
   return parser
