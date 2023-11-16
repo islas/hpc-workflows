@@ -133,21 +133,24 @@ class Test( SubmitAction ):
         json.dump( stepsLog, f, indent=2 )
 
       errs = self.reportErrs( stepsLog )
-
-      self.log_pop()
     return not errs
   
-  def reportErrs( self, stepsLog ) :
+  def reportErrs( self, stepsLog, simple=False ) :
     success = True
     for stepname, stepResult in stepsLog.items() :
       success = success and stepResult[ "success" ]
     if not success :
+      if not simple :
+        for stepname, stepResult in stepsLog.items() :
+          if not stepResult[ "success" ] :
+            self.steps_[ stepname ].log_push()
+            self.steps_[ stepname ].reportErrs( stepResult[ "success" ], stepResult[ "line" ] )
+            self.steps_[ stepname ].log_pop()
       self.log( "{fail} : Steps [ {steps} ] failed".format(
                                                             fail=SubmitAction.FAILURE_STR,
                                                             steps=", ".join( [ key for key in stepsLog.keys() if not stepsLog[key]["success"] ] ) 
                                                             )
               )
-      self.log( "\n".join( [ logs["message"] for step, logs in stepsLog.items() if not logs["success"] ] ) )
     else :
       # We got here without errors
         self.log( "{succ} : Test {name} completed successfully".format( succ=SubmitAction.SUCCESS_STR, name=self.name_ ) )

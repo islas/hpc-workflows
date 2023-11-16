@@ -269,6 +269,18 @@ class Step( SubmitAction ):
     
     self.log( "Unknown completion, assumed true to avoid infinite loop" )
     return True
+  
+  def reportErrs( self, success, lastline ) :
+    if not success :
+      errMark = "{banner} {msg} {banner}".format( banner="!" * 10, msg=" ".join( ["ERROR"] * 3 ) )
+      self.log( errMark )
+      self.log( "{fail} : Missing key '{key}' marking success".format( fail=SubmitAction.FAILURE_STR, key=self.globalOpts_.key ) )
+      self.log( "Line: \"{0}\"".format( lastline ) )
+      msg = "Step {0} has failed! See logfile {1}".format( self.name_, self.logfile_ )
+      self.log( msg )
+      self.log( errMark )
+    else :
+      self.log( "{succ} : Step {step} reported \"{line}\"".format( succ=SubmitAction.SUCCESS_STR, step=self.name_, line=lastline ) )
 
   def postProcessResults( self ) :
     # We've been requested to output our results from this step
@@ -288,6 +300,7 @@ class Step( SubmitAction ):
 
     try :
       f = open( self.logfile_, "rb" )
+      f.close()
     except : 
       msg = "Logfile {0} does not exist, did submission fail?".format( self.logfile_ )
       self.log( msg )
@@ -295,36 +308,19 @@ class Step( SubmitAction ):
 
     try :
       self.log( "Checking last line for success <KEY PHRASE> of format '{0}'".format( self.globalOpts_.key ) )
-      # https://stackoverflow.com/a/54278929
-      try:  # catch OSError in case of a one line file 
-        f.seek( -2, os.SEEK_END )
-        while f.read(1) != b'\n' :
-          f.seek( -2, os.SEEK_CUR )
-      except OSError:
-          f.seek(0)
-      lastline = f.readline().decode()
-
+      lastline = SubmitAction.getLastLine( self.logfile_ )
       findKey = re.match( self.globalOpts_.key, lastline )
-      if findKey is None :
-        errMark = "{banner} {msg} {banner}".format( banner="!" * 10, msg=" ".join( ["ERROR"] * 3 ) )
-        self.log( errMark )
-        self.log( "{fail} : Missing key '{key}' marking success".format( fail=SubmitAction.FAILURE_STR, key=self.globalOpts_.key ) )
-        self.log( "Line: \"{0}\"".format( lastline.rstrip() ) )
-        msg = "Step {0} has failed! See logfile {1}".format( self.name_, self.logfile_ )
-        self.log( msg )
-        self.log( errMark )
-        
-        err     = "\n{banner}\n{msg}\n{banner}".format( banner=errMark, msg=msg )
-        success = False
+      success = ( findKey is not None )
+      # self.reportErrs( success, lastline )
+      if success :
+        self.log( SubmitAction.SUCCESS_STR )
       else :
-        self.log( "{succ} : Step {step} reported \"{line}\"".format( succ=SubmitAction.SUCCESS_STR, step=self.name_, line=lastline.rstrip() ) )
-        err = lastline.rstrip()
-        success = True
+        self.log( SubmitAction.FAILURE_STR )
+
     except Exception as e :
       raise e
-    
     self.log_pop()
-    return success, err
+    return success, lastline
 
   @staticmethod
   def sortDependencies( steps ) :
