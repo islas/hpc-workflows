@@ -194,6 +194,11 @@ class Suite( SubmitAction ) :
     testDict = {
                   "steps" : { "submit" : stepDict }
                 }
+
+    # Make our current key check for multitest pass
+    self.log( "Setting keyphrase for passing to internally defined one")
+    hpcJoinOpts.key = "\[file::(\w+)\][ ]*\[SUCCESS\] : All tests passed"
+
     hpcJoinTest = Test( "joinHPC_" + "_".join( tests ), testDict, self.submitOptions_, hpcJoinOpts, parent=self.ancestry(), rootDir=self.rootDir_ )
     # No argpacks
     hpcJoinTest.steps_["submit"].submitOptions_.arguments_ = {}
@@ -333,6 +338,13 @@ class Suite( SubmitAction ) :
       with open( self.logfile_, "w" ) as testSuiteLogfile :
         json.dump( testSuiteLogs, testSuiteLogfile, indent=2 )
       
+      # Now dump metadata so we can do list comprehension
+      testSuiteLogs.pop( "metadata" )
+      if failedTests :
+        self.log( "{fail} : Tests [ {tests} ] failed".format( fail=SubmitAction.FAILURE_STR, tests=", ".join( failedTests ) ) )
+      else :
+        self.log( "{succ} : All tests passed".format( succ=SubmitAction.SUCCESS_STR ) )
+
       return not ( False in [ testLog[ "success"] for testLog in testSuiteLogs.values() ] ), [ testSuiteLogs[ test ][ "logfile" ] for test in tests ]
 
     # Unsure where all logs will be, maybe probably
@@ -408,8 +420,8 @@ def runSuite( options ) :
                           rootDir=root
                           )
         success, logs = testSuite.run( options.tests )
-        if success and options.message :
-          print( options.message )
+        # if success and options.message :
+        #   print( options.message )
   else :
     testSuite = Suite( 
                           basename,
@@ -420,8 +432,8 @@ def runSuite( options ) :
                           rootDir=root
                           )
     success, logs = testSuite.run( options.tests )
-    if success and options.message :
-      print( options.message ) 
+    # if success and options.message :
+    #   print( options.message ) 
 
   return ( success, options.tests, logs )
 
@@ -574,6 +586,14 @@ def getOptionsParser():
                       const=True,
                       action='store_const'
                       )
+  # parser.add_argument(
+  #                     "-m", "--message",
+  #                     dest="message",
+  #                     help="Message to output at the end of running tests if successful, helpful for signalling with same logic as steps",
+  #                     default=None,
+  #                     type=str
+  #                     )
+
   parser.add_argument(
                       "-fc", "--forceSingle",
                       dest="forceSingle",
