@@ -1,0 +1,165 @@
+#!/bin/sh
+
+justify()
+{
+  func_justify=$1
+  func_fillchar=$2
+  func_width=$3
+  shift; shift; shift
+  func_msg="$*"
+  python3 -c "print( '{msg:$func_fillchar$func_justify$func_width}'.format( msg='$func_msg' ) )"
+  # https://unix.stackexchange.com/a/267730
+  # termwidth="$(tput cols)"
+  # padding="$(printf '%0.1s' "$1"{1..64})"
+  # printf '%*.*s %s %*.*s\n' 0 "$(((termwidth-2-${#1})/2))" "$padding" "$3" 0 "$(((termwidth-1-${#1})/2))" "$padding"
+}
+
+check()
+{
+  # Very simple
+  func_filename="$1"
+  func_regex="$2"
+  grep -Eq "$func_regex" "$func_filename"
+  return $?
+}
+
+checkBetween()
+{
+  func_filename="$1"
+  func_regex="$2"
+  func_pat1="$3"
+  func_pat2="$4"
+  # Check that func_pat1 and func_pat2 exist
+  if [ $( grep -Ec "${func_pat1}" "$func_filename" ) -gt 0 ] && [ $( grep -Ec "${func_pat2}" "$func_filename" ) -gt 0 ]; then
+    # https://stackoverflow.com/a/38972737
+    awk '/'"${func_pat1}"'/,/'"${func_pat2}"'/' "$func_filename" | grep -Eq "$func_regex" "$func_filename"
+    return $?
+  else
+    return 1
+  fi
+}
+
+checkLastLine()
+{
+  func_filename="$1"
+  func_regex="$2"
+  tail -n 1 "$func_filename" | grep -Eq "$func_regex" 
+  return $?
+}
+
+checkJson()
+{
+  func_filename="$1"
+  func_location="$2"
+  func_expect="$3"
+  func_value=$( python3 -c "import json; checkDict=json.load( open( '$func_filename', 'r' ) ); print( checkDict$func_location )" 2>&1 )
+  if [ "$func_value" = "$func_expect" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+filterLines()
+{
+  func_filename="$1"
+  func_matchLines="$2"
+  func_tmpfile=$( mktemp test_XXXX )
+  sed -n -e "s@\(${func_matchLines}.*\)@\1@p" > $func_tmpfile
+
+  echo $func_tmpfile
+}
+
+reportResult()
+{
+  func_mostRecent=$1
+  func_previous=$2
+  func_expectRes=$3
+  if [ $func_mostRecent -eq $func_expectRes ]; then
+    echo SUCCESS
+  else 
+    echo FAILURE
+  fi
+
+  if [ $func_mostRecent -eq $func_expectRes ] && [ $func_previous -eq 0 ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+
+reportTest()
+{
+  func_testname="$1"
+  func_testdesc="$2"
+  func_expectRes="$3"
+  func_previousResult=$4
+  func_result=$5
+  func_report=$( reportResult $func_result $func_previousResult $func_expectRes )
+  printf "%-10s%-32s%s\n" "$func_report" "$func_testname" "$func_testdesc"
+  return $func_result
+}
+
+checkTest()
+{
+  func_testname="$1"
+  func_testdesc="$2"
+  func_expectRes=$3
+  func_previousResult=$4
+  func_filename="$5"
+  func_regex="$6"
+
+  check "$func_filename" "$func_regex"
+  reportTest $func_testname "$func_testdesc" $func_expectRes $func_previousResult $?
+  func_result=$?
+  return $func_result
+}
+
+checkTestBetween()
+{
+  func_testname="$1"
+  func_testdesc="$2"
+  func_expectRes=$3
+  func_previousResult=$4
+  func_filename="$5"
+  func_regex="$6"
+  func_pat1="$7"
+  func_pat2="$8"
+
+  checkBetween "$func_filename" "$func_regex" "$func_pat1" "$func_pat2"
+  reportTest $func_testname "$func_testdesc" $func_expectRes $func_previousResult $?
+  func_result=$?
+  return $func_result
+}
+
+checkTestLastLine()
+{
+  func_testname="$1"
+  func_testdesc="$2"
+  func_expectRes=$3
+  func_previousResult=$4
+  func_filename="$5"
+  func_regex="$6"
+
+  checkLastLine "$func_filename" "$func_regex"
+  reportTest $func_testname "$func_testdesc" $func_expectRes $func_previousResult $?
+  func_result=$?
+  return $func_result
+}
+
+checkTestJson()
+{
+  func_testname="$1"
+  func_testdesc="$2"
+  func_expectRes=$3
+  func_previousResult=$4
+  func_filename="$5"
+  func_location="$6"
+  func_expect="$7"
+
+  checkJson "$func_filename" "$func_location" "$func_expect"
+  reportTest $func_testname "$func_testdesc" $func_expectRes $func_previousResult $?
+  func_result=$?
+  return $func_result
+}
