@@ -137,8 +137,8 @@ result=$?
 
 
 checkTestBetween                                                                \
-  MAIN_STDOUT_REPORTS_SUCCESS                                                   \
-  "Test reports success at correct time"                                         \
+  MAIN_STDOUT_TEST_REPORTS_SUCCESS                                              \
+  "Test reports success at correct time"                                        \
   0 $result                                                                     \
   $redirect                                                                     \
   "\[SUCCESS\] : Test basic reported success"                                   \
@@ -152,6 +152,73 @@ checkTestLastLine                                                               
   0 $result                                                                     \
   $redirect                                                                     \
   "\[SUCCESS\] : All tests passed"
+result=$?
+
+justify "<" "*" 100 "-->[TEST STDOUT FOR TEST SUCCESS] "
+checkTest                                                                       \
+  TEST_STDOUT_CORRECT_TEST                                                      \
+  "Correct test run"                                                            \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
+  "\[test::basic\][ ]*Preparing working directory"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_ROOTDIR                                                           \
+  "Root dir is set correctly"                                                   \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
+  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
+  "\[file::00_vs_submitOptions\]"                                               \
+  "Preparing working directory"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_ROOTDIR_AT_TEST                                                   \
+  "Root dir is the same at the test level"                                      \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
+  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
+  "\[test::basic\][ ]*Preparing working directory"                              \
+  "\[test::basic\][ ]*Checking if results wait is required"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_ROOTDIR_AT_STEP                                                   \
+  "Root dir is the same at the step level"                                      \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
+  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
+  "\[step::step\][ ]*Preparing working directory"                               \
+  "\[step::step\][ ]*Submitting step step"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_STEP_REDIRECT                                                     \
+  "Step stdout is redirected"                                                   \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
+  "Local step will be redirected to logfile"                                    \
+  "\[step::step\].*START step"                                                  \
+  "\[step::step\].*STOP step"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_STEP_REPORTS_SUCCESS                                              \
+  "Step reports success at correct time"                                        \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
+  "\[step::step\][ ]*\[SUCCESS\]"                                               \
+  "\[step::step\][ ]*Results for step"                                          \
+  "\[test::basic\][ ]*Writing relevant logfiles"
+result=$?
+
+checkTestLastLine                                                               \
+  TEST_STDOUT_PASS_LASTLINE                                                     \
+  "Test reports success as last line"                                           \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
+  "\[test::basic\][ ]*\[SUCCESS\] : Test basic completed successfully"
 result=$?
 
 # Cleanup run
@@ -201,7 +268,7 @@ checkTestBetween                                                                
 result=$?
 
 checkTestBetween                                                                \
-  MAIN_STDOUT_REPORTS_FAILURE                                                   \
+  MAIN_STDOUT_TEST_REPORTS_FAILURE                                              \
   "Test reports failure at correct time"                                        \
   1 $result                                                                     \
   $redirect                                                                     \
