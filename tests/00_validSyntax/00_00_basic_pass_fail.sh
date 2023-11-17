@@ -16,6 +16,44 @@ reportTest                                                                      
   "Suite should report success when everything passes"                          \
   0 0 $result
 
+justify "<" "*" 100 "-->[LOG FILES GENERATED] "
+# Check files exist
+test -f $redirect
+reportTest                                                                      \
+  SUITE_STDOUT_CAPTURE                                                          \
+  "Suite stdout captured"                                                       \
+  0 $result $?
+result=$?
+
+test -f $CURRENT_SOURCE_DIR/basic_stdout.log
+reportTest                                                                      \
+  TEST_STDOUT_CAPTURE                                                           \
+  "Test stdout captured"                                                        \
+  0 $result $?
+result=$?
+
+test -f $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic.step.log
+reportTest                                                                      \
+  STEP_STDOUT_CAPTURE                                                           \
+  "Step stdout captured"                                                        \
+  0 $result $?
+result=$?
+
+test -f $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic.log
+reportTest                                                                      \
+  TEST_LOG_EXISTS                                                               \
+  "Test summary log generated"                                                  \
+  0 $result $?
+result=$?
+
+test -f $CURRENT_SOURCE_DIR/00_vs_submitOptions.log
+reportTest                                                                      \
+  MASTERLOG_EXISTS                                                              \
+  "Suite summary log generated"                                                 \
+  0 $result $?
+result=$?
+
+
 justify "<" "*" 100 "-->[SANITY CHECKS ON CHECK FUNCTIONS] "
 checkTestJson                                                                   \
   SANITY_CHECK_JSON_DNE                                                         \
