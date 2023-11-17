@@ -97,8 +97,9 @@ reportTest()
   func_previousResult=$4
   func_result=$5
   func_report=$( reportResult $func_result $func_previousResult $func_expectRes )
-  printf "%-10s%-32s%s\n" "$func_report" "$func_testname" "$func_testdesc"
-  return $func_result
+  func_totalResult=$?
+  printf "%-10s%-36s%s\n" "$func_report" "$func_testname" "$func_testdesc"
+  return $func_totalResult
 }
 
 checkTest()
