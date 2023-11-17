@@ -243,11 +243,14 @@ result=$?
 rm $redirect
 rm $CURRENT_SOURCE_DIR/*.log
 
+
+justify "^" "*" 100 "->[NEGATIVE TESTS]<-"
+
 # Run again, but negative tests cases
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
 $CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/00_vs_submitOptions.json -t basic-fail > $redirect 2>&1
 shouldFail=$?
-justify "<" "*" 100 "-->[NEGATIVE TESTS - SUITE FAILS OK] "
+justify "<" "*" 100 "-->[SUITE FAILS OK] "
 reportTest                                                                      \
   SUITE_FAILURE                                                                 \
   "Suite should report failure when step fails in a test"                       \
