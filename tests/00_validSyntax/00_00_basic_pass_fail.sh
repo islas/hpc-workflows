@@ -1,0 +1,195 @@
+#!/bin/sh
+# https://stackoverflow.com/a/29835459
+CURRENT_SOURCE_DIR=$( CDPATH= cd -- "$(dirname -- "$0")" && pwd )
+
+. $CURRENT_SOURCE_DIR/../scripts/checkers.sh
+
+echo "Tests for $( basename $0 )"
+
+# Run various tests from json and do checks
+redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
+$CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/00_vs_submitOptions.json -t basic > $redirect 2>&1
+result=$?
+justify "<" "*" 100 "-->[SUITE RUN OK] "
+reportTest                                                                      \
+  SUITE_SUCCESS                                                                 \
+  "Suite should report success when everything passes"                          \
+  0 0 $result
+
+justify "<" "*" 100 "-->[SANITY CHECKS ON CHECK FUNCTIONS] "
+checkTestJson                                                                   \
+  SANITY_CHECK_JSON_DNE                                                         \
+  "Make sure JSON check fails when key DNE"                                     \
+  1 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
+  "['metadata']['does_not_exist']"                                              \
+  00_vs_submitOptions.json
+result=$?
+
+
+checkTestJson                                                                   \
+  SANITY_CHECK_JSON_NOMATCH                                                     \
+  "Make sure JSON check fails when value mismatch"                              \
+  1 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
+  "['metadata']"                                                                \
+  "definitely not this"
+result=$?
+
+
+justify "<" "*" 100 "-->[MASTERLOG METADATA] "
+checkTestJson                                                                   \
+  MASTERLOG_METADATA_RELFILE                                                    \
+  "Ensure masterlog contains metadata for test file"                            \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
+  "['metadata']['rel_file']"                                                    \
+  00_vs_submitOptions.json
+result=$?
+
+
+checkTestJson                                                                   \
+  MASTERLOG_METADATA_RELDIR                                                     \
+  "Ensure masterlog contains metadata for relative dir"                         \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
+  "['metadata']['rel_offset']"                                                  \
+  ""
+result=$?
+
+justify "<" "*" 100 "-->[MASTERLOG SUCCESS] "
+checkTestJson                                                                   \
+  MASTERLOG_REPORT_TEST                                                         \
+  "Ensure masterlog reports test success"                                       \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
+  "['basic']['success']"                                                        \
+  True
+result=$?
+
+
+checkTestJson                                                                   \
+  MASTERLOG_REPORT_STEP                                                         \
+  "Ensure masterlog reports step success"                                       \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
+  "['basic']['steps']['step']['success']"                                       \
+  True
+result=$?
+
+justify "<" "*" 100 "-->[MAIN STDOUT FOR TEST SUCCESS] "
+checkTestBetween                                                                \
+  MAIN_STDOUT_ROOTDIR                                                           \
+  "Root dir is set correctly"                                                   \
+  0 $result                                                                     \
+  $redirect                                                                     \
+  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
+  "Using Python"                                                                \
+  "Preparing working directory"
+result=$?
+
+
+checkTest                                                                       \
+  MAIN_STDOUT_ONETEST                                                           \
+  "Only one test is in queue"                                                   \
+  0 $result                                                                     \
+  $redirect                                                                     \
+  "Spawning process pool of size [0-9]+ to perform 1 tests"
+result=$?
+
+
+checkTestBetween                                                                \
+  MAIN_STDOUT_REPORTS_SUCCESS                                                   \
+  "Test reports success at correct time"                                         \
+  0 $result                                                                     \
+  $redirect                                                                     \
+  "\[SUCCESS\] : Test basic reported success"                                   \
+  "Waiting for tests to complete"                                               \
+  "Test suite complete"
+result=$?
+
+checkTestLastLine                                                               \
+  MAIN_STDOUT_PASS_LASTLINE                                                     \
+  "Suite reports success as last line"                                           \
+  0 $result                                                                     \
+  $redirect                                                                     \
+  "\[SUCCESS\] : All tests passed"
+result=$?
+
+# Cleanup run
+rm $redirect
+rm $CURRENT_SOURCE_DIR/*.log
+
+# Run again, but negative tests cases
+redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
+$CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/00_vs_submitOptions.json -t basic-fail > $redirect 2>&1
+shouldFail=$?
+justify "<" "*" 100 "-->[NEGATIVE TESTS - SUITE FAILS OK] "
+reportTest                                                                      \
+  SUITE_FAILURE                                                                 \
+  "Suite should report failure when step fails in a test"                       \
+  1 $result $shouldFail
+
+
+justify "<" "*" 100 "-->[MASTERLOG FAILURE] "
+checkTestJson                                                                   \
+  MASTERLOG_REPORT_TEST                                                         \
+  "Ensure masterlog reports test failure"                                       \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
+  "['basic-fail']['success']"                                                   \
+  False
+result=$?
+
+
+checkTestJson                                                                   \
+  MASTERLOG_REPORT_STEP                                                         \
+  "Ensure masterlog reports step failure"                                       \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
+  "['basic-fail']['steps']['step']['success']"                                  \
+  False
+result=$?
+
+justify "<" "*" 100 "-->[MAIN STDOUT FOR TEST FAILURE] "
+checkTestBetween                                                                \
+  MAIN_STDOUT_REPORTS_NO_SUCCESS                                                \
+  "Test does not report success"                                                \
+  1 $result                                                                     \
+  $redirect                                                                     \
+  "\[SUCCESS\] : Test basic reported success"                                   \
+  "Waiting for tests to complete"                                               \
+  "Test suite complete"
+result=$?
+
+checkTestBetween                                                                \
+  MAIN_STDOUT_REPORTS_FAILURE                                                   \
+  "Test reports failure at correct time"                                        \
+  1 $result                                                                     \
+  $redirect                                                                     \
+  "\[FAILURE\] : Test basic reported failure"                                   \
+  "Waiting for tests to complete"                                               \
+  "Test suite complete"
+result=$?
+
+checkTestLastLine                                                               \
+  MAIN_STDOUT_NO_PASS_LASTLINE                                                  \
+  "Suite does not report success as last line"                                  \
+  1 $result                                                                     \
+  $redirect                                                                     \
+  "\[SUCCESS\] : All tests passed"
+result=$?
+
+checkTestLastLine                                                               \
+  MAIN_STDOUT_FAIL_LASTLINE                                                     \
+  "Suite reports failure as last line"                                          \
+  0 $result                                                                     \
+  $redirect                                                                     \
+  "\[FAILURE\] : Tests \[.*\] failed"
+result=$?
+
+# Cleanup run
+rm $redirect
+rm $CURRENT_SOURCE_DIR/*.log
+
+exit $result
