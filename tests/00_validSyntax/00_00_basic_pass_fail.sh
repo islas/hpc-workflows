@@ -314,6 +314,101 @@ checkTestLastLine                                                               
   "\[FAILURE\] : Tests \[.*\] failed"
 result=$?
 
+justify "<" "*" 100 "-->[TEST STDOUT FOR TEST FAILURE] "
+checkTest                                                                       \
+  TEST_STDOUT_CORRECT_TEST                                                      \
+  "Correct test run"                                                            \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
+  "\[test::basic-fail\][ ]*Preparing working directory"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_ROOTDIR                                                           \
+  "Root dir is set correctly"                                                   \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
+  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
+  "\[file::00_vs_submitOptions\]"                                               \
+  "Preparing working directory"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_ROOTDIR_AT_TEST                                                   \
+  "Root dir is the same at the test level"                                      \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
+  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
+  "\[test::basic-fail\][ ]*Preparing working directory"                         \
+  "\[test::basic-fail\][ ]*Checking if results wait is required"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_ROOTDIR_AT_STEP                                                   \
+  "Root dir is the same at the step level"                                      \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
+  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
+  "\[step::step\][ ]*Preparing working directory"                               \
+  "\[step::step\][ ]*Submitting step step"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_STEP_REDIRECT                                                     \
+  "Step stdout is redirected"                                                   \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
+  "Local step will be redirected to logfile"                                    \
+  "\[step::step\].*START step"                                                  \
+  "\[step::step\].*STOP step"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_STEP_REPORTS_FAILURE                                              \
+  "Step reports failure at correct time"                                        \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
+  "\[step::step\][ ]*\[FAILURE\]"                                               \
+  "\[step::step\][ ]*Results for step"                                          \
+  "\[test::basic-fail\][ ]*Writing relevant logfiles"
+result=$?
+
+checkTestBetween                                                                \
+  TEST_STDOUT_STEP_REPORTS_LASTLINE                                             \
+  "Step reports lastline reason for failure"                                    \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
+  "\[step::step\][ ]*Line: \".*\""                                              \
+  "\[step::step\][ ]*.*ERROR ERROR ERROR"                                       \
+  "\[step::step\][ ]*.*ERROR ERROR ERROR"
+result=$?
+
+checkTestLastLine                                                               \
+  TEST_STDOUT_FAIL_LASTLINE                                                     \
+  "Test reports failure as last line"                                           \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
+  "\[test::basic-fail\][ ]*\[FAILURE\] : Steps \[ step \] failed"
+result=$?
+
+
+justify "<" "*" 100 "-->[STEP STDOUT FOR STEP FAILURE] "
+checkTest                                                                       \
+  STEP_STDOUT_CORRECT_STEP                                                      \
+  "Correct step run"                                                            \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic-fail.step.log                   \
+  "arg0 arg1"
+result=$?
+
+checkTestLastLine                                                               \
+  STEP_STDOUT_FAIL_LASTLINE                                                     \
+  "Step does not have last line pass marker"                                    \
+  1 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic-fail.step.log                   \
+  "TEST .* PASS"
+result=$?
+
 # Cleanup run
 rm $redirect
 rm $CURRENT_SOURCE_DIR/*.log
