@@ -221,6 +221,24 @@ checkTestLastLine                                                               
   "\[test::basic\][ ]*\[SUCCESS\] : Test basic completed successfully"
 result=$?
 
+
+justify "<" "*" 100 "-->[STEP STDOUT FOR STEP SUCCESS] "
+checkTest                                                                       \
+  STEP_STDOUT_CORRECT_STEP                                                      \
+  "Correct step run"                                                            \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic.step.log                        \
+  "arg0 arg1"
+result=$?
+
+checkTestLastLine                                                               \
+  STEP_STDOUT_PASS_LASTLINE                                                     \
+  "Step reports success as last line"                                           \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic.step.log                        \
+  "TEST .* PASS"
+result=$?
+
 # Cleanup run
 rm $redirect
 rm $CURRENT_SOURCE_DIR/*.log
