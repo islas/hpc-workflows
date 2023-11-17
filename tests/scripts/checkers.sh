@@ -76,9 +76,9 @@ reportResult()
   func_previous=$2
   func_expectRes=$3
   if [ $func_mostRecent -eq $func_expectRes ]; then
-    echo SUCCESS
+    echo "  SUCCESS"
   else 
-    echo FAILURE
+    echo "X FAILURE"
   fi
 
   if [ $func_mostRecent -eq $func_expectRes ] && [ $func_previous -eq 0 ]; then
@@ -98,7 +98,7 @@ reportTest()
   func_result=$5
   func_report=$( reportResult $func_result $func_previousResult $func_expectRes )
   func_totalResult=$?
-  printf "%-10s%-36s%s\n" "$func_report" "$func_testname" "$func_testdesc"
+  printf "%-12s%-36s%s\n" "$func_report" "$func_testname" "$func_testdesc"
   return $func_totalResult
 }
 
