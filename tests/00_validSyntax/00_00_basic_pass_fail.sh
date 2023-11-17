@@ -277,6 +277,24 @@ checkTestJson                                                                   
   False
 result=$?
 
+checkTestJson                                                                   \
+  MASTERLOG_REPORT_TEST_LASTLINE                                                \
+  "Masterlog contains last line from test stdout"                               \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
+  "['basic-fail']['line']"                                                      \
+  "$( tail -n 1 $CURRENT_SOURCE_DIR/basic-fail_stdout.log )"
+result=$?
+
+checkTestJson                                                                   \
+  MASTERLOG_REPORT_STEP_LASTLINE                                                \
+  "Masterlog contains last line from step stdout"                               \
+  0 $result                                                                     \
+  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
+  "['basic-fail']['steps']['step']['line']"                                     \
+  "$( tail -n 1 $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic-fail.step.log )"
+result=$?
+
 justify "<" "*" 100 "-->[MAIN STDOUT FOR TEST FAILURE] "
 checkTestBetween                                                                \
   MAIN_STDOUT_REPORTS_NO_SUCCESS                                                \
