@@ -28,7 +28,7 @@ checkLastLine()
 {
   func_filename="$1"
   func_regex="$2"
-  tail -n 1 "$func_filename" | grep -Eq "$func_regex" 
+  tail -n 1 "$func_filename" 2> /dev/null | grep -Eq "$func_regex" 
   return $?
 }
 
