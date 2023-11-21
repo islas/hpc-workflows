@@ -17,7 +17,7 @@ checkBetween()
   # Check that func_pat1 and func_pat2 exist
   if [ $( grep -Esc "${func_pat1}" "$func_filename" ) -gt 0 ] && [ $( grep -Esc "${func_pat2}" "$func_filename" ) -gt 0 ]; then
     # https://stackoverflow.com/a/38972737
-    awk '/'"${func_pat1}"'/,/'"${func_pat2}"'/' "$func_filename" | grep -Eq "$func_regex" "$func_filename"
+    awk '/'"${func_pat1}"'/,/'"${func_pat2}"'/' "$func_filename" | grep -Eq "$func_regex"
     return $?
   else
     return 1
