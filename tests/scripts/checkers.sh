@@ -1,19 +1,4 @@
 #!/bin/sh
-
-justify()
-{
-  func_justify=$1
-  func_fillchar=$2
-  func_width=$3
-  shift; shift; shift
-  func_msg="$*"
-  python3 -c "print( '{msg:$func_fillchar$func_justify$func_width}'.format( msg='$func_msg' ) )"
-  # https://unix.stackexchange.com/a/267730
-  # termwidth="$(tput cols)"
-  # padding="$(printf '%0.1s' "$1"{1..64})"
-  # printf '%*.*s %s %*.*s\n' 0 "$(((termwidth-2-${#1})/2))" "$padding" "$3" 0 "$(((termwidth-1-${#1})/2))" "$padding"
-}
-
 check()
 {
   # Very simple
