@@ -2,6 +2,7 @@
 # https://stackoverflow.com/a/29835459
 CURRENT_SOURCE_DIR=$( CDPATH= cd -- "$(dirname -- "$0")" && pwd )
 
+. $CURRENT_SOURCE_DIR/../scripts/helpers.sh
 . $CURRENT_SOURCE_DIR/../scripts/checkers.sh
 
 echo "Tests for $( basename $0 )"
@@ -12,15 +13,14 @@ echo "  Check that when a multi-step test runs, if one step fails correct report
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
 $CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/00_vs_submitOptions.json -t basic-fail-multistep > $redirect 2>&1
 shouldFail=$?
-suite_relfile=00_vs_submitOptions.json
+suite=00_vs_submitOptions
+suite_relfile=$suite.json
 suite_reloffset=""
 suiteStdout=$redirect
-testName=basic-fail-multistep
-testStdout=$CURRENT_SOURCE_DIR/${testName}_stdout.log
-stepPassStdout=$CURRENT_SOURCE_DIR/00_vs_submitOptions.$testName.step-pass.log
-stepFailStdout=$CURRENT_SOURCE_DIR/00_vs_submitOptions.$testName.step-fail.log
-masterlog=$CURRENT_SOURCE_DIR/00_vs_submitOptions.log
-testlog=$CURRENT_SOURCE_DIR/00_vs_submitOptions.$testName.log
+
+test0=basic-fail-multistep
+test0_step0=step-pass
+test0_step1=step-fail
 
 justify "<" "*" 100 "-->[SUITE FAILS OK] "
 reportTest                                                                      \
@@ -30,40 +30,42 @@ reportTest                                                                      
 result=$?
 
 
+justify "^" "*" 100 "->[CHECK LOGS EXIST]<-"
 . $CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh \
-  $suite_relfile                                          \
-  "$suite_reloffset"                                      \
   $result                                                 \
-  $suiteStdout                                            \
-  $testStdout                                             \
-  "$stepPassStdout $stepFailStdout"                       \
-  $masterlog $testlog
+  $CURRENT_SOURCE_DIR                                     \
+  $suite                                                  \
+  "$test0=[$test0_step0,$test0_step1]"                    \
+  "$suite_relfile"                                        \
+  "$suite_reloffset"                                      \
+  $suiteStdout
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh $result $masterlog $testStdout $stepPassStdout $testName step-pass false true
+justify "^" "*" 100 "->[CHECK FAILED TEST]<-"
+. $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
+  $result $CURRENT_SOURCE_DIR $suite                        \
+  $test0 false                                              \
+  "$test0_step0=true $test0_step1=false"
 result=$?
 
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh $result $masterlog $testStdout $stepFailStdout $testName step-fail false false
+. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $CURRENT_SOURCE_DIR $suiteStdout 1
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $suiteStdout $CURRENT_SOURCE_DIR 1
+. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test0 false false
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $testName false false
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 "step-pass step-fail"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $testStdout $CURRENT_SOURCE_DIR $testName "step-pass step-fail"
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh \
+  $result $CURRENT_SOURCE_DIR $suite \
+  $test0 false "step-pass=true step-fail=false"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $testStdout $testName step-pass false true
+. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 step-pass "arg0 arg1" true
 result=$?
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $testStdout $testName step-fail false false
-result=$?
-
-. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $stepPassStdout step "arg0 arg1" true
-result=$?
-. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $stepFailStdout step "arg0 arg1" false
+. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 step-fail "arg0 arg1" false
 result=$?
 
 # Cleanup run

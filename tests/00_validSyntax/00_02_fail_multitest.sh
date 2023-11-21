@@ -95,38 +95,44 @@ result=$?
 result=$?
 
 
-# justify "^" "*" 100 "->[CHECK PASSED TEST]<-"
-# . $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
-#   $result                                                   \
-#   $masterlog                                                \
-#   $( format $testStdout_fmt testname=basic )                \
-#   $( format $stepStdout_fmt testname=basic step=step )      \
-#   basic                                                     \
-#   step                                                      \
-#   true true
-# result=$?
+justify "^" "*" 100 "->[CHECK PASSED TEST]<-"
+. $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
+  $result                                                   \
+  $CURRENT_SOURCE_DIR                                       \
+  $suite                                                    \
+  $test1                                                    \
+  true                                                      \
+  "$test1_step0=true"
+result=$?
 
-# . $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh \
-#   $result              \
-#   $suiteStdout         \
-#   basic                \
-#   false true
-# result=$?
+. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh \
+  $result              \
+  $suiteStdout         \
+  $test1               \
+  false true
+result=$?
 
-# . $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh \
-#   $result             \
-#   $( format $testStdout_fmt testname=basic ) \
-#   $CURRENT_SOURCE_DIR \
-#   $testName           \
-#   "step"
-# result=$?
-# . $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $( format $testStdout_fmt testname=basic ) basic step true true
-# result=$?
-# . $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $stepPassStdout step "arg0 arg1" true
-# result=$?
-# . $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $stepFailStdout step "arg0 arg1" false
-# result=$?
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh \
+  $result $CURRENT_SOURCE_DIR $suite \
+  $test1                             \
+  "$test1_step0"
+result=$?
 
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh \
+  $result             \
+  $CURRENT_SOURCE_DIR \
+  $suite              \
+  $test1              \
+  true               \
+  "$test1_step0=true"
+result=$?
+
+. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh \
+  $result $CURRENT_SOURCE_DIR $suite $test1 \
+  $test1_step0   \
+  "arg0 arg1" \
+  true
+result=$?
 
 # Cleanup run
 rm $redirect
