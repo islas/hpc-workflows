@@ -33,7 +33,7 @@ reportTest                                                                      
   1 0 $shouldFail
 result=$?
 
-
+justify "^" "*" 100 "->[CHECK LOGS EXIST]<-"
 . $CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh \
   $result                                                 \
   $CURRENT_SOURCE_DIR                                     \
@@ -41,9 +41,13 @@ result=$?
   "$test0=[$test0_step0,$test0_step1] $test1=[$test1_step0]" \
   "$suite_relfile"                                        \
   "$suite_reloffset"                                      \
-  $suiteStdout                                            \
+  $suiteStdout
 result=$?
 
+. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $CURRENT_SOURCE_DIR $suiteStdout 2
+result=$?
+
+justify "^" "*" 100 "->[CHECK FAILED TEST]<-"
 . $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
   $result                                                   \
   $CURRENT_SOURCE_DIR                                       \
@@ -53,9 +57,6 @@ result=$?
   "$test0_step0=true $test0_step1=false"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $CURRENT_SOURCE_DIR $suiteStdout 2
-result=$?
-
 . $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh \
   $result              \
   $suiteStdout         \
@@ -63,11 +64,9 @@ result=$?
   false false
 result=$?
 
-justify "^" "*" 100 "->[CHECK FAILED TEST]<-"
 . $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh \
-  $result             \
-  $CURRENT_SOURCE_DIR \
-  $test0              \
+  $result $CURRENT_SOURCE_DIR $suite \
+  $test0                             \
   "$test0_step0 $test0_step1"
 result=$?
 
