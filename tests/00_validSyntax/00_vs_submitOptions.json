@@ -47,6 +47,20 @@
       }
     }
   },
+  "basic-fail-multistep" :
+  {
+    "steps" :
+    {
+      "step-pass" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step-fail" :
+      {
+        "command"      : "./tests/scripts/echo_nolastline.sh"
+      }
+    }
+  },
   "overrideAtTest" :
   {
     "submit_options" : 

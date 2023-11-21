@@ -5,238 +5,47 @@ CURRENT_SOURCE_DIR=$( CDPATH= cd -- "$(dirname -- "$0")" && pwd )
 . $CURRENT_SOURCE_DIR/../scripts/checkers.sh
 
 echo "Tests for $( basename $0 )"
+echo "Purpose:"
+echo "  Check that basic functionality of simplest testing properly passes or fails with correct reports"
 
 # Run various tests from json and do checks
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
 $CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/00_vs_submitOptions.json -t basic > $redirect 2>&1
 result=$?
+suite_relfile=00_vs_submitOptions.json
+suite_reloffset=""
+suiteStdout=$redirect
+testStdout=$CURRENT_SOURCE_DIR/basic_stdout.log
+stepStdout=$CURRENT_SOURCE_DIR/00_vs_submitOptions.basic.step.log
+masterlog=$CURRENT_SOURCE_DIR/00_vs_submitOptions.log
+testlog=$CURRENT_SOURCE_DIR/00_vs_submitOptions.basic.log
+
+
 justify "<" "*" 100 "-->[SUITE RUN OK] "
 reportTest                                                                      \
   SUITE_SUCCESS                                                                 \
   "Suite should report success when everything passes"                          \
   0 0 $result
 
-justify "<" "*" 100 "-->[LOG FILES GENERATED] "
-# Check files exist
-test -f $redirect
-reportTest                                                                      \
-  SUITE_STDOUT_CAPTURE                                                          \
-  "Suite stdout captured"                                                       \
-  0 $result $?
+. $CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh $suite_relfile "$suite_reloffset" $result $suiteStdout $testStdout $stepStdout $masterlog $testlog
 result=$?
 
-test -f $CURRENT_SOURCE_DIR/basic_stdout.log
-reportTest                                                                      \
-  TEST_STDOUT_CAPTURE                                                           \
-  "Test stdout captured"                                                        \
-  0 $result $?
+. $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh $result $masterlog $testStdout $stepStdout basic step true true
 result=$?
 
-test -f $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic.step.log
-reportTest                                                                      \
-  STEP_STDOUT_CAPTURE                                                           \
-  "Step stdout captured"                                                        \
-  0 $result $?
+. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $suiteStdout $CURRENT_SOURCE_DIR 1
 result=$?
 
-test -f $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic.log
-reportTest                                                                      \
-  TEST_LOG_EXISTS                                                               \
-  "Test summary log generated"                                                  \
-  0 $result $?
+. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout basic true true
 result=$?
 
-test -f $CURRENT_SOURCE_DIR/00_vs_submitOptions.log
-reportTest                                                                      \
-  MASTERLOG_EXISTS                                                              \
-  "Suite summary log generated"                                                 \
-  0 $result $?
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $testStdout $CURRENT_SOURCE_DIR basic step
 result=$?
 
-
-justify "<" "*" 100 "-->[SANITY CHECKS ON CHECK FUNCTIONS] "
-checkTestJson                                                                   \
-  SANITY_CHECK_JSON_DNE                                                         \
-  "Make sure JSON check fails when key DNE"                                     \
-  1 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
-  "['metadata']['does_not_exist']"                                              \
-  00_vs_submitOptions.json
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $testStdout basic step true true
 result=$?
 
-
-checkTestJson                                                                   \
-  SANITY_CHECK_JSON_NOMATCH                                                     \
-  "Make sure JSON check fails when value mismatch"                              \
-  1 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
-  "['metadata']"                                                                \
-  "definitely not this"
-result=$?
-
-
-justify "<" "*" 100 "-->[MASTERLOG METADATA] "
-checkTestJson                                                                   \
-  MASTERLOG_METADATA_RELFILE                                                    \
-  "Ensure masterlog contains metadata for test file"                            \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
-  "['metadata']['rel_file']"                                                    \
-  00_vs_submitOptions.json
-result=$?
-
-
-checkTestJson                                                                   \
-  MASTERLOG_METADATA_RELDIR                                                     \
-  "Ensure masterlog contains metadata for relative dir"                         \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
-  "['metadata']['rel_offset']"                                                  \
-  ""
-result=$?
-
-justify "<" "*" 100 "-->[MASTERLOG SUCCESS] "
-checkTestJson                                                                   \
-  MASTERLOG_REPORT_TEST                                                         \
-  "Ensure masterlog reports test success"                                       \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
-  "['basic']['success']"                                                        \
-  True
-result=$?
-
-
-checkTestJson                                                                   \
-  MASTERLOG_REPORT_STEP                                                         \
-  "Ensure masterlog reports step success"                                       \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
-  "['basic']['steps']['step']['success']"                                       \
-  True
-result=$?
-
-justify "<" "*" 100 "-->[MAIN STDOUT FOR TEST SUCCESS] "
-checkTestBetween                                                                \
-  MAIN_STDOUT_ROOTDIR                                                           \
-  "Root dir is set correctly"                                                   \
-  0 $result                                                                     \
-  $redirect                                                                     \
-  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
-  "Using Python"                                                                \
-  "Preparing working directory"
-result=$?
-
-
-checkTest                                                                       \
-  MAIN_STDOUT_ONETEST                                                           \
-  "Only one test is in queue"                                                   \
-  0 $result                                                                     \
-  $redirect                                                                     \
-  "Spawning process pool of size [0-9]+ to perform 1 tests"
-result=$?
-
-
-checkTestBetween                                                                \
-  MAIN_STDOUT_TEST_REPORTS_SUCCESS                                              \
-  "Test reports success at correct time"                                        \
-  0 $result                                                                     \
-  $redirect                                                                     \
-  "\[SUCCESS\] : Test basic reported success"                                   \
-  "Waiting for tests to complete"                                               \
-  "Test suite complete"
-result=$?
-
-checkTestLastLine                                                               \
-  MAIN_STDOUT_PASS_LASTLINE                                                     \
-  "Suite reports success as last line"                                           \
-  0 $result                                                                     \
-  $redirect                                                                     \
-  "\[SUCCESS\] : All tests passed"
-result=$?
-
-justify "<" "*" 100 "-->[TEST STDOUT FOR TEST SUCCESS] "
-checkTest                                                                       \
-  TEST_STDOUT_CORRECT_TEST                                                      \
-  "Correct test run"                                                            \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
-  "\[test::basic\][ ]*Preparing working directory"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_ROOTDIR                                                           \
-  "Root dir is set correctly"                                                   \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
-  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
-  "\[file::00_vs_submitOptions\]"                                               \
-  "Preparing working directory"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_ROOTDIR_AT_TEST                                                   \
-  "Root dir is the same at the test level"                                      \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
-  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
-  "\[test::basic\][ ]*Preparing working directory"                              \
-  "\[test::basic\][ ]*Checking if results wait is required"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_ROOTDIR_AT_STEP                                                   \
-  "Root dir is the same at the step level"                                      \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
-  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
-  "\[step::step\][ ]*Preparing working directory"                               \
-  "\[step::step\][ ]*Submitting step step"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_STEP_REDIRECT                                                     \
-  "Step stdout is redirected"                                                   \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
-  "Local step will be redirected to logfile"                                    \
-  "\[step::step\].*START step"                                                  \
-  "\[step::step\].*STOP step"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_STEP_REPORTS_SUCCESS                                              \
-  "Step reports success at correct time"                                        \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
-  "\[step::step\][ ]*\[SUCCESS\]"                                               \
-  "\[step::step\][ ]*Results for step"                                          \
-  "\[test::basic\][ ]*Writing relevant logfiles"
-result=$?
-
-checkTestLastLine                                                               \
-  TEST_STDOUT_PASS_LASTLINE                                                     \
-  "Test reports success as last line"                                           \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic_stdout.log                                          \
-  "\[test::basic\][ ]*\[SUCCESS\] : Test basic completed successfully"
-result=$?
-
-
-justify "<" "*" 100 "-->[STEP STDOUT FOR STEP SUCCESS] "
-checkTest                                                                       \
-  STEP_STDOUT_CORRECT_STEP                                                      \
-  "Correct step run"                                                            \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic.step.log                        \
-  "arg0 arg1"
-result=$?
-
-checkTestLastLine                                                               \
-  STEP_STDOUT_PASS_LASTLINE                                                     \
-  "Step reports success as last line"                                           \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic.step.log                        \
-  "TEST .* PASS"
+. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $stepStdout step "arg0 arg1" true
 result=$?
 
 # Cleanup run
@@ -250,6 +59,14 @@ justify "^" "*" 100 "->[NEGATIVE TESTS]<-"
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
 $CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/00_vs_submitOptions.json -t basic-fail > $redirect 2>&1
 shouldFail=$?
+suite_relfile=00_vs_submitOptions.json
+suite_reloffset=""
+suiteStdout=$redirect
+testStdout=$CURRENT_SOURCE_DIR/basic-fail_stdout.log
+stepStdout=$CURRENT_SOURCE_DIR/00_vs_submitOptions.basic-fail.step.log
+masterlog=$CURRENT_SOURCE_DIR/00_vs_submitOptions.log
+testlog=$CURRENT_SOURCE_DIR/00_vs_submitOptions.basic-fail.log
+
 justify "<" "*" 100 "-->[SUITE FAILS OK] "
 reportTest                                                                      \
   SUITE_FAILURE                                                                 \
@@ -257,174 +74,22 @@ reportTest                                                                      
   1 $result $shouldFail
 
 
-justify "<" "*" 100 "-->[MASTERLOG FAILURE] "
-checkTestJson                                                                   \
-  MASTERLOG_REPORT_TEST                                                         \
-  "Ensure masterlog reports test failure"                                       \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
-  "['basic-fail']['success']"                                                   \
-  False
+. $CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh $suite_relfile "$suite_reloffset" $result $suiteStdout $testStdout $stepStdout $masterlog $testlog
 result=$?
 
-
-checkTestJson                                                                   \
-  MASTERLOG_REPORT_STEP                                                         \
-  "Ensure masterlog reports step failure"                                       \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
-  "['basic-fail']['steps']['step']['success']"                                  \
-  False
+. $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh $result $masterlog $testStdout $stepStdout basic-fail step false false
 result=$?
 
-checkTestJson                                                                   \
-  MASTERLOG_REPORT_TEST_LASTLINE                                                \
-  "Masterlog contains last line from test stdout"                               \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
-  "['basic-fail']['line']"                                                      \
-  "$( tail -n 1 $CURRENT_SOURCE_DIR/basic-fail_stdout.log )"
+. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout basic-fail false false
 result=$?
 
-checkTestJson                                                                   \
-  MASTERLOG_REPORT_STEP_LASTLINE                                                \
-  "Masterlog contains last line from step stdout"                               \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.log                                   \
-  "['basic-fail']['steps']['step']['line']"                                     \
-  "$( tail -n 1 $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic-fail.step.log )"
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $testStdout $CURRENT_SOURCE_DIR basic-fail step
 result=$?
 
-justify "<" "*" 100 "-->[MAIN STDOUT FOR TEST FAILURE] "
-checkTestBetween                                                                \
-  MAIN_STDOUT_REPORTS_NO_SUCCESS                                                \
-  "Test does not report success"                                                \
-  1 $result                                                                     \
-  $redirect                                                                     \
-  "\[SUCCESS\] : Test basic reported success"                                   \
-  "Waiting for tests to complete"                                               \
-  "Test suite complete"
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $testStdout basic-fail step false false
 result=$?
 
-checkTestBetween                                                                \
-  MAIN_STDOUT_TEST_REPORTS_FAILURE                                              \
-  "Test reports failure at correct time"                                        \
-  1 $result                                                                     \
-  $redirect                                                                     \
-  "\[FAILURE\] : Test basic reported failure"                                   \
-  "Waiting for tests to complete"                                               \
-  "Test suite complete"
-result=$?
-
-checkTestLastLine                                                               \
-  MAIN_STDOUT_NO_PASS_LASTLINE                                                  \
-  "Suite does not report success as last line"                                  \
-  1 $result                                                                     \
-  $redirect                                                                     \
-  "\[SUCCESS\] : All tests passed"
-result=$?
-
-checkTestLastLine                                                               \
-  MAIN_STDOUT_FAIL_LASTLINE                                                     \
-  "Suite reports failure as last line"                                          \
-  0 $result                                                                     \
-  $redirect                                                                     \
-  "\[FAILURE\] : Tests \[.*\] failed"
-result=$?
-
-justify "<" "*" 100 "-->[TEST STDOUT FOR TEST FAILURE] "
-checkTest                                                                       \
-  TEST_STDOUT_CORRECT_TEST                                                      \
-  "Correct test run"                                                            \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
-  "\[test::basic-fail\][ ]*Preparing working directory"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_ROOTDIR                                                           \
-  "Root dir is set correctly"                                                   \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
-  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
-  "\[file::00_vs_submitOptions\]"                                               \
-  "Preparing working directory"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_ROOTDIR_AT_TEST                                                   \
-  "Root dir is the same at the test level"                                      \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
-  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
-  "\[test::basic-fail\][ ]*Preparing working directory"                         \
-  "\[test::basic-fail\][ ]*Checking if results wait is required"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_ROOTDIR_AT_STEP                                                   \
-  "Root dir is the same at the step level"                                      \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
-  "Root directory is : $CURRENT_SOURCE_DIR"                                     \
-  "\[step::step\][ ]*Preparing working directory"                               \
-  "\[step::step\][ ]*Submitting step step"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_STEP_REDIRECT                                                     \
-  "Step stdout is redirected"                                                   \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
-  "Local step will be redirected to logfile"                                    \
-  "\[step::step\].*START step"                                                  \
-  "\[step::step\].*STOP step"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_STEP_REPORTS_FAILURE                                              \
-  "Step reports failure at correct time"                                        \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
-  "\[step::step\][ ]*\[FAILURE\]"                                               \
-  "\[step::step\][ ]*Results for step"                                          \
-  "\[test::basic-fail\][ ]*Writing relevant logfiles"
-result=$?
-
-checkTestBetween                                                                \
-  TEST_STDOUT_STEP_REPORTS_LASTLINE                                             \
-  "Step reports lastline reason for failure"                                    \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
-  "\[step::step\][ ]*Line: \".*\""                                              \
-  "\[step::step\][ ]*.*ERROR ERROR ERROR"                                       \
-  "\[step::step\][ ]*.*ERROR ERROR ERROR"
-result=$?
-
-checkTestLastLine                                                               \
-  TEST_STDOUT_FAIL_LASTLINE                                                     \
-  "Test reports failure as last line"                                           \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/basic-fail_stdout.log                                     \
-  "\[test::basic-fail\][ ]*\[FAILURE\] : Steps \[ step \] failed"
-result=$?
-
-
-justify "<" "*" 100 "-->[STEP STDOUT FOR STEP FAILURE] "
-checkTest                                                                       \
-  STEP_STDOUT_CORRECT_STEP                                                      \
-  "Correct step run"                                                            \
-  0 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic-fail.step.log                   \
-  "arg0 arg1"
-result=$?
-
-checkTestLastLine                                                               \
-  STEP_STDOUT_FAIL_LASTLINE                                                     \
-  "Step does not have last line pass marker"                                    \
-  1 $result                                                                     \
-  $CURRENT_SOURCE_DIR/00_vs_submitOptions.basic-fail.step.log                   \
-  "TEST .* PASS"
+. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $stepStdout step "arg0 arg1" false
 result=$?
 
 # Cleanup run
