@@ -33,7 +33,7 @@ reportTest                                                                      
 justify "^" "*" 100 "->[CHECK LOGS EXIST]<-"
 . $CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh \
   $result $CURRENT_SOURCE_DIR $suite                      \
-  "$test0=[$test0_step0]"                                 \
+  "$test0=[$test0_step0] $test1=[$test1_step0]"           \
   "$suite_relfile"                                        \
   "$suite_reloffset"                                      \
   $suiteStdout
