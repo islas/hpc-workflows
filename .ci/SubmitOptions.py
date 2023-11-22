@@ -67,7 +67,7 @@ class SubmitOptions( ) :
     self.logfile_          = None
 
     # Should normally be restricted to host-specific options
-    self.arguments_        = {}
+    self.arguments_        = OrderedDict()
 
     # Allow host-specific submit options
     self.isHostSpecific_      = isHostSpecific
