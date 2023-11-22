@@ -21,7 +21,7 @@ suiteStdout=$redirect
 test0=basic
 test0_step0=step
 
-
+justify "^" "*" 100 "->[POSITIVE TESTS]<-"
 justify "<" "*" 100 "-->[SUITE RUN OK] "
 reportTest                                                                      \
   SUITE_SUCCESS                                                                 \
@@ -49,7 +49,13 @@ result=$?
 . $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test0 true true
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=./tests/scripts/echo_normal.sh"
+result=$?
+
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=../../"
+result=$?
+
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "argset_01=\['arg0','arg1'\]" "argset_01=00_vs_submitOptions"
 result=$?
 
 . $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $CURRENT_SOURCE_DIR $suite $test0 true "$test0_step0=true"
@@ -64,7 +70,6 @@ rm $CURRENT_SOURCE_DIR/*.log
 
 
 justify "^" "*" 100 "->[NEGATIVE TESTS]<-"
-
 # Run again, but negative tests cases
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
 $CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/00_vs_submitOptions.json -t basic-fail > $redirect 2>&1
@@ -93,7 +98,7 @@ justify "^" "*" 100 "->[CHECK LOGS EXIST]<-"
   $suiteStdout
 result=$?
 
-justify "^" "*" 100 "->[CHECK PASS TEST]<-"
+justify "^" "*" 100 "->[CHECK FAIL TEST]<-"
 . $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
   $result $CURRENT_SOURCE_DIR $suite                        \
   $test0 false "$test0_step0=false"
@@ -105,7 +110,13 @@ result=$?
 . $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test0 false false
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=./tests/scripts/echo_normal.sh"
+result=$?
+
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=../../"
+result=$?
+
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "argset_01=\['arg0','arg1'\]" "argset_01=$suite"
 result=$?
 
 . $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $CURRENT_SOURCE_DIR $suite $test0 false "$test0_step0=false"

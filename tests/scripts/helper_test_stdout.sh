@@ -3,7 +3,7 @@ helper_result=$1
 helper_logdir=$2
 helper_suite=$3
 helper_testname=$4
-helper_stepnames=$5
+helper_mapping="$5"
 
 helper_testStdout_loc=$( format $testStdout_fmt logdir=$helper_logdir suite=$helper_suite testname=$helper_testname )
 
@@ -36,7 +36,9 @@ checkTestBetween                                                                
   "\[test::$helper_testname\][ ]*Checking if results wait is required"
 helper_result=$?
 
-for helper_step in $helper_stepnames; do
+
+helper_steps=$( getKeys "$helper_mapping" )
+for helper_step in $helper_steps; do
   helper_stepStdout_loc=$( format $stepStdout_fmt logdir=$helper_logdir suite=$helper_suite testname=$helper_testname step=$helper_step )
   checkTestBetween                                                                \
     TEST_STDOUT_ROOTDIR_AT_STEP                                                   \
@@ -56,6 +58,17 @@ for helper_step in $helper_stepnames; do
     "Local step will be redirected to logfile $helper_stepStdout_loc"             \
     "\[step::$helper_step\].*START $helper_step"                                  \
     "\[step::$helper_step\].*STOP $helper_step"
+  helper_result=$?
+
+  helper_stepScript=$( getValuesAtKey "$helper_mapping" $helper_step )
+  checkTestBetween                                                                \
+    TEST_STDOUT_STEP_CORRECT_SCRIPT                                               \
+    "Step script run is correctly set for [$helper_step] to $helper_stepScript"   \
+    0 $helper_result                                                              \
+    $helper_testStdout_loc                                                        \
+    "Script : $helper_stepScript" \
+    "\[step::$helper_step\][ ]*Submitting step $helper_step"                      \
+    "\[step::$helper_step\][ ]*Running command:"
   helper_result=$?
 done
 

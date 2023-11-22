@@ -41,7 +41,7 @@ for helper_testname in $helper_testnames; do
 
     checkTestBetween                                                                \
       MAIN_STDOUT_TEST_REPORTS_SUCCESS                                              \
-      "Test reports success at correct time"                                        \
+      "Test [$helper_testname] reports success at correct time"                     \
       0 $helper_result                                                              \
       $helper_suiteStdout                                                           \
       "\[SUCCESS\] : Test $helper_testname reported success"                        \
@@ -53,7 +53,7 @@ for helper_testname in $helper_testnames; do
 
     checkTestBetween                                                                \
       MAIN_STDOUT_REPORTS_NO_SUCCESS                                                \
-      "Test does not report success"                                                \
+      "Test [$helper_testname] does not report success"                             \
       1 $helper_result                                                              \
       $helper_suiteStdout                                                           \
       "\[SUCCESS\] : Test $helper_testname reported success"                        \
@@ -63,7 +63,7 @@ for helper_testname in $helper_testnames; do
 
     checkTestBetween                                                                \
       MAIN_STDOUT_TEST_REPORTS_FAILURE                                              \
-      "Test reports failure at correct time"                                        \
+      "Test [$helper_testname] reports failure at correct time"                     \
       0 $helper_result                                                              \
       $helper_suiteStdout                                                           \
       "\[FAILURE\] : Test $helper_testname reported failure"                        \

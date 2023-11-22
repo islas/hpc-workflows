@@ -55,7 +55,16 @@ result=$?
 . $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test0 false false
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 "step-pass step-fail"
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 "step-pass=./tests/scripts/echo_normal.sh step-fail=./tests/scripts/echo_nolastline.sh"
+result=$?
+
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=../../ $test0_step1=../../"
+result=$?
+
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "argset_01=\['arg0','arg1'\]" "argset_01=$suite"
+result=$?
+
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 "argset_01=\['arg0','arg1'\]" "argset_01=$suite"
 result=$?
 
 . $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh \

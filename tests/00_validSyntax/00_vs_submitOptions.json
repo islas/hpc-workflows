@@ -65,14 +65,14 @@
   {
     "submit_options" : 
     {
-      "working_directory" : "../../",
+      "working_directory" : "../",
       "resources"  : "list your resources here based on HPC specific system",
       "queue"      : "economy",
       "timelimit"  : "01:00:00",
       "wait"       : "True if set, use with caution",
       "arguments"  : 
       { 
-        "argset_01"            : [ "arg0", "arg1" ],
+        "argset_01"            : [ "arg2", "arg3" ],
         ".*regex.*::argset_02" : [ "argRegex" ]
       },
       "submission"  : "LOCAL",
@@ -95,7 +95,7 @@
     {
       "step" :
       {
-        "command"      : "./tests/scripts/echo_normal.sh"
+        "command"      : "../tests/scripts/echo_normal.sh"
       }
     }
   },
@@ -103,14 +103,14 @@
   {
     "submit_options" : 
     {
-      "working_directory" : "../../",
+      "working_directory" : "../",
       "resources"  : "list your resources here based on HPC specific system",
       "queue"      : "economy",
       "timelimit"  : "01:00:00",
       "wait"       : "True if set, use with caution",
       "arguments"  : 
       { 
-        "argset_01"            : [ "arg0", "arg1" ],
+        "argset_01"            : [ "arg2", "arg3" ],
         ".*regex.*::argset_02" : [ "argRegex" ]
       },
       "submission"  : "LOCAL",
@@ -131,18 +131,18 @@
     },
     "steps" :
     {
-      "step" :
+      "stepOverride" :
       {
         "submit_options" :
         {
-          "working_directory" : "../../",
+          "working_directory" : ".",
           "resources"  : "list your resources here based on HPC specific system",
           "queue"      : "economy",
           "timelimit"  : "01:00:00",
           "wait"       : "True if set, use with caution",
           "arguments"  : 
           { 
-            "argset_01"            : [ "arg0", "arg1" ],
+            "argset_01"            : [ "arg4", "arg5" ],
             ".*regex.*::argset_02" : [ "argRegex" ]
           },
           "submission"  : "LOCAL",
@@ -161,7 +161,7 @@
             "submission"  : "LOCAL"
           }
         },
-        "command"      : "./tests/scripts/echo_normal.sh"
+        "command"      : "../../tests/scripts/echo_normal.sh"
       }
     }
   },
@@ -177,7 +177,7 @@
   },
   "overrideAtTest-regex" :
   {
-    "submit_options" : { "arguments" : { ".*regex.*::argset_02" : [ "override" ] } },
+    "submit_options" : { "arguments" : { ".*regex.*::argset_02" : [ "overrideAtTest" ] } },
     "steps" :
     {
       "step" :
@@ -190,7 +190,7 @@
   {
     "steps" :
     {
-      "submit_options" : { "arguments" : { ".*regex.*::argset_02" : [ "override" ] } },
+      "submit_options" : { "arguments" : { ".*regex.*::argset_02" : [ "overrideAtStep" ] } },
       "step" :
       {
         "command"      : "./tests/scripts/echo_normal.sh"
