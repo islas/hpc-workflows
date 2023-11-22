@@ -202,17 +202,17 @@
       }
     }
   },
-  "applyAtStep-sameregex" :
+  "applyAtSpecificSteps-sameregex" :
   {
     "submit_options" : 
     { 
       "arguments" : 
       { 
         ".*regex.*::argset_02" : [ ],
-        ".*setA.*::argRegex" : [ "setA" ],
         ".*setB.*::argRegex" : [ "setB" ],
-        ".*setC.*::argRegex" : [ "setC" ],
-        ".*setD.*::argRegex" : [ "setD" ]
+        ".*setA.*::argRegex" : [ "setA" ],
+        ".*setD.*::argRegex" : [ "setD" ],
+        ".*setC.*::argRegex" : [ "setC" ]
       }
     },
     "steps" :
