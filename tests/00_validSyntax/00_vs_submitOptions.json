@@ -163,9 +163,9 @@
   {
     "steps" :
     {
-      "submit_options" : { "arguments" : { ".*regex.*::argset_02" : [ "overrideAtStep" ] } },
       "step" :
       {
+        "submit_options" : { "arguments" : { ".*regex.*::argset_02" : [ "overrideAtStep" ] } },
         "command"      : "./tests/scripts/echo_normal.sh"
       }
     }
