@@ -170,13 +170,14 @@
       }
     }
   },
-  "applyAtStep-regex" :
+  "applyAtSpecificAncestry-regex" :
   {
     "submit_options" : 
     { 
       "arguments" : 
-      { 
-        ".*regex.*::argset_02" : [ ],
+      {
+        ".*regex.*::argset_02" : [    ],
+        "applyAtWrongAncestry.*set.*::argRegexNoMatch" : [ "setNone" ],
         ".*setA.*::argRegexA" : [ "setA" ],
         ".*setB.*::argRegexB" : [ "setB" ]
       }
