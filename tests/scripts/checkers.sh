@@ -17,7 +17,24 @@ checkBetween()
   # Check that func_pat1 and func_pat2 exist
   if [ $( grep -Esc "${func_pat1}" "$func_filename" ) -gt 0 ] && [ $( grep -Esc "${func_pat2}" "$func_filename" ) -gt 0 ]; then
     # https://stackoverflow.com/a/38972737
+    # Maybe consider using https://stackoverflow.com/a/55222083 if this becomes insufficient
     awk '/'"${func_pat1}"'/,/'"${func_pat2}"'/' "$func_filename" | grep -Eq "$func_regex"
+    return $?
+  else
+    return 1
+  fi
+}
+
+getLineBetween()
+{
+  func_filename="$1"
+  func_regex="$2"
+  func_pat1="$3"
+  func_pat2="$4"
+  # Check that func_pat1 and func_pat2 exist
+  if [ $( grep -Esc "${func_pat1}" "$func_filename" ) -gt 0 ] && [ $( grep -Esc "${func_pat2}" "$func_filename" ) -gt 0 ]; then
+    # https://stackoverflow.com/a/38972737
+    awk '/'"${func_pat1}"'/,/'"${func_pat2}"'/{print NR, $0}' "$func_filename" | grep -E "$func_regex"
     return $?
   else
     return 1
