@@ -9,17 +9,53 @@ on:
 jobs:
   build:
     if : ${{ github.event.label.name == 'test' }} || ${{ github.event_name == 'push' }}
-    runs-on: WSL
+    runs-on: ubuntu
     permissions:
       contents: read
       pull-requests: write
     steps:
     - uses: actions/checkout@v3
-    - name: Run test 0
-      run: |
-        echo "Hello World!"
-        ./.ci/runner.py .ci/example.json test-id-0 -d ..
     
+    - name: Run test 00_01
+      run: |
+        ./tests/00_*/00_01*
+    
+    - name: Run test 00_02
+      run: |
+        ./tests/00_*/00_02*
+      
+    - name: Run test 00_03
+      run: |
+        ./tests/00_*/00_03*
+    
+    - name: Run test 00_04
+      run: |
+        ./tests/00_*/00_04*
+    
+    - name: Run test 00_05
+      run: |
+        ./tests/00_*/00_05*
+    
+    - name: Run test 00_06
+      run: |
+        ./tests/00_*/00_06*
+    
+    - name: Run test 00_07
+      run: |
+        ./tests/00_*/00_07*
+    
+    - name: Run test 00_08
+      run: |
+        ./tests/00_*/00_08*
+    
+    - name: Run test 00_09
+      run: |
+        ./tests/00_*/00_09*
+    
+    - name: Run test 00_10
+      run: |
+        ./tests/00_*/00_10*
+
     - name : Remove 'test' label
       if : ${{ github.event.label.name == 'test' }}
       env:
