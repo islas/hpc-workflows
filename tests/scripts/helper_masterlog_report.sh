@@ -6,6 +6,10 @@ helper_testname=$4
 helper_testPass=$5
 helper_mapping="$6"
 
+SOURCE_DIR=$( CDPATH= cd -- "$(dirname -- "$0")" && pwd )
+. $SOURCE_DIR/helpers.sh
+. $SOURCE_DIR/checkers.sh
+
 helper_masterlog=$( format $masterlog_fmt logdir=$helper_logdir suite=$helper_suite )
 
 if [ "$helper_testPass" = true ]; then
@@ -75,4 +79,4 @@ for helper_step in $helper_steps; do
 
 done
 
-return $helper_result
+exit $helper_result

@@ -4,6 +4,10 @@ helper_logdir=$2
 helper_suiteStdout=$3
 helper_numTests=$4
 
+SOURCE_DIR=$( CDPATH= cd -- "$(dirname -- "$0")" && pwd )
+. $SOURCE_DIR/helpers.sh
+. $SOURCE_DIR/checkers.sh
+
 justify "<" "*" 100 "-->[MAIN STDOUT] "
 checkTestBetween                                                                \
   MAIN_STDOUT_ROOTDIR                                                           \
@@ -24,4 +28,4 @@ checkTest                                                                       
   "Spawning process pool of size [0-9]+ to perform $helper_numTests tests"
 helper_result=$?
 
-return $helper_result
+exit $helper_result

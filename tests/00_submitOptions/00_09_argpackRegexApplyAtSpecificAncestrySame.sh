@@ -33,7 +33,7 @@ reportTest                                                                      
   0 0 $result
 
 justify "^" "*" 100 "->[CHECK LOGS EXIST]<-"
-. $CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh \
+$CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh \
   $result $CURRENT_SOURCE_DIR $suite                      \
   "$test0=[$test0_step0,$test0_step1,$test0_step2,$test0_step3]"           \
   "$suite_relfile"                                        \
@@ -42,32 +42,32 @@ justify "^" "*" 100 "->[CHECK LOGS EXIST]<-"
 result=$?
 
 justify "^" "*" 100 "->[CHECK REGEX TEST]<-"
-. $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
+$CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
   $result $CURRENT_SOURCE_DIR $suite                        \
   $test0 true "$test0_step0=true"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $CURRENT_SOURCE_DIR $suiteStdout 1
+$CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $CURRENT_SOURCE_DIR $suiteStdout 1
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test0 true true
+$CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test0 true true
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 \
   "$test0_step0=./tests/scripts/echo_normal.sh \
    $test0_step1=./tests/scripts/echo_normal.sh \
    $test0_step2=./tests/scripts/echo_normal.sh \
    $test0_step3=./tests/scripts/echo_normal.sh"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test0 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test0 \
   "$test0_step0=../../ \
    $test0_step1=../../ \
    $test0_step2=../../ \
    $test0_step3=../../"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $CURRENT_SOURCE_DIR $suite $test0 true \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $CURRENT_SOURCE_DIR $suite $test0 true \
   "$test0_step0=true \
    $test0_step1=true \
    $test0_step2=true \
@@ -75,7 +75,7 @@ result=$?
 result=$?
 
 justify "^" "*" 100 "->[CHECK [$test0_step0] STEP ]<-"
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 \
   "\.\*setB\.\*::argRegex=\['setB'\]             \
    \.\*setA\.\*::argRegex=\['setA'\]             \
    argset_01=\['arg0','arg1'\]                    \
@@ -86,18 +86,18 @@ justify "^" "*" 100 "->[CHECK [$test0_step0] STEP ]<-"
    \.\*regex\.\*::argset_02=$test0"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 \
   "\.\*setD\.\*::argRegex=\['setD'\]             \
    \.\*setC\.\*::argRegex=\['setC'\]" \
   "\.\*setD\.\*::argRegex=$test0                \
    \.\*setC\.\*::argRegex=$test0" false
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "setB setA arg0 arg1" true
+$CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "setB setA arg0 arg1" true
 result=$?
 
 justify "^" "*" 100 "->[CHECK [$test0_step1] STEP ]<-"
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 \
   "\.\*setD\.\*::argRegex=\['setD'\]             \
    \.\*setC\.\*::argRegex=\['setC'\]             \
    argset_01=\['arg0','arg1'\]                    \
@@ -108,7 +108,7 @@ justify "^" "*" 100 "->[CHECK [$test0_step1] STEP ]<-"
    \.\*regex\.\*::argset_02=$test0"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 \
   "\.\*setB\.\*::argRegex=\['setB'\]             \
    \.\*setA\.\*::argRegex=\['setA'\]" \
   "\.\*setB\.\*::argRegex=$test0                \
@@ -116,11 +116,11 @@ result=$?
 result=$?
 
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 "setD setC arg0 arg1" true
+$CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 "setD setC arg0 arg1" true
 result=$?
 
 justify "^" "*" 100 "->[CHECK [$test0_step2] STEP ]<-"
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step2 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step2 \
   "\.\*setB\.\*::argRegex=\['setB'\]             \
    \.\*setA\.\*::argRegex=\['setA'\]             \
    \.\*setD\.\*::argRegex=\['setD'\]             \
@@ -135,20 +135,18 @@ justify "^" "*" 100 "->[CHECK [$test0_step2] STEP ]<-"
    \.\*regex\.\*::argset_02=$test0"
 result=$?
 
-result=$?
-
-. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step2 "setB setA setD setC arg0 arg1" true
+$CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step2 "setB setA setD setC arg0 arg1" true
 result=$?
 
 justify "^" "*" 100 "->[CHECK [$test0_step3] STEP ]<-"
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step3 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step3 \
   "argset_01=\['arg0','arg1'\]                    \
    \.\*regex\.\*::argset_02=\[\]" \
   "argset_01=$suite                              \
    \.\*regex\.\*::argset_02=$test0"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step3 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step3 \
   "\.\*setB\.\*::argRegex=\['setB'\]             \
    \.\*setA\.\*::argRegex=\['setA'\]             \
    \.\*setD\.\*::argRegex=\['setD'\]             \
@@ -159,7 +157,7 @@ result=$?
    \.\*setC\.\*::argRegex=$test0" false
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step3 "arg0 arg1" true
+$CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step3 "arg0 arg1" true
 result=$?
 
 

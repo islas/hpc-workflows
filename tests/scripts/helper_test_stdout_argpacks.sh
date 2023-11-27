@@ -8,6 +8,10 @@ helper_mapping="$6"
 helper_mappingOrigin="$7"
 helper_argpackExist="$8"
 
+SOURCE_DIR=$( CDPATH= cd -- "$(dirname -- "$0")" && pwd )
+. $SOURCE_DIR/helpers.sh
+. $SOURCE_DIR/checkers.sh
+
 helper_testStdout_loc=$( format $testStdout_fmt logdir=$helper_logdir suite=$helper_suite testname=$helper_testname )
 
 justify "<" "*" 100 "-->[TEST [$helper_testname] STDOUT ARGPACKS] "
@@ -59,4 +63,4 @@ for helper_argpack in $helper_argpacks; do
   fi
 done
 
-return $helper_result
+exit $helper_result

@@ -7,6 +7,10 @@ helper_step=$5
 helper_expected="$6"
 helper_pass=$7
 
+SOURCE_DIR=$( CDPATH= cd -- "$(dirname -- "$0")" && pwd )
+. $SOURCE_DIR/helpers.sh
+. $SOURCE_DIR/checkers.sh
+
 helper_stepStdout_loc=$( format $stepStdout_fmt logdir=$helper_logdir suite=$helper_suite testname=$helper_testname step=$helper_step )
 
 
@@ -38,4 +42,4 @@ else
   helper_result=$?
 fi
 
-return $helper_result
+exit $helper_result

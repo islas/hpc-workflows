@@ -5,6 +5,10 @@ helper_suite=$3
 helper_testname=$4
 helper_mapping=$5
 
+SOURCE_DIR=$( CDPATH= cd -- "$(dirname -- "$0")" && pwd )
+. $SOURCE_DIR/helpers.sh
+. $SOURCE_DIR/checkers.sh
+
 helper_testStdout_loc=$( format $testStdout_fmt logdir=$helper_logdir suite=$helper_suite testname=$helper_testname )
 
 justify "<" "*" 100 "-->[TEST [$helper_testname] STDOUT WORKING DIRECTORY] "
@@ -34,4 +38,4 @@ for helper_step in $helper_steps; do
   helper_result=$?
 done
 
-return $helper_result
+exit $helper_result

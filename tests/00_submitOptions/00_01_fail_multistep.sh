@@ -32,7 +32,7 @@ result=$?
 
 
 justify "^" "*" 100 "->[CHECK LOGS EXIST]<-"
-. $CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh \
+$CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh \
   $result                                                 \
   $CURRENT_SOURCE_DIR                                     \
   $suite                                                  \
@@ -43,39 +43,39 @@ justify "^" "*" 100 "->[CHECK LOGS EXIST]<-"
 result=$?
 
 justify "^" "*" 100 "->[CHECK FAILED TEST]<-"
-. $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
+$CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
   $result $CURRENT_SOURCE_DIR $suite                        \
   $test0 false                                              \
   "$test0_step0=true $test0_step1=false"
 result=$?
 
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $CURRENT_SOURCE_DIR $suiteStdout 1
+$CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $CURRENT_SOURCE_DIR $suiteStdout 1
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test0 false false
+$CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test0 false false
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 "step-pass=./tests/scripts/echo_normal.sh step-fail=./tests/scripts/echo_nolastline.sh"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 "step-pass=./tests/scripts/echo_normal.sh step-fail=./tests/scripts/echo_nolastline.sh"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=../../ $test0_step1=../../"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=../../ $test0_step1=../../"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "argset_01=\['arg0','arg1'\]" "argset_01=$suite"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "argset_01=\['arg0','arg1'\]" "argset_01=$suite"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 "argset_01=\['arg0','arg1'\]" "argset_01=$suite"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 "argset_01=\['arg0','arg1'\]" "argset_01=$suite"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh \
   $result $CURRENT_SOURCE_DIR $suite \
   $test0 false "step-pass=true step-fail=false"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 step-pass "arg0 arg1" true
+$CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 step-pass "arg0 arg1" true
 result=$?
-. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 step-fail "arg0 arg1" false
+$CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 step-fail "arg0 arg1" false
 result=$?
 
 # Cleanup run
