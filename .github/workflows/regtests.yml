@@ -58,7 +58,7 @@ jobs:
         ./tests/00_*/00_10*
 
     - name : Remove 'test' label
-      if : ${{ github.event.label.name == 'test' }}
+      if : ${{ !cancelled() && github.event.label.name == 'test' }}
       env:
         PR_NUMBER: ${{ github.event.number }}
       run: |
