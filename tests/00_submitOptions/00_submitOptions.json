@@ -202,7 +202,7 @@
       }
     }
   },
-  "applyAtSpecificSteps-sameregex" :
+  "applyAtSpecificAncestry-sameregex" :
   {
     "submit_options" : 
     { 
@@ -235,7 +235,7 @@
       }
     }
   },
-  "applyAtStep-alphaorderregex" :
+  "applyAtSpecificAncestry-alpharegex" :
   {
     "submit_options" : 
     { 
@@ -243,7 +243,7 @@
       { 
         ".*regex.*::argset_02" : [ ],
         ".*setA.*::shouldBeLast" : [ "setA" ],
-        ".*setB.*::beSecond" : [ "setB" ],
+        ".*setB.*::beSecondSet"  : [ "setB" ],
         ".*setC.*::needsToBeBetween_b_and_s" : [ "setC" ],
         ".*setD.*::alwaysFirst" : [ "setD" ]
       }
