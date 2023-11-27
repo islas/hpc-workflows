@@ -1,0 +1,271 @@
+{
+  "submit_options" :
+  {
+    "working_directory" : "../../",
+    "resources"  : "list your resources here based on HPC specific system",
+    "queue"      : "economy",
+    "timelimit"  : "01:00:00",
+    "wait"       : "True if set, use with caution",
+    "arguments"  : 
+    { 
+      "argset_01"            : [ "arg0", "arg1" ],
+      ".*regex.*::argset_02" : [ "argRegex" ]
+    },
+    "submission"  : "LOCAL",
+    "host-specific"   :
+    {
+      "working_directory" : "../../",
+      "resources"  : "list your resources here based on HPC specific system",
+      "queue"      : "economy",
+      "timelimit"  : "01:00:00",
+      "wait"       : "True if set, use with caution",
+      "arguments"  : 
+      { 
+        "argset_01"            : [ "arg0", "arg1" ],
+        ".*regex.*::argset_02" : [ "argRegex" ]
+      },
+      "submission"  : "LOCAL"
+    }
+  },
+  "basic" :
+  {
+    "steps" :
+    {
+      "step" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      }
+    }
+  },
+  "basic-fail" :
+  {
+    "steps" :
+    {
+      "step" :
+      {
+        "command"      : "./tests/scripts/echo_nolastline.sh"
+      }
+    }
+  },
+  "basic-fail-multistep" :
+  {
+    "steps" :
+    {
+      "step-pass" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step-fail" :
+      {
+        "command"      : "./tests/scripts/echo_nolastline.sh"
+      }
+    }
+  },
+  "overrideAtTest" :
+  {
+    "submit_options" : 
+    {
+      "working_directory" : "../",
+      "resources"  : "list your resources here based on HPC specific system",
+      "queue"      : "economy",
+      "timelimit"  : "01:00:00",
+      "wait"       : "True if set, use with caution",
+      "arguments"  : 
+      { 
+        "argset_01"            : [ "arg2", "arg3" ],
+        ".*regex.*::argset_02" : [ "argRegex" ]
+      },
+      "submission"  : "LOCAL",
+      "host-specific"   :
+      {
+        "working_directory" : "../../",
+        "resources"  : "list your resources here based on HPC specific system",
+        "queue"      : "economy",
+        "timelimit"  : "01:00:00",
+        "wait"       : "True if set, use with caution",
+        "arguments"  : 
+        { 
+          "argset_01"            : [ "arg0", "arg1" ],
+          ".*regex.*::argset_02" : [ "argRegex" ]
+        },
+        "submission"  : "LOCAL"
+      }
+    },
+    "steps" :
+    {
+      "step" :
+      {
+        "command"      : "../tests/scripts/echo_normal.sh"
+      }
+    }
+  },
+  "overrideAtStep" :
+  {
+    "submit_options" : { "working_directory" : "../" },
+    "steps" :
+    {
+      "stepOverride" :
+      {
+        "submit_options" :
+        {
+          "working_directory" : ".",
+          "resources"  : "list your resources here based on HPC specific system",
+          "queue"      : "economy",
+          "timelimit"  : "01:00:00",
+          "wait"       : "True if set, use with caution",
+          "arguments"  : 
+          { 
+            "argset_01"            : [ "arg4", "arg5" ],
+            ".*regex.*::argset_02" : [ "argRegex" ]
+          },
+          "submission"  : "LOCAL",
+          "host-specific"   :
+          {
+            "working_directory" : "../../",
+            "resources"  : "list your resources here based on HPC specific system",
+            "queue"      : "economy",
+            "timelimit"  : "01:00:00",
+            "wait"       : "True if set, use with caution",
+            "arguments"  : 
+            { 
+              "argset_01"            : [ "arg0", "arg1" ],
+              ".*regex.*::argset_02" : [ "argRegex" ]
+            },
+            "submission"  : "LOCAL"
+          }
+        },
+        "command"      : "../../tests/scripts/echo_normal.sh"
+      }
+    }
+  },
+  "basic-regex" :
+  {
+    "steps" :
+    {
+      "step" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      }
+    }
+  },
+  "overrideAtTest-regex" :
+  {
+    "submit_options" : { "arguments" : { ".*regex.*::argset_02" : [ "overrideAtTest" ] } },
+    "steps" :
+    {
+      "step" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      }
+    }
+  },
+  "overrideAtStep-regex" :
+  {
+    "steps" :
+    {
+      "step" :
+      {
+        "submit_options" : { "arguments" : { ".*regex.*::argset_02" : [ "overrideAtStep" ] } },
+        "command"      : "./tests/scripts/echo_normal.sh"
+      }
+    }
+  },
+  "applyAtSpecificAncestry-regex" :
+  {
+    "submit_options" : 
+    { 
+      "arguments" : 
+      {
+        ".*regex.*::argset_02" : [    ],
+        "applyAtWrongAncestry.*set.*::argRegexNoMatch" : [ "setNone" ],
+        ".*setA.*::argRegexA" : [ "setA" ],
+        ".*setB.*::argRegexB" : [ "setB" ]
+      }
+    },
+    "steps" :
+    {
+      "step_setA" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_setB" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_setA_setB" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_none_set_a_set_B_settC_dSet" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      }
+    }
+  },
+  "applyAtSpecificAncestry-sameregex" :
+  {
+    "submit_options" : 
+    { 
+      "arguments" : 
+      { 
+        ".*regex.*::argset_02" : [ ],
+        ".*setB.*::argRegex" : [ "setB" ],
+        ".*setA.*::argRegex" : [ "setA" ],
+        ".*setD.*::argRegex" : [ "setD" ],
+        ".*setC.*::argRegex" : [ "setC" ]
+      }
+    },
+    "steps" :
+    {
+      "step_setA_setB" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_setD_setC" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_setA_setB_setC_setD" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_none_set_a_set_B_settC_dSet" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      }
+    }
+  },
+  "applyAtSpecificAncestry-alpharegex" :
+  {
+    "submit_options" : 
+    { 
+      "arguments" : 
+      { 
+        ".*regex.*::argset_02" : [ ],
+        ".*setA.*::shouldBeLast" : [ "setA" ],
+        ".*setB.*::beSecondSet"  : [ "setB" ],
+        ".*setC.*::needsToBeBetween_b_and_s" : [ "setC" ],
+        ".*setD.*::alwaysFirst" : [ "setD" ]
+      }
+    },
+    "steps" :
+    {
+      "step_setA_setB" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_setD_setC" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_setA_setB_setC_setD" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_none_set_a_set_B_settC_dSet" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      }
+    }
+  }
+}

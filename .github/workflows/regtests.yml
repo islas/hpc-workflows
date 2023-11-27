@@ -1,0 +1,69 @@
+name: Regression Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types:    [ labeled ]
+
+jobs:
+  build:
+    if : ${{ github.event.label.name == 'test' }} || ${{ github.event_name == 'push' }}
+    runs-on: ubuntu
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run test 00_01
+      run: |
+        ./tests/00_*/00_01*
+    
+    - name: Run test 00_02
+      run: |
+        ./tests/00_*/00_02*
+      
+    - name: Run test 00_03
+      run: |
+        ./tests/00_*/00_03*
+    
+    - name: Run test 00_04
+      run: |
+        ./tests/00_*/00_04*
+    
+    - name: Run test 00_05
+      run: |
+        ./tests/00_*/00_05*
+    
+    - name: Run test 00_06
+      run: |
+        ./tests/00_*/00_06*
+    
+    - name: Run test 00_07
+      run: |
+        ./tests/00_*/00_07*
+    
+    - name: Run test 00_08
+      run: |
+        ./tests/00_*/00_08*
+    
+    - name: Run test 00_09
+      run: |
+        ./tests/00_*/00_09*
+    
+    - name: Run test 00_10
+      run: |
+        ./tests/00_*/00_10*
+
+    - name : Remove 'test' label
+      if : ${{ github.event.label.name == 'test' }}
+      env:
+        PR_NUMBER: ${{ github.event.number }}
+      run: |
+        curl \
+          -X DELETE \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H 'Authorization: token ${{ github.token }}' \
+          https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels/test
+  

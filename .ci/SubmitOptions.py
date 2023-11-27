@@ -67,7 +67,7 @@ class SubmitOptions( ) :
     self.logfile_          = None
 
     # Should normally be restricted to host-specific options
-    self.arguments_        = {}
+    self.arguments_        = OrderedDict()
 
     # Allow host-specific submit options
     self.isHostSpecific_      = isHostSpecific
@@ -245,13 +245,14 @@ class SubmitOptions( ) :
 
 
       # Format them and pass them out in alphabetical order based on name, NOT REGEX
-      longestPack = len( max( [ key[0] for key in argpacksToUse if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY ], key=len ) )
+      longestPack   = len( max( [ key for key, sortname in argpacksToUse if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY ], key=len ) )
+      longestOrigin = len( max( [ self.arguments_[SubmitOptions.ARGUMENTS_ORIGIN_KEY][key] for key, sortname in argpacksToUse if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY ], key=len ) )
       for key, sortname in sorted( argpacksToUse, key=lambda pack : pack[1] ) :
         if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY :
           print( 
                 "From {origin:<{length}} adding arguments pack {key:<{packlength}} : {val}".format(
                                                                                         origin=self.arguments_[SubmitOptions.ARGUMENTS_ORIGIN_KEY][key],
-                                                                                        length=LABEL_LENGTH,
+                                                                                        length=longestOrigin,
                                                                                         packlength=longestPack + 2,
                                                                                         key="'{0}'".format( key ),
                                                                                         val=self.arguments_[key]
