@@ -11,12 +11,13 @@ echo "  Check that when a multi-step test runs, if one step fails correct report
 
 # 
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
-$CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/00_vs_submitOptions.json -t basic-fail-multistep > $redirect 2>&1
-shouldFail=$?
-suite=00_vs_submitOptions
+suite=00_submitOptions
 suite_relfile=$suite.json
 suite_reloffset=""
 suiteStdout=$redirect
+$CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/$suite.json -t basic-fail-multistep > $redirect 2>&1
+shouldFail=$?
+
 
 test0=basic-fail-multistep
 test0_step0=step-pass

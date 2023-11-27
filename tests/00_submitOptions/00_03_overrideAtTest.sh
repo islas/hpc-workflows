@@ -11,7 +11,7 @@ echo "  Demonstrate submit options being overridden at the test level"
 
 # Run various tests from json and do checks
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
-suite=00_vs_submitOptions
+suite=00_submitOptions
 test0=overrideAtTest
 test0_step0=step
 

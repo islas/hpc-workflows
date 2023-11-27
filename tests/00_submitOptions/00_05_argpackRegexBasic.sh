@@ -11,7 +11,7 @@ echo "  Demonstrate argpack complex feature of allowing regex matching in the fo
 
 # Run various tests from json and do checks
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
-suite=00_vs_submitOptions
+suite=00_submitOptions
 test0=basic-regex
 test0_step0=step
 test1=basic

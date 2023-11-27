@@ -11,12 +11,12 @@ echo "  Check that basic functionality of simplest testing properly passes or fa
 
 # Run various tests from json and do checks
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
-$CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/00_vs_submitOptions.json -t basic > $redirect 2>&1
-result=$?
-suite=00_vs_submitOptions
+suite=00_submitOptions
 suite_relfile=$suite.json
 suite_reloffset=""
 suiteStdout=$redirect
+$CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/$suite.json -t basic > $redirect 2>&1
+result=$?
 
 test0=basic
 test0_step0=step
@@ -55,7 +55,7 @@ result=$?
 . $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=../../"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "argset_01=\['arg0','arg1'\]" "argset_01=00_vs_submitOptions"
+. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "argset_01=\['arg0','arg1'\]" "argset_01=$suite"
 result=$?
 
 . $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $CURRENT_SOURCE_DIR $suite $test0 true "$test0_step0=true"
@@ -72,12 +72,12 @@ rm $CURRENT_SOURCE_DIR/*.log
 justify "^" "*" 100 "->[NEGATIVE TESTS]<-"
 # Run again, but negative tests cases
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
-$CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/00_vs_submitOptions.json -t basic-fail > $redirect 2>&1
-shouldFail=$?
-suite=00_vs_submitOptions
+suite=00_submitOptions
 suite_relfile=$suite.json
 suite_reloffset=""
 suiteStdout=$redirect
+$CURRENT_SOURCE_DIR/../../.ci/runner.py $CURRENT_SOURCE_DIR/$suite.json -t basic-fail > $redirect 2>&1
+shouldFail=$?
 
 test0=basic-fail
 test0_step0=step

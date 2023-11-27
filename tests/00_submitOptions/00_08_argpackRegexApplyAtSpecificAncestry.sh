@@ -11,7 +11,7 @@ echo "  Demonstrate argpack regex conditionally applied to steps based on correc
 
 # Run various tests from json and do checks
 redirect=$( mktemp $CURRENT_SOURCE_DIR/test_XXXX )
-suite=00_vs_submitOptions
+suite=00_submitOptions
 test0=applyAtSpecificAncestry-regex
 test0_step0=step_setA
 test0_step1=step_setB
