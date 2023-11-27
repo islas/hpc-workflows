@@ -8,6 +8,9 @@ helper_suite_relfile="$5"
 helper_suite_reloffset="$6"
 helper_suiteStdout=$7
 
+SOURCE_DIR=$( CDPATH= cd -- "$(dirname -- "$0")" && pwd )
+. $SOURCE_DIR/helpers.sh
+. $SOURCE_DIR/checkers.sh
 
 helper_masterlog=$( format $masterlog_fmt logdir=$helper_logdir suite=$helper_suite )
 
@@ -100,4 +103,5 @@ checkTestJson                                                                   
   "$helper_suite_reloffset"
 helper_result=$?
 
-return $helper_result
+
+exit $helper_result

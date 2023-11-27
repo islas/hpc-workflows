@@ -105,7 +105,7 @@ getNthValueAtKey()
 splitValues()
 {
   string="$1"
-  echo $string | tr -d '[' | tr -d ']' | tr ',' $'\n'
+  echo $string | tr -d '[' | tr -d ']' | tr ',' '\n'
 }
 
 format()

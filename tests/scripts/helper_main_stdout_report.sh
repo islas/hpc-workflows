@@ -5,6 +5,10 @@ helper_testnames="$3"
 helper_suitePass=$4
 helper_testsPass=$5
 
+SOURCE_DIR=$( CDPATH= cd -- "$(dirname -- "$0")" && pwd )
+. $SOURCE_DIR/helpers.sh
+. $SOURCE_DIR/checkers.sh
+
 if [ "$helper_suitePass" = true ]; then
   justify "<" "*" 100 "-->[MAIN STDOUT SUCCESS] "
 
@@ -74,4 +78,4 @@ for helper_testname in $helper_testnames; do
   fi
 done
 
-return $helper_result
+exit $helper_result

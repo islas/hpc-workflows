@@ -7,8 +7,9 @@ on:
     types:    [ labeled ]
 
 jobs:
-  build:
+  regsuite:
     if : ${{ github.event.label.name == 'test' }} || ${{ github.event_name == 'push' }}
+    name: "Run Regression Suite"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,7 +58,7 @@ jobs:
         ./tests/00_*/00_10*
 
     - name : Remove 'test' label
-      if : ${{ github.event.label.name == 'test' }}
+      if : ${{ !cancelled() && github.event.label.name == 'test' }}
       env:
         PR_NUMBER: ${{ github.event.number }}
       run: |

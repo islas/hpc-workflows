@@ -31,7 +31,7 @@ reportTest                                                                      
   0 0 $result
 
 justify "^" "*" 100 "->[CHECK LOGS EXIST]<-"
-. $CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh \
+$CURRENT_SOURCE_DIR/../scripts/helper_logs_generated.sh \
   $result $CURRENT_SOURCE_DIR $suite                      \
   "$test0=[$test0_step0] $test1=[$test1_step0]"           \
   "$suite_relfile"                                        \
@@ -40,55 +40,55 @@ justify "^" "*" 100 "->[CHECK LOGS EXIST]<-"
 result=$?
 
 justify "^" "*" 100 "->[CHECK REGEX TEST]<-"
-. $CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
+$CURRENT_SOURCE_DIR/../scripts/helper_masterlog_report.sh \
   $result $CURRENT_SOURCE_DIR $suite                        \
   $test0 true "$test0_step0=true"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $CURRENT_SOURCE_DIR $suiteStdout 2
+$CURRENT_SOURCE_DIR/../scripts/helper_main_stdout.sh $result $CURRENT_SOURCE_DIR $suiteStdout 2
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test0 true true
+$CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test0 true true
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=./tests/scripts/echo_normal.sh"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=./tests/scripts/echo_normal.sh"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=../../"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test0 "$test0_step0=../../"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 \
   "argset_01=\['arg0','arg1'\] \.\*regex\.\*::argset_02=\['argRegex'\]" "argset_01=$suite \.\*regex\.\*::argset_02=$suite"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $CURRENT_SOURCE_DIR $suite $test0 true "$test0_step0=true"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $CURRENT_SOURCE_DIR $suite $test0 true "$test0_step0=true"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "arg0 arg1 argRegex" true
+$CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "arg0 arg1 argRegex" true
 result=$?
 
 justify "^" "*" 100 "->[CHECK NON-REGEX TEST]<-"
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test1 true true
+$CURRENT_SOURCE_DIR/../scripts/helper_main_stdout_report.sh $result $suiteStdout $test1 true true
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test1 "$test1_step0=./tests/scripts/echo_normal.sh"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test1 "$test1_step0=./tests/scripts/echo_normal.sh"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test1 "$test1_step0=../../"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURRENT_SOURCE_DIR $suite $test1 "$test1_step0=../../"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test1 $test1_step0 "argset_01=\['arg0','arg1'\]" "argset_01=$suite"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test1 $test1_step0 "argset_01=\['arg0','arg1'\]" "argset_01=$suite"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test1 $test1_step0 \
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test1 $test1_step0 \
   "\.\*regex\.\*::argset_02=\['argRegex'\]" "\.\*regex\.\*::argset_02=$suite" false
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $CURRENT_SOURCE_DIR $suite $test1 true "$test1_step0=true"
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $CURRENT_SOURCE_DIR $suite $test1 true "$test1_step0=true"
 result=$?
 
-. $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test1 $test1_step0 "arg0 arg1" true
+$CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test1 $test1_step0 "arg0 arg1" true
 result=$?
 
 
