@@ -155,8 +155,8 @@ class Step( SubmitAction ):
       ## Call step
       ##
       # https://stackoverflow.com/a/18422264
+      logfileOutput = open( self.logfile_, "w+", buffering=1 )
       if redirect :
-        output = open( self.logfile_, "w+", buffering=1 )
         self.log( "Local step will be redirected to logfile {0}".format( self.logfile_ ) )
       else :
         # Just keep in memory as a string
@@ -168,10 +168,10 @@ class Step( SubmitAction ):
                               stderr=subprocess.STDOUT
                               )
       for c in iter( lambda: proc.stdout.read(1), b"" ):
-        if redirect :
-          output.write( c.decode( 'utf-8', 'replace' ) )
-          output.flush()
-        else :
+        # Always store in logfile
+        logfileOutput.write( c.decode( 'utf-8', 'replace' ) )
+        logfileOutput.flush()
+        if not redirect :
           output.write( c )
           sys.stdout.buffer.write(c)
           sys.stdout.flush()
