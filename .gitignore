@@ -5,3 +5,6 @@ __pycache__/
 *$py.class
 *.log
 test_*
+
+# Make tutorials set in stone unless forcibly changed
+*.ipynb
