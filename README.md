@@ -15,7 +15,7 @@ You should be generally familiar with testing and/or whatever environment you wa
 #### Test Config Terminology
 These will be listed with the following format: <br>
 `<Term> - [<json keyword if applicable>] (<code implementation>) - Description`
-* Suite ([Suite](.ci/runner.py)) - Analogous to the test config but just refers to the collection of tests loaded as opposed to the JSON file
+* Suite ([Suite](.ci/runner.py)) - Analogous to the test config but just refers to the collection of tests as opposed to the JSON file
 * Submit Options [`"submit_options"`] ([SubmitOptions](.ci/SubmitOptions.py)) - Details the *how* a script, test or suite should be run, particularly powerful in defining any HPC-specifics and host-specific variations scripts must know about
 * Test [<anything not `"submit_options"`>] ([Test](.ci/Test.py)) - Defines a test within the suite, contains the steps and optionally higher-precedence specification of submit options for this test
 * Step [<anything under `"steps"` inside test] ([Step](.ci/Step.py)) - Defines a step within a test, like a test can contain specific submit options. Most important though, it defines the script to run and any interdependencies between other steps in this test
@@ -29,6 +29,7 @@ These will be listed with the following format: <br>
   * Steps / normal arguments - These arguments are **always** applied to the step script first before any argpakcs evaluation
 * Dependency - List interdependency between steps using common HPC nomenclature `after*`
 * Ancestry - The equivalent "fully-qualified-name" of an action with `.` delimter to separate suite/test/step, e.g. For a test config `myconfig.json` with test `simple` and step `foobar`, step `foobar`'s ancestry would be `myconfig.simple.foobar`
+* Keyphrase - a specifically formatted string that steps will need to match as their last line to mark success
 
 ### How it works
 The test framework functions off of a limited few key principles ingrained into the test config format (see [example.json](.ci/example.json) for simplified example or [regression suite](tests/00_submitOptions/00_submitOptions.json) for in-depth working example) :
@@ -39,7 +40,7 @@ The test framework functions off of a limited few key principles ingrained into 
 * Submit options can exist at any level *and*
   * Any definition of submit options in a parent action are inherited as defaults to the subsequent children actions (e.g. test submit options are default applied to its respective steps)
   * Any redefinition of the exact same option or argpack in children will override and take precedence
-  * Under `"submit_options"`, anything not a keyword will be assumed to be a host-specific set of `"submit_options"` applied if the FQDN of the host machine running the test(s) contains that string
+  * Under `"submit_options"`, anything not a keyword will be assumed to be a host-specific set of `"submit_options"` applied after all generic non-host-specifc options if the FQDN of the host machine running the test(s) contains that string
   * Only the final cummulative submit options at a step are applied and used in running your tests' scripts
   * Argpacks are applied *after* step arguments based on alphabetic order first and order of appearance in test config second
   * Regex-based argpacks will use `<regex>::argpack` format where `argpack` is the name used for order sorting and `<regex>` is used to filter based on step ancestry
