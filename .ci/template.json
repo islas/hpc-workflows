@@ -1,54 +1,116 @@
 {
-  "test-id" :
+  // this is the only KEYWORD at this level
+  // ALL ENTRIES ARE OPTIONAL UNLESS NOTED
+  "submit_options" : // These are globally applied submit options
   {
-    "submit_options" :
-    { 
-      "working_directory" : "dirpath",
-      "queue"             : "queue-to-submit-to",
-      "resources"         : "resource_list",
-      "timelimit"         : "hh:mm:ss"
-    },
-    "steps" :
+    // KEYWORDS
+   
+    // can be relative or absolute, applied from root directory
+    "working_directory" : "path",
+   
+    // generally needed for any HPC system
+    "queue"             : "HPC queue",
+   
+    // specific to each HPC system
+    "resources"         : "HPC resources flags and options",
+   
+    // timelimit for a step to complete
+    "timelimit"         : "HH:MM:SS",
+   
+    // uses HPC wait/blocking feature - generally not recommended
+    "wait"              : "true if set",
+   
+    // use one of the options to specify how steps should run
+    "submission"        : "LOCAL", // PBS|SLURM|LOCAL
+   
+    // dict of argpacks
+    "arguments"         :
     {
-      "step-name" :
-       { 
-        "submit_options" :
-        { 
-          "working_directory" : "dirpath",
-          "queue"             : "queue-to-submit-to",
-          "resources"         : "resource_list",
-          "timelimit"         : "hh:mm:ss"
-        },
-        "command"      : "filepath",
-        "arguments"    : "-add args",
-        "dependencies" : { "step-name" : "after|afterok|afternotok|afterany", "more-steps" : "dep_type" }
+      // argpacks can be any valid string but all must be unique
+      // Recommended to not contain spaces or periods, character pattern
+      // '::' is reserved for regex-based argpacks
+     
+      // list of arguments to this specific <argpack>
+      // They DO NOT undergo shell-expansion, so $ENV_VAR will be verbatim passed in
+      "<argpack>"          : [ "list", "of", "arguments" ],
+     
+      // <regex> should be a valid regex usable by python's re module
+      // <argpack> can match the above <argpack> string since the full
+      // strings are unique, but they will be considered separate and
+      // future definitions will only override the specific unique match
+      // Single arguments with spaces should be entered as one string
+      "<regex>::<argpack>" : [ "-f", "one whole arg", "-x" ]
+    },
+    // NO MORE KEYWORDS AT THIS LEVEL, ANYTHING ELSE IS CONSIDERED A HOST-SPECIFIC SUBSET
+    // subset will be applied if key is found inside host FQDN
+    // NOT REGEX - this is just python `if key in fqdn`
+    "match-fqdn" :      
+    {
+      // Any of the "submit_options" KEYWORDS - host-specific subsets cannot be nested
+      // When steps are resolved if a host-specific subset matches it will be applied
+      // AFTER all generic submit_options have been applied
+    },
+    // No limit on number of host-specific subsets as long as they are unique
+    "may-match-other-host" :
+    {
+    }
+  },
+ 
+  // everything that isn't "submit_options" is considered a test name
+  // Like argpacks, they can be named anything unique amongst tests, but
+  // avoid using spaces and periods. Recommended characters are [a-zA-Z_-+]
+  "test-name" :
+  {
+    "submit_options" : {}, // EXACT SAME RULES AS ABOVE APPLY
+    // Additional KEYWORD
+    // A dict of steps, order of entry does not determine order of execution
+    "steps" : // REQUIRED KEYWORD
+    {
+      // NO KEYWORDS AT THIS LEVEL, EVERYTHING IS CONSIDERED A STEP
+      // Same naming rules as tests apply
+      "step-A" :
+      {
+        "submit_options" : {}, // EXACT SAME RULES AS ABOVE APPLY (see the pattern?)
+        // ADDITIONAL KEYWORDS
+         
+        // REQUIRED KEYWORD
+        // Script to run, not limited to `sh`. Executed from root or working_directory if specified
+        "command"        : "filepath/to/script/to/run/from_root_or_workingDir.sh",
+        
+        // Similar layout to argpack argument listing, but this is not an argpack
+        // this list is ALWAYS FIRST before any and all argpacks
+        "arguments"      : [ "also", "a list of arguments" ],
+        
+        // Specify and determine the inter-dependency order of steps
+        // NO CIRCULAR OR DEADLOCK PROTECTION LOGIC EXISTS SO BE CAREFUL TO SET THIS CORRECTLY
+        "dependencies" :
+        {
+          // dict of step names verbatim and dependency mapping using 
+          // generally standard HPC-dependency nomenclature
+          // 
+          "step-B" : "afterany" // after|afterok|afternotok|afterany
+        }
+      },
+      "step-B" :
+      {
+        // submit_options, arguments, and dependecies  are OPTIONAL KEYWORDS
+        "command" : "other/command.py"
       }
     }
   },
-  "test-id-0" :
+  "other-test" :
   {
-    "submit_options" :
-    { 
-      "working_directory" : "dirpath",
-      "queue"             : "queue-to-submit-to",
-      "resources"         : "resource_list",
-      "timelimit"         : "hh:mm:ss"
-    },
+    // submit_options is OPTIONAL KEYWORD
     "steps" :
     {
-      "step-name" :
-       { 
-        "submit_options" :
-        { 
-          "working_directory" : "dirpath",
-          "queue"             : "queue-to-submit-to",
-          "resources"         : "resource_list",
-          "timelimit"         : "hh:mm:ss"
-        },
-        "command"      : "filepath",
-        "arguments"    : "-add args",
-        "dependencies" : { "step-name" : "after|afterok|afternotok|afterany", "more-steps" : "dep_type" }
-      }
+      // step names only need to be unique within their respective test's "steps" section
+      "step-A" : { "command" : "foobar.csh" }
     }
   }
+  // ...and so on...
+  // ALL KEYWORDS ARE OPTIONAL **EXCEPT** :
+  //   [under a test]
+  //     - steps
+  //   [under a step]
+  //     - command
 }
