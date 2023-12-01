@@ -56,7 +56,37 @@ jobs:
     - name: Run test 00_10
       run: |
         ./tests/00_*/00_10*
+  markdowndocs:
+    name: "Run Regression Suite"
+    needs: regsuite
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install jupyter-nbconvert
+      run: |
+        sudo apt-get update
+        sudo apt-get install jupyter-nbconvert
+    - name: Run all tutorials
+      run: |
+        for notebook in $( ls ./tutorials/*.ipynb ); do
+          jupyter nbconvert --to=markdown  --execute $notebook
+        done
+    - name: Update documentation
+      run: |
+        git add ./tutorials/*.md
+        git status
 
+  removeLabel:
+    if : ${{ !cancelled() && github.event.label.name == 'test' }}
+    name: "Remove Test Label"
+    needs: [ regsuite, markdowndocs ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
     - name : Remove 'test' label
       if : ${{ !cancelled() && github.event.label.name == 'test' }}
       env:
