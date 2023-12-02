@@ -82,6 +82,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        git config user.email "aislas@ucar.edu"
+        git config user.name  "Anthony Islas"
         git add ./tutorials/*.md
         git status
         git commit -m "Generating tutorials markdown"
