@@ -85,9 +85,11 @@ jobs:
         git config user.email "aislas@ucar.edu"
         git config user.name  "Anthony Islas"
         git add ./tutorials/*.md
-        git status
-        git commit -m "Generating tutorials markdown"
-        git push
+        if [ $( git diff --cached --quiet ) -ne 0 ]; then
+          git status
+          git commit -m "Generating tutorials markdown"
+          git push
+        fi
 
   removeLabel:
     if : ${{ !cancelled() && github.event.label.name == 'test' }}
