@@ -57,7 +57,7 @@ jobs:
       run: |
         ./tests/00_*/00_10*
   markdowndocs:
-    name: "Run Regression Suite"
+    name: "Generate Tutorials Markdown"
     needs: regsuite
     runs-on: ubuntu-latest
     permissions:
@@ -81,6 +81,7 @@ jobs:
       run: |
         git add ./tutorials/*.md
         git status
+        git commit -m "Generating tutorials markdown"
 
   removeLabel:
     if : ${{ !cancelled() && github.event.label.name == 'test' }}
