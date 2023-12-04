@@ -3,7 +3,8 @@ name: Generate Documentation
 on:
   pull_request:
     types: [ opened, synchronize ]
-    paths: [ "tutorials/**.ipynb", "tutorials/**.md" ]
+    paths:
+      - tutorials/**
 
 jobs:
   markdowndocs:

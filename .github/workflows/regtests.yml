@@ -3,10 +3,14 @@ name: Regression Tests
 on:
   push:
     branches: [ main ]
-    paths-ignore: [ "**.md", "**.ipynb" ]
+    paths-ignore:
+      - "**.md"
+      - "**.ipynb"
   pull_request:
     types:    [ labeled ]
-    paths-ignore: [ "**.md", "**.ipynb" ]
+    paths-ignore:
+      - "**.md"
+      - "**.ipynb"
 
 jobs:
   regsuite:
