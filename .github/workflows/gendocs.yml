@@ -1,0 +1,40 @@
+name: Generate Documentation
+
+on:
+  pull_request:
+    types:    [ opened, synchronize ]
+    paths: "**.ipynb"
+
+jobs:
+  markdowndocs:
+    name: "Generate Tutorials Markdown"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v3
+    - name: Checkout PR
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh pr checkout ${{ github.event.pull_request.number }}
+    - uses: actions/setup-python@v4
+      with:
+        cache: 'pip' # caching pip dependencies
+    - run: pip install nbconvert notebook
+    - name: Run all tutorials
+      run: |
+        for notebook in $( ls ./tutorials/*.ipynb ); do
+          jupyter nbconvert --to=markdown  --execute $notebook
+        done
+    - name: Update documentation
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config user.email "aislas@ucar.edu"
+        git config user.name  "Anthony Islas"
+        git add ./tutorials/*.md
+        if [ $( git diff --cached --quiet ) -ne 0 ]; then
+          git status
+          git commit -m "Generating tutorials markdown"
+          git push
+        fi
