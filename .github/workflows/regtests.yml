@@ -3,8 +3,14 @@ name: Regression Tests
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - "**.md"
+      - "**.ipynb"
   pull_request:
     types:    [ labeled ]
+    paths-ignore:
+      - "**.md"
+      - "**.ipynb"
 
 jobs:
   regsuite:
@@ -57,6 +63,15 @@ jobs:
       run: |
         ./tests/00_*/00_10*
 
+  removeLabel:
+    if : ${{ !cancelled() && github.event.label.name == 'test' }}
+    name: "Remove Test Label"
+    needs: [ regsuite ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
     - name : Remove 'test' label
       if : ${{ !cancelled() && github.event.label.name == 'test' }}
       env:
