@@ -282,7 +282,8 @@ class Suite( SubmitAction ) :
         testDirs = [ altdir for altdir in self.globalOpts_.altdirs ]
 
       for testIdx, opt in enumerate( individualTestOpts ) :
-          opt.testsConfig = self.rootDir_ + "/" + testDirs[testIdx] + "/" + self.metadata_[ "rel_file" ]
+        opt.testsConfig = testDirs[testIdx] + "/" + os.path.basename( self.globalOpts_.testsConfig )
+
     self.log_pop()
 
     self.log( "Spawning process pool of size {0} to perform {1} tests".format( self.globalOpts_.pool, len(tests) ) )
