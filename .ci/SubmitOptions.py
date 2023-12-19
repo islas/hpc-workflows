@@ -410,7 +410,7 @@ class SubmitOptions( ) :
           currentKey = groups["res"]
         
         if currentKey not in resourceBreakDown :
-          resourceBreakDown[currentKey] = {}
+          resourceBreakDown[currentKey] = OrderedDict()
         resourceBreakDown[ currentKey ][ groups[ "res" ] ] = groups[ "amount" ]
 
     elif submitType == SubmissionType.SLURM :
@@ -436,20 +436,20 @@ class SubmitOptions( ) :
     # # Flatten and get all keys
     # allResourceTypes = list( set( [ res for breakdown in allBreakdowns for resGroup in breakdown.values() for res in resGroup.keys() ] ) )
 
-    organizedResources = {}
+    organizedResources = OrderedDict()
     for breakdown in allBreakdowns :
       for group, resources in breakdown.items() :
         if group not in organizedResources :
-          organizedResources[ group ] = {}
+          organizedResources[ group ] = OrderedDict()
         for resource, amount in resources.items() :
           if resource not in organizedResources[ group ] :
             organizedResources[ group ][ resource ] = []
           # Accumulate all resources' amounts into lists
           organizedResources[ group ][ resource ].append( amount )
 
-    finalBreakdown = {}
+    finalBreakdown = OrderedDict()
     for group, resources in organizedResources.items() :
-      finalBreakdown[ group ] = {}
+      finalBreakdown[ group ] = OrderedDict()
       for resource, amounts in resources.items() : 
         try :
           finalBreakdown[ group ][ resource ] = sum( [ int(amount) for amount in heapq.nlargest( maxN, amounts ) ] )
