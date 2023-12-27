@@ -41,6 +41,14 @@ getLineBetween()
   fi
 }
 
+getLine()
+{
+  func_filename="$1"
+  func_regex="$2"
+  grep -Esn "$func_regex" $func_filename
+  return $?
+}
+
 checkLastLine()
 {
   func_filename="$1"
