@@ -4,13 +4,15 @@ import json
 import time
 from collections import OrderedDict
 from datetime import timedelta
+import threading
+from concurrent.futures import ThreadPoolExecutor
 
 from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions, SubmissionType
 from Step          import Step
 
-HPC_DELAY_PERIOD_SECONDS = 60
-HPC_POLL_PERIOD_SECONDS = 120
+HPC_DELAY_PERIOD_SECONDS =  60
+HPC_POLL_PERIOD_SECONDS  = 120
 
 class Test( SubmitAction ):
 
@@ -20,6 +22,8 @@ class Test( SubmitAction ):
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.steps_         = {}
     self.waitResults_    = False
+    self.multiStepLock_  = threading.Lock()
+    self.stepNotifier_   = threading.Semaphore( 0 ) # Starts unable to acquire
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
   def parseSpecificOptions( self ) :

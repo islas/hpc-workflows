@@ -28,7 +28,7 @@ class Step( SubmitAction ):
   def scope( self ) :
     return "step"
 
-  def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, globalOpts, lock, notifier, parent = "", rootDir = "./" ) :
     self.submitted_ = False
     self.jobid_     = None
     self.retval_    = None
@@ -39,6 +39,8 @@ class Step( SubmitAction ):
     self.children_      = [] # steps that are dependent on us that we will need to sign off for
     # DO NOT MODIFY THIS UNLESS YOU UNDERSTAND THE IMPLICATIONS
     self.addWorkingDirArg_ = True
+    self.lock_          = lock
+    self.wakeTest_      = notifier
 
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
