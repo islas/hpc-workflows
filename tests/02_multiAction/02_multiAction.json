@@ -1,0 +1,81 @@
+{
+  "submit_options" :
+  {
+    "working_directory" : "../../",
+    "resources"  : "list your resources here based on HPC specific system",
+    "queue"      : "economy",
+    "timelimit"  : "01:00:00",
+    "wait"       : "True if set, use with caution",
+    "arguments"  : 
+    { 
+      "argset_01"            : [ "arg0", "arg1" ]
+    },
+    "submission"  : "LOCAL"
+  },
+  "basicParallel" :
+  {
+    "steps" :
+    {
+      "stepA" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh"
+      },
+      "stepB" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh"
+      },
+      "stepC" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh"
+      },
+      "stepD" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh"
+      }
+    }
+  },
+  "complexParallel" :
+  {
+    "steps" :
+    {
+      "stepA" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh"
+      },
+      "stepB" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh"
+      },
+      "stepC" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh"
+      },
+      "stepD" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh"
+      },
+      "stepE" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh",
+        "dependencies" : { "stepA" : "afterany", "stepD" : "afterany" }
+      },
+      "stepF" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh",
+        "dependencies" : { "stepB" : "afterany", "stepC" : "afterany" }
+      }
+      ,
+      "stepG" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh",
+        "dependencies" : { "stepE" : "afterany" }
+      }
+      ,
+      "stepH" :
+      {
+        "command"      : "./tests/scripts/echo_normal_sleep.sh",
+        "dependencies" : { "stepF" : "afterany", "stepG" : "afterany" }
+      }
+    }
+  }
+}
