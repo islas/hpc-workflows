@@ -35,7 +35,16 @@ class Test( SubmitAction ):
         self.log( msg )
         raise Exception( msg )
       for stepname, stepDict in self.options_[ key ].items() :
-        self.steps_[ stepname ] = Step( stepname, stepDict, self.submitOptions_, self.globalOpts_, parent=self.ancestry(), rootDir=self.rootDir_ )
+        self.steps_[ stepname ] = Step(
+                                        stepname,
+                                        stepDict,
+                                        self.submitOptions_,
+                                        self.globalOpts_,
+                                        self.multiStepLock_,
+                                        self.stepNotifier_,
+                                        parent=self.ancestry(),
+                                        rootDir=self.rootDir_
+                                        )
     
     # Now that steps are fully parsed, attempt to organize dependencies
     Step.sortDependencies( self.steps_ )

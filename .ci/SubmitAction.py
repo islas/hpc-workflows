@@ -81,8 +81,12 @@ class SubmitAction( ) :
       self.log( "Current directory : {0}".format( os.getcwd() ) )
 
     self.log_pop()
+  
+  def prepExecuteAction( self ) :
+    pass
 
   def run( self ) :
+    self.prepExecuteAction()
     self.setWorkingDirectory()
     return self.executeAction()
   
