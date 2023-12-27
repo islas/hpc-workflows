@@ -608,7 +608,7 @@ def getOptionsParser():
   #                     )
 
   parser.add_argument(
-                      "-fc", "--forceSingle",
+                      "-fs", "--forceSingle",
                       dest="forceSingle",
                       help="Force multi-testing to run in single-process mode",
                       default=False,
