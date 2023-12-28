@@ -65,11 +65,11 @@ jobs:
     
     - name: Run test 02_00
       run: |
-        ./tests/00_*/02_00*
+        ./tests/02_*/02_00*
 
     - name: Run test 02_01
       run: |
-        ./tests/00_*/02_01*
+        ./tests/02_*/02_01*
 
   removeLabel:
     if : ${{ !cancelled() && github.event.label.name == 'test' }}
