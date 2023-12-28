@@ -125,6 +125,26 @@ $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_step_dep_order.sh \
           $test0_step7=[$test0_step5,$test0_step6]"
 result=$?
 
+# we know steps are submitted in appearing order from the test config so this will work
+# when using the test script that sleeps to enforce coherency
+# Steps A-D are submitted sequentially and thus run parallel as removed from queue
+# Step F will trigger after B+C complete which MUST BE before D completes (again due to coherency)
+# Step E will trigger after A+D complete, but by that point F is running and no other steps can be queued
+#  so Step E is run more-or-less "serially" even though F may or may not be finishing
+# Step G will only trigger after E is complete, and once again runs serially - this time most likely
+# Step H requires G+F which converges all steps and thus IS run completely serially
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_step_parallel.sh \
+  $result $CURRENT_SOURCE_DIR $suite \
+  $test0 "$test0_step0=[$test0_step1,$test0_step2,$test0_step3] \
+          $test0_step1=[$test0_step2,$test0_step3]              \
+          $test0_step2=[$test0_step3]                           \
+          $test0_step3=[$test0_step5]                           \
+          $test0_step4=[]                                       \
+          $test0_step5=[$test0_step4]                           \
+          $test0_step6=[]                                       \
+          $test0_step7=[]"
+result=$?
+
 $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "arg0 arg1" true
 result=$?
 

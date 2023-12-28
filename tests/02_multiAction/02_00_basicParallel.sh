@@ -96,6 +96,15 @@ $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_step_dep_order.sh \
   $test0 "$test0_step0=[] $test0_step1=[] $test0_step2=[] $test0_step3=[]"
 result=$?
 
+# we know steps are submitted in appearing order from the test config so this will work
+# when using the test script that sleeps to enforce coherency
+$CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_step_parallel.sh \
+  $result $CURRENT_SOURCE_DIR $suite \
+  $test0 "$test0_step0=[$test0_step1,$test0_step2,$test0_step3] \
+          $test0_step1=[$test0_step2,$test0_step3] \
+          $test0_step2=[$test0_step3]"
+result=$?
+
 $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "arg0 arg1" true
 result=$?
 
