@@ -62,16 +62,13 @@ class Test( SubmitAction ):
       for step in self.steps_.values() :
         if step.runnable() and step.name_ not in stepsAlreadyRun :
           stepsAlreadyRun[ step.name_ ] = submittedStep = executor.submit( step.run )
-          # Add a callback to facilitate any errors
-          # submittedStep.add_done_callback( self.stepComplete )
-          # stepsAlreadyRun.append( step.name_ )
 
       # We have submitted all runnable steps for the current phase, and there is no guarantee
       # that all these steps need to complete at the same time so DO NOT WAIT for all
       # results, but instead patiently wait for one of the submitted steps to wake us up
       # and then check if any of our runnable states has changed, obviously if no steps
       # have completed between our last check and an arbitrary time later then no runnable states
-      # will have changed either (THIS DOES NOT WORK WELL WITH LOCAL SUBMISSION AND AFTER ONLY DEPENDENCY)
+      # will have changed either (THIS DOES NOT WORK WELL WITH LOCAL SUBMISSION AND "AFTER" ONLY DEPENDENCY)
       self.stepNotifier_.acquire()
 
       # Make sure anything that woke us up was okay
