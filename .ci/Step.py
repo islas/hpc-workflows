@@ -28,7 +28,7 @@ class Step( SubmitAction ):
   def scope( self ) :
     return "step"
 
-  def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
+  def __init__( self, name, options, defaultSubmitOptions, globalOpts, lock, notifier, parent = "", rootDir = "./" ) :
     self.submitted_ = False
     self.jobid_     = None
     self.retval_    = None
@@ -39,6 +39,8 @@ class Step( SubmitAction ):
     self.children_      = [] # steps that are dependent on us that we will need to sign off for
     # DO NOT MODIFY THIS UNLESS YOU UNDERSTAND THE IMPLICATIONS
     self.addWorkingDirArg_ = True
+    self.lock_          = lock
+    self.wakeTest_      = notifier
 
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
@@ -112,11 +114,17 @@ class Step( SubmitAction ):
     if self.submitOptions_.lockSubmitType_ and "submission" in self.submitOptions_.submit_ :
       self.log( "{{ '{0}' : {1} }} overridden by cli".format( "submission", self.submitOptions_.submit_[ "submission" ] ) )
 
+  def prepExecuteAction( self ) :
+    # We are about to execute - these are the first to happen
+    # Acquire the lock until we have finished submitting our step
+    self.lock_.acquire()
+    # Immediately consider ourselves submitted, thus not runnable anymore
+    self.submitted_ = True
+
   def executeAction( self ) :
     # Do submission logic....
     self.log( "Submitting step {0}...".format( self.name_ ) )
     self.log_push()
-    self.submitted_ = True
     self.executeInfo()
   
     redirect = ( self.submitOptions_.submitType_ == SubmissionType.LOCAL and not self.globalOpts_.inlineLocal )
@@ -161,12 +169,24 @@ class Step( SubmitAction ):
       else :
         # Just keep in memory as a string
         output = io.BytesIO()
-      proc = subprocess.Popen(
-                              args,
-                              stdin =subprocess.PIPE,
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.STDOUT
-                              )
+      try :
+        proc = subprocess.Popen(
+                                args,
+                                stdin =subprocess.PIPE,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT
+                                )
+      except Exception as e :
+        # If we fail, we need to tell our parent test :(
+        self.wakeTest_.release()
+        # And release other lock
+        self.lock_.release()
+        # and propagate the exception
+        raise e
+
+      # We are at this point only reading in the step running, no need to hold others up
+      self.lock_.release()
+
       for c in iter( lambda: proc.stdout.read(1), b"" ):
         # Always store in logfile
         logfileOutput.write( c.decode( 'utf-8', 'replace' ) )
@@ -187,6 +207,8 @@ class Step( SubmitAction ):
       self.log( "Doing dry-run, no ouptut" )
       self.retval_ = 0
       output       = "12345"
+      self.lock_.release()
+
 
     print( "\n", flush=True, end="" )
     self.log(  "*" * 15 + "{:^15}".format( "STOP " + self.name_ ) + "*" * 15 )
@@ -221,15 +243,22 @@ class Step( SubmitAction ):
 
       if self.submitOptions_.submitType_ != SubmissionType.LOCAL and not self.globalOpts_.nofatal :
         raise Exception( msg )
-    
+
     # If we get this far sign off
     if self.children_ :
       self.log( "Notifying children..." )
+      # Step is done and we need to write to other steps so re-acquire the lock for safe writing 
+      # ALSO do this after all error handling so we know we are safe to lock without leaving us in a catatonic state
+      self.lock_.acquire()
       self.notifyChildren( )
+      self.lock_.release()
 
     self.log_pop()
     
     self.log( "Finished submitting step {0}\n".format( self.name_ ) )
+
+    # Tell our test to wake up and check any changes to states
+    self.wakeTest_.release()
 
   def notifyChildren( self ) :
     if self.children_ :

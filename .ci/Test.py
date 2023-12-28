@@ -4,13 +4,15 @@ import json
 import time
 from collections import OrderedDict
 from datetime import timedelta
+import threading
+from concurrent.futures import ThreadPoolExecutor
 
 from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions, SubmissionType
 from Step          import Step
 
-HPC_DELAY_PERIOD_SECONDS = 60
-HPC_POLL_PERIOD_SECONDS = 120
+HPC_DELAY_PERIOD_SECONDS =  60
+HPC_POLL_PERIOD_SECONDS  = 120
 
 class Test( SubmitAction ):
 
@@ -20,6 +22,8 @@ class Test( SubmitAction ):
   def __init__( self, name, options, defaultSubmitOptions, globalOpts, parent = "", rootDir = "./" ) :
     self.steps_         = {}
     self.waitResults_    = False
+    self.multiStepLock_  = threading.Lock()
+    self.stepNotifier_   = threading.Semaphore( 0 ) # Starts unable to acquire
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
   def parseSpecificOptions( self ) :
@@ -31,7 +35,16 @@ class Test( SubmitAction ):
         self.log( msg )
         raise Exception( msg )
       for stepname, stepDict in self.options_[ key ].items() :
-        self.steps_[ stepname ] = Step( stepname, stepDict, self.submitOptions_, self.globalOpts_, parent=self.ancestry(), rootDir=self.rootDir_ )
+        self.steps_[ stepname ] = Step(
+                                        stepname,
+                                        stepDict,
+                                        self.submitOptions_,
+                                        self.globalOpts_,
+                                        self.multiStepLock_,
+                                        self.stepNotifier_,
+                                        parent=self.ancestry(),
+                                        rootDir=self.rootDir_
+                                        )
     
     # Now that steps are fully parsed, attempt to organize dependencies
     Step.sortDependencies( self.steps_ )
@@ -40,18 +53,42 @@ class Test( SubmitAction ):
   def executeAction( self ) :
     self.checkWaitResults()
 
-    steps = []
-    while len( steps ) != len( self.steps_ ) :
+    stepsAlreadyRun = {}
+    # Since this might be the limiting computational factor in terms of how processes run
+    # use the more supported ThreadPoolExecutor rather than a simple ThreadPool to enable 
+    # any future growth 
+    executor = ThreadPoolExecutor( max_workers=self.globalOpts_.threadpool )
+    while len( stepsAlreadyRun ) != len( self.steps_ ) :
       for step in self.steps_.values() :
+        if step.runnable() and step.name_ not in stepsAlreadyRun :
+          stepsAlreadyRun[ step.name_ ] = submittedStep = executor.submit( step.run )
 
-        if step.runnable() :
-          step.run()
-          steps.append( step.name_ )
+      # We have submitted all runnable steps for the current phase, and there is no guarantee
+      # that all these steps need to complete at the same time so DO NOT WAIT for all
+      # results, but instead patiently wait for one of the submitted steps to wake us up
+      # and then check if any of our runnable states has changed, obviously if no steps
+      # have completed between our last check and an arbitrary time later then no runnable states
+      # will have changed either (THIS DOES NOT WORK WELL WITH LOCAL SUBMISSION AND "AFTER" ONLY DEPENDENCY)
+      self.stepNotifier_.acquire()
+
+      # Make sure anything that woke us up was okay
+      for stepname, futureObj in stepsAlreadyRun.items() :
+        if futureObj.done() :
+          try :
+            futureObj.result()
+          except Exception as e :
+            # Kill it all and shut down
+            for k,v in stepsAlreadyRun.items() : v.cancel() # This is for prior to python 3.9
+            executor.shutdown( wait=True, cancel_futures=True )
+            raise e
+
       self.log( "Checking remaining steps..." )
+
+    executor.shutdown( wait=True, cancel_futures=True )
 
     self.log( "No remaining steps, test submission complete" )
 
-    return self.postProcessResults( steps )
+    return self.postProcessResults( stepsAlreadyRun.keys() )
 
   def checkWaitResults( self ) :
     # Do we need to add a results step?

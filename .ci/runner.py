@@ -395,6 +395,11 @@ def runSuite( options ) :
     err = "Error: No account provided for non-local run."
     print( err )
     raise Exception( err )
+
+  if options.inlineLocal and options.threadpool > 1 :
+    print( "Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)" )
+    options.threadpool = 1
+
   # Quickly convert to abs path
   options.testsConfig = os.path.abspath( options.testsConfig )
 
@@ -568,7 +573,14 @@ def getOptionsParser():
   parser.add_argument(
                       "-p", "--pool",
                       dest="pool",
-                      help="Threadpool size when running multiple tests, if serial is desired set to 1",
+                      help="Process pool size when running multiple tests, if serial test runs are desired set to 1",
+                      default=4,
+                      type=int
+                      )
+  parser.add_argument(
+                      "-tp", "--threadpool",
+                      dest="threadpool",
+                      help="Threadpool size when running multiple steps, if serial step runs are desired set to 1",
                       default=4,
                       type=int
                       )
@@ -596,7 +608,7 @@ def getOptionsParser():
   #                     )
 
   parser.add_argument(
-                      "-fc", "--forceSingle",
+                      "-fs", "--forceSingle",
                       dest="forceSingle",
                       help="Force multi-testing to run in single-process mode",
                       default=False,
