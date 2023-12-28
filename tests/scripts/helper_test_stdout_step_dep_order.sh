@@ -40,6 +40,7 @@ for helper_step in $helper_steps; do
       helper_stepDepIdx=$(( $helper_stepDepIdx + 1 ))
     done
   else
+    justify "<" "*" 100 "-->[STEP [$helper_step] NO DEPENDENCY ORDER] "
     # This step has no dependencies, it should start whenever but before the test is done (obviously)
     checkTestBetween                                                                \
       TEST_STDOUT_STEP_NO_DEPENDENCIES                                              \
