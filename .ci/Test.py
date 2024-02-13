@@ -213,9 +213,6 @@ class Test( SubmitAction ):
     # more complex logic. For now, try not to add too many divergent branches of testing
     self.log( "Computing maximum HPC resources per runnable step phase..." )
 
-    # Walk through all steps and determine what HPC resources would be needed
-    checked  = { }
-
     # Maybe use one day for complex branch analysis...
     # deps     = { depType : {} for depType in Step.DependencyType }
 
@@ -235,13 +232,40 @@ class Test( SubmitAction ):
     phase = 0
     self.log( "Joining steps..." )
     self.log_push()
-    while len( checked ) != len( self.steps_ ) :
-      # Gather set of runnables
-      runnable = [ step for step in self.steps_.values() if step.runnable() ]
 
+    # We need to break it down by expected runtime of each test by size of pool
+    # as that is the order they will run in. Could we optimize? Yea probably. Will we? Not right now
+    self.log( "Calculating expected runtime of steps across {0} thread workers [threadpool size]".format( self.globalOpts_.threadpool ) )
+    self.log_push()
+    # Gather set of runnable psuedojobs
+    psuedoJobs = [ step for step in self.steps_.values() if step.runnable() ]
+    # Assume all runnable are in queue to be run, and thus cannot be re-submitted
+    for pj in psuedoJobs :
+      pj.submitted_ = True
+
+    psuedoRunningMap = {}
+    # Continue while we have jobs in queue or running
+    while len( psuedoJobs ) > 0 or len( psuedoRunningMap ) > 0 :
+      # If we have slots in our pool and jobs left, fill in
+      while len( psuedoRunningMap ) < self.globalOpts_.threadpool and len( psuedoJobs ) > 0 :
+        pjStep = psuedoJobs.pop(0)
+        psuedoRunningMap[ pjStep.name_ ] = { "step" : pjStep, "timelimit" : SubmitOptions.parseTimelimit( pjStep.submitOptions_.timelimit_, hpcSubmit[0] ) }
+
+      # Find smallest job
+      runForKey = min( psuedoRunningMap, key= lambda k : psuedoRunningMap[k]["timelimit"] )
+      runFor    = copy.deepcopy( psuedoRunningMap[runForKey]["timelimit"] )
+      maxTimelimit += runFor
+      # "Run" for that amount of time
+      self.log( "Simulating threadpool for {0}".format( psuedoRunningMap[runForKey]["timelimit"] ) )
+      self.log_push()
+
+      for key in psuedoRunningMap.keys() :
+        psuedoRunningMap[ key ][ "timelimit" ] -= runFor
+
+      # What would our max resource consumption be whilst running this set?
       # Add all concurrent resources together
-      currentResources = SubmitOptions.joinHPCResourcesOp( runnable, lambda rhs,lhs : rhs + lhs, print=self.log  )
-      currentTimelimit = max( [ SubmitOptions.parseTimelimit( step.submitOptions_.timelimit_, hpcSubmit[0] ) for step in runnable ] )
+      currentResources = SubmitOptions.joinHPCResourcesOp( [ pj[ "step" ] for pj in psuedoRunningMap.values() ], lambda rhs,lhs : rhs + lhs, print=self.log  )
+
       # Get maximum
       maxResources = SubmitOptions.joinHPCResourcesStrOp(
                                                           maxResources,
@@ -250,33 +274,49 @@ class Test( SubmitAction ):
                                                           max,
                                                           print=self.log
                                                           )
-      # Add to current timelimit
-      maxTimelimit += currentTimelimit
       self.log( "[PHASE {phase}] Resources for [ {steps} ] : '{res}', timelimit = {time}".format(
-                                                                              phase=phase,
-                                                                              steps="".join(
-                                                                                            "{0:>{1}}".format(
-                                                                                                              step, longestStep + ( 1 if len( runnable ) > 1 else 0 ) )
-                                                                                                              for step in ",[:space:]".join(
-                                                                                                                 [ step.name_ for step in runnable ]
-                                                                                                              ).split( '[:space:]' )
-                                                                                            ),
-                                                                              res=currentResources,
-                                                                              time=currentTimelimit
-                                                                              )
+                                                                                                  phase=phase,
+                                                                                                  steps="".join(
+                                                                                                                "{0:>{1}}".format(
+                                                                                                                                  step, longestStep + ( 1 if len( psuedoRunningMap ) > 1 else 0 ) )
+                                                                                                                                  for step in ",[:space:]".join( 
+                                                                                                                                    psuedoRunningMap.keys()
+                                                                                                                                  ).split( '[:space:]' )
+                                                                                                                ),
+                                                                                                  res=currentResources,
+                                                                                                  time=runFor
+                                                                                                  )
                 )
       phase += 1
 
-      # Add to checked
-      checked.update( { step.name_ : step for step in runnable } )
+      
+      # Re-evaluate for any jobs that completed
+      completed = []
+      for stepname in psuedoRunningMap :
+        if psuedoRunningMap[ stepname ][ "timelimit" ].total_seconds() <= 0 :
+          completed.append( stepname )
+          psuedoRunningMap[ stepname ][ "step" ].jobid_     = 0
+          psuedoRunningMap[ stepname ][ "step" ].retval_    = 0
+          psuedoRunningMap[ stepname ][ "step" ].notifyChildren( )
 
-      # For all runnable assume ran
-      for step in runnable :
-        step.jobid_     = 0
-        step.retval_    = 0
-        step.submitted_ = True
-        step.notifyChildren( )
-    
+      # Remove completed
+      for pj in completed :
+        psuedoRunningMap.pop( pj )
+
+      # Add any new arrivals to the queue
+      for step in self.steps_.values() :
+        if step.runnable() :
+          # as soon as it is in queue, consider it submitted
+          psuedoJobs.append( step )
+          step.submitted_ = True
+
+      self.log( "{0} jobs completed during this runtime".format( len( completed ) ) )
+      self.log_pop()
+
+
+
+    self.log_pop()
+
     # Reset the pipeline
     for step in self.steps_.values() :
       step.resetRunnable()
