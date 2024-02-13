@@ -534,7 +534,8 @@ class SubmitOptions( ) :
                     raise Exception( msg )
                 else :
                   # Not sure how to add, leave as is
-                  print( "Unsure how to operate on resources {0} and {1} together, defaulting to {0}".format( finalResourceBreakdown[ group ][ res ], amount ) )
+                  pass
+                  # print( "Unsure how to operate on resources {0} and {1} together, defaulting to {0}".format( finalResourceBreakdown[ group ][ res ], amount ) )
             else :
               # Just add
               finalResourceBreakdown[ group ][ res ] = amount
