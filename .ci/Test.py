@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import time
+import copy
 from collections import OrderedDict
 from datetime import timedelta
 import threading
@@ -79,12 +80,21 @@ class Test( SubmitAction ):
           except Exception as e :
             # Kill it all and shut down
             for k,v in stepsAlreadyRun.items() : v.cancel() # This is for prior to python 3.9
-            executor.shutdown( wait=True, cancel_futures=True )
+            executor.shutdown( wait=True )
             raise e
 
       self.log( "Checking remaining steps..." )
 
-    executor.shutdown( wait=True, cancel_futures=True )
+    # Grab anything that we are still waiting for that has already been submitted
+    for stepname, futureObj in stepsAlreadyRun.items() :
+      try :
+        futureObj.result()
+      except Exception as e :
+        # Kill it all and shut down
+        for k,v in stepsAlreadyRun.items() : v.cancel() # This is for prior to python 3.9
+        executor.shutdown( wait=True )
+        raise e
+    executor.shutdown( wait=True )
 
     self.log( "No remaining steps, test submission complete" )
 
