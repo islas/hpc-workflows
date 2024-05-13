@@ -44,14 +44,14 @@
     // NO MORE KEYWORDS AT THIS LEVEL, ANYTHING ELSE IS CONSIDERED A HOST-SPECIFIC SUBSET
     // subset will be applied if key is found inside host FQDN
     // NOT REGEX - this is just python `if key in fqdn`
-    "match-fqdn" :      
+    "<match-fqdn>" :      
     {
       // Any of the "submit_options" KEYWORDS - host-specific subsets cannot be nested
       // When steps are resolved if a host-specific subset matches it will be applied
       // AFTER all generic submit_options have been applied
     },
     // No limit on number of host-specific subsets as long as they are unique
-    "may-match-other-host" :
+    "<may-match-other-host>" :
     {
     }
   },
