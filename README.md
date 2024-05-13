@@ -12,9 +12,11 @@ You should be generally familiar with testing and/or whatever environment you wa
 * Run script - The entry point for all tests will be the [.ci/runner.py](./.ci/runner.py). From this point on it will simply be referred to as the <ins>*run script*</ins> (to avoid confusion with GitHub Runners - may change in the future).
 * Test config - The defintion of tests will always reside in a JSON-formatted file called the <ins>*test config*</ins> which will be able to be parsed by Python's [json module](https://docs.python.org/3/library/json.html) (this does not support comments - may change in the future).
 * Report script - An optional end-point for tests is to use [.ci/reporter.py](./.ci/reporter.py) to gather a final report for a set of tests run. This will be known as the <ins>*report script*</ins> or <ins>*reporter*</ins>.
+
 #### Test Config Terminology
 These will be listed with the following format: <br>
-`<Term> - [<json keyword if applicable>] (<code implementation>) - Description`
+`<Term> - [<json keyword if applicable>] (<code implementation>) - Description`<br>
+
 * Suite ([Suite](.ci/runner.py)) - Analogous to the test config but just refers to the collection of tests as opposed to the JSON file
 * Submit Options [`"submit_options"`] ([SubmitOptions](.ci/SubmitOptions.py)) - Details the *how* a script, test or suite should be run, particularly powerful in defining any HPC-specifics and host-specific variations scripts must know about
 * Test [<anything not `"submit_options"`>] ([Test](.ci/Test.py)) - Defines a test within the suite, contains the steps and optionally higher-precedence specification of submit options for this test
