@@ -20,7 +20,7 @@ These will be listed with the following format: <br>
 * Suite ([Suite](.ci/runner.py)) - Analogous to the test config but just refers to the collection of tests as opposed to the JSON file
 * Submit Options [`"submit_options"`] ([SubmitOptions](.ci/SubmitOptions.py)) - Details the *how* a script, test or suite should be run, particularly powerful in defining any HPC-specifics and host-specific variations scripts must know about
 * Test [<anything not `"submit_options"`>] ([Test](.ci/Test.py)) - Defines a test within the suite, contains the steps and optionally higher-precedence specification of submit options for this test
-* Step [<anything under `"steps"` inside test] ([Step](.ci/Step.py)) - Defines a step within a test, like a test can contain specific submit options. Most important though, it defines the script to run and any interdependencies between other steps in this test
+* Step [<anything under `"steps"` inside test>] ([Step](.ci/Step.py)) - Defines a step within a test, like a test can contain specific submit options. Most important though, it defines the script to run and any interdependencies between other steps in this test
 * Submit Action ([SubmitAction](.ci/SubmitAction.py)) - Base class for suite/test/step which constitutes a runnable "action" with submit options
 
 #### Additional Terminology
