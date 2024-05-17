@@ -11,8 +11,38 @@
     // generally needed for any HPC system
     "queue"             : "HPC queue",
    
-    // specific to each HPC system
-    "resources"         : "HPC resources flags and options",
+    // specifics to each HPC system
+    "hpc_arguments"     :
+    {
+      // NO KEYWORDS at this level
+      // argpacks can be any valid string but all must be unique
+      // Recommended to not contain spaces or periods, character pattern
+      // '::' is reserved for regex-based argpacks
+      "<argpack>" : 
+      {
+        // <option> will be appended to the job submission, if an empty dict
+        // is provided nothing more will happen with respect to this <argpack>
+        // Entries will joined HPC-specific syntax then concatenated with "<option>" :
+        //   non-empty values in key-value pairs join with ( '=' for PBS | ':' for SLURM )
+        //   keys (with value if present)             with ( ':' for PBS | ',' for SLURM )
+        // {"-l ":{"select":1,"ngpus":4}} for PBS would result in the following being added to the HPC submission
+        //   -l select=1:ngpus=4
+        // {"gres=":{"gpu:tesla":2,"shard":64}} for SLURM would result in the following being added to the HPC submission
+        //   --gres=gpu:tesla:2,shard:64
+        "<option>" : // HPC flag or option to pass in
+        {
+          "<unique-resource-name>" : "number or string", // non-unit numbers do not need quotes
+          // <regex> should be a valid regex usable by python's re module
+          // <unique-resource-name> CANNOT match the above <unique-resource-name>
+          // future definitions will only override the specific full unique match with <regex> included
+          "<regex>::<unique-resource-name>"  : 0         // only a single value is accepted
+        }
+      },
+      // <regex> should be a valid regex usable by python's re module
+      // <argpack> CANNOT match the above <argpack>
+      // future definitions will only override the specific full unique match with <regex> included
+      "<regex>::<argpack>" : {} // same layout as the above "hpc_arguments" <argpack>
+    },
    
     // timelimit for a step to complete
     "timelimit"         : "HH:MM:SS",
@@ -32,18 +62,17 @@
      
       // list of arguments to this specific <argpack>
       // They DO NOT undergo shell-expansion, so $ENV_VAR will be verbatim passed in
+      // Single arguments with spaces should be entered as one string
       "<argpack>"          : [ "list", "of", "arguments" ],
      
       // <regex> should be a valid regex usable by python's re module
-      // <argpack> can match the above <argpack> string since the full
-      // strings are unique, but they will be considered separate and
-      // future definitions will only override the specific unique match
-      // Single arguments with spaces should be entered as one string
+      // <argpack> CANNOT match the above <argpack>
+      // future definitions will only override the specific full unique match with <regex> included
       "<regex>::<argpack>" : [ "-f", "one whole arg", "-x" ]
     },
     // NO MORE KEYWORDS AT THIS LEVEL, ANYTHING ELSE IS CONSIDERED A HOST-SPECIFIC SUBSET
     // subset will be applied if key is found inside host FQDN
-    // NOT REGEX - this is just python `if key in fqdn`
+    // NOT REGEX - this is just python `if key in fqdn`, first one found is applied
     "match-fqdn" :      
     {
       // Any of the "submit_options" KEYWORDS - host-specific subsets cannot be nested
@@ -77,7 +106,7 @@
         // Script to run, not limited to `sh`. Executed from root or working_directory if specified
         "command"        : "filepath/to/script/to/run/from_root_or_workingDir.sh",
         
-        // Similar layout to argpack argument listing, but this is not an argpack
+        // Similar layout to "arguments" argpack argument listing, but this is not an argpack
         // this list is ALWAYS FIRST before any and all argpacks
         "arguments"      : [ "also", "a list of arguments" ],
         

@@ -62,7 +62,7 @@ class Step( SubmitAction ):
         self.dependencies_[ depStep ] = Step.DependencyType( depType )
 
     # Now set things manually
-    self.submitOptions_.name_ = self.ancestry()
+    self.submitOptions_.setName( self.ancestry() )
 
     valid, msg = self.submitOptions_.validate()
     if not valid :

@@ -7,10 +7,9 @@ from collections import OrderedDict
 from enum import Enum
 from datetime import timedelta
 
-# https://stackoverflow.com/a/3233356
-import collections.abc
+import SubmitCommon as sc
+from SubmitArgpacks import SubmitArgpacks
 
-LABEL_LENGTH = 12
 
 PBS_RESOURCE_REGEX_STR = r"(?P<start>[ ]*-l[ ]+)?(?P<res>\w+)=(?P<amount>.*?)(?=:|[ ]*-l[ ]|$)"
 PBS_RESOURCE_REGEX     = re.compile( PBS_RESOURCE_REGEX_STR )
@@ -23,15 +22,6 @@ PBS_TIMELIMIT_REGEX_STR    = r"^(?P<hh>\d+):(?P<mm>\d+):(?P<ss>\d+)$"
 PBS_TIMELIMIT_REGEX        = re.compile( PBS_TIMELIMIT_REGEX_STR )
 PBS_TIMELIMIT_FORMAT_STR   = "{:02}:{:02}:{:02}"
 
-# Update mapping dest with source
-def recursiveUpdate( dest, source ):
-  for k, v in source.items():
-    if isinstance( v, collections.abc.Mapping ):
-      dest[k] = recursiveUpdate( dest.get( k, {} ), v )
-    else:
-      dest[k] = v
-  return dest
-
 # Move this out of nested class for pickle
 class SubmissionType( Enum ):
   PBS   = "PBS"
@@ -42,14 +32,11 @@ class SubmissionType( Enum ):
     return self.value
 
 class SubmitOptions( ) :
-  
-  ARGUMENTS_ORIGIN_KEY = "arguments_origin"
 
   def __init__( self, optDict={}, isHostSpecific=False, lockSubmitType=False, origin=None ) :
     self.submit_            = optDict
     self.workingDirectory_  = None
     self.queue_             = None
-    self.resources_         = None
     self.timelimit_         = None
     self.wait_              = None
     
@@ -66,15 +53,15 @@ class SubmitOptions( ) :
     self.dependencies_     = None
     self.logfile_          = None
 
-    # Should normally be restricted to host-specific options
-    self.arguments_        = OrderedDict()
+    self.hpcArguments_     = None
+    self.arguments_        = SubmitArgpacks( OrderedDict() )
 
     # Allow host-specific submit options
     self.isHostSpecific_      = isHostSpecific
     self.hostSpecificOptions_ = {}
     self.parse( origin=origin )
 
-  def parse( self, log=False, origin=None ):
+  def parse( self, print=print, origin=None ):
     submitKeys = []
 
     key = "working_directory"
@@ -87,11 +74,6 @@ class SubmitOptions( ) :
     if key in self.submit_ :
       self.queue_ = self.submit_[ key ]
     
-    key = "resources"
-    submitKeys.append( key )
-    if key in self.submit_ :
-      self.resources_ = self.submit_[ key ]
-    
     key = "timelimit"
     submitKeys.append( key )
     if key in self.submit_ :
@@ -101,13 +83,16 @@ class SubmitOptions( ) :
     submitKeys.append( key )
     if key in self.submit_ :
       self.wait_ = self.submit_[ key ]
+
+    key = "hpc_arguments"
+    submitKeys.append( key )
+    if key in self.submit_ :
+      self.hpcArguments_ = self.submit_[ key ]
     
     key = "arguments"
     submitKeys.append( key )
     if key in self.submit_ :
-      self.arguments_ = self.submit_[ key ]
-      if origin is not None :
-        self.arguments_[ SubmitOptions.ARGUMENTS_ORIGIN_KEY ] = { argKey : origin for argKey in self.arguments_.keys() }
+      self.arguments_ = SubmitArgpacks( self.submit_[ key ], origin )
     
     # Allow parsing of per-action submission
     key = "submission"
@@ -130,9 +115,8 @@ class SubmitOptions( ) :
 
   # Updates and overrides current with values from rhs if they exist
   def update( self, rhs, print=print ) :
-    if rhs.workingDirectory_    is not None : self.workingDirectory_ = rhs.workingDirectory_
+    if rhs.workingDirectory_    is not None : self.workingDirectory_  = rhs.workingDirectory_
     if rhs.queue_               is not None : self.queue_             = rhs.queue_
-    if rhs.resources_           is not None : self.resources_         = rhs.resources_
     if rhs.timelimit_           is not None : self.timelimit_         = rhs.timelimit_
     if rhs.wait_                is not None : self.wait_              = rhs.wait_
     
@@ -149,13 +133,18 @@ class SubmitOptions( ) :
     if rhs.name_                is not None : self.name_             = rhs.name_
     if rhs.dependencies_        is not None : self.dependencies_     = rhs.dependencies_
 
-    # These are both dictionaries
-    if rhs.arguments_                       : recursiveUpdate( self.arguments_, rhs.arguments_ )
-    if rhs.hostSpecificOptions_             : recursiveUpdate( self.hostSpecificOptions_, rhs.hostSpecificOptions_ )
+    
+    # if rhs.hpcArguments_        is not None : self.hpcArguments_.update( rhs.hpcArguments_ )
+    if rhs.hpcArguments_        is not None : self.hpcArguments_ = rhs.hpcArguments_
+    
+    if rhs.arguments_           is not None : self.arguments_   .update( rhs.arguments_, print=print )
+
+    # Just a dictionary
+    if rhs.hostSpecificOptions_             : sc.recursiveUpdate( self.hostSpecificOptions_, rhs.hostSpecificOptions_ )
 
     # This keeps things consistent but should not affect anything
-    recursiveUpdate( self.submit_, rhs.submit_ )
-    self.parse( log=True )
+    sc.recursiveUpdate( self.submit_, rhs.submit_ )
+    self.parse( print=print )
   
   # Check non-optional fields
   def validate( self ) :
@@ -171,8 +160,8 @@ class SubmitOptions( ) :
         err = "account"
       elif self.queue_ is None :
         err = "queue"
-      elif self.resources_ is None :
-        err = "resource list"
+      elif self.hpcArguments_ is None :
+        err = "hpc_arguments"
       
       if err is not None :
         err += " on non-LOCAL submission"
@@ -181,6 +170,12 @@ class SubmitOptions( ) :
     if err is not None :
       errMsg = errMsgFormat.format( opt=err )
     return err is None, errMsg
+
+
+  def setName( self, name ) :
+    self.name_ = name
+    self.arguments_.name_ = name
+    # self.hpcArguments_.name_ = name
 
   def selectHostSpecificSubmitOptions( self ) :
     # Must be valid for this specific host or generically
@@ -206,59 +201,28 @@ class SubmitOptions( ) :
     # https://github.com/python/cpython/issues/88508
     submitDict = {}
     if self.submitType_ == SubmissionType.PBS :
-      submitDict    = { "submit" : "qsub",   "resources"  : "{0}",
+      submitDict    = { "submit" : "qsub",   "arguments"  : "{0}",
                         "name"   : "-N {0}", "dependency" : "-W depend={0}",
                         "queue"  : "-q {0}", "account"    : "-A {0}",
                         "output" : "-j oe -o {0}",
                         "time"   : "-l walltime={0}",
                         "wait"   : "-W block=true" }
     elif self.submitType_ == SubmissionType.SLURM :
-      submitDict    = { "submit" : "sbtach", "resources"  : "{0}",
+      submitDict    = { "submit" : "sbtach", "arguments"  : "{0}",
                         "name"   : "-J {0}", "dependency" : "-d {0}",
                         "queue"  : "-p {0}", "account"    : "-A {0}",
                         "output" : "-j -o {0}",
                         "time"   : "-t {0}",
                         "wait"   : "-W" }
     elif self.submitType_ == SubmissionType.LOCAL :
-      submitDict    = { "submit" : "",       "resources"  : "",
+      submitDict    = { "submit" : "",       "arguments"  : "",
                         "name"   : "",       "dependency" : "",
                         "queue"  : "",       "account"    : "",
                         "output" : "-o {0}",
                         "time"   : "",
                         "wait"   : "" }
 
-    additionalArgs = []
-    
-    if self.arguments_ :
-      # Find all argument packs that match our ancestry
-      argpacksToUse = []
-      for argpack in self.arguments_.keys() :
-        if "::" in argpack :
-          # print( "Checking scope-specific argument pack {0}".format( argpack ) )
-          # Take everything before :: and treat it as a regex to match ancestry
-          scopeRegex = argpack.split( "::" )[0]
-          if re.match( scopeRegex, self.name_ ) is not None :
-            argpacksToUse.append( ( argpack, argpack.split( "::" )[1] ) )
-        else :
-          # Generic pack, send it off!
-          argpacksToUse.append( ( argpack, argpack ) )
-
-
-      # Format them and pass them out in alphabetical order based on name, NOT REGEX
-      longestPack   = len( max( [ key for key, sortname in argpacksToUse if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY ], key=len ) )
-      longestOrigin = len( max( [ self.arguments_[SubmitOptions.ARGUMENTS_ORIGIN_KEY][key] for key, sortname in argpacksToUse if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY ], key=len ) )
-      for key, sortname in sorted( argpacksToUse, key=lambda pack : pack[1] ) :
-        if key != SubmitOptions.ARGUMENTS_ORIGIN_KEY :
-          print( 
-                "From {origin:<{length}} adding arguments pack {key:<{packlength}} : {val}".format(
-                                                                                        origin=self.arguments_[SubmitOptions.ARGUMENTS_ORIGIN_KEY][key],
-                                                                                        length=longestOrigin,
-                                                                                        packlength=longestPack + 2,
-                                                                                        key="'{0}'".format( key ),
-                                                                                        val=self.arguments_[key]
-                                                                                        )
-                )
-          additionalArgs.extend( self.arguments_[key] )
+    additionalArgs = self.arguments_.selectAncestrySpecificSubmitArgpacks().format( print=print )
 
     if self.submitType_ == SubmissionType.LOCAL :
       return [], additionalArgs
@@ -266,8 +230,8 @@ class SubmitOptions( ) :
       cmd = [ submitDict[ "submit" ] ]
 
       # Set through config
-      if self.resources_ is not None :
-        cmd.extend( submitDict[ "resources" ].format( self.resources_ ).split( " " ) )
+      if self.hpcArguments_ is not None :
+        cmd.extend( submitDict[ "arguments" ].format( self.hpcArguments_ ).split( " " ) )
 
       if self.queue_ is not None :
         cmd.extend( submitDict[ "queue" ].format( self.queue_ ).split( " " ) )
@@ -301,7 +265,7 @@ class SubmitOptions( ) :
     output = {
               "working_directory" : self.workingDirectory_,
               "queue"             : self.queue_,
-              "resources"         : self.resources_,
+              "hpc_arguments"     : self.hpcArguments_,
               "timelimit"         : self.timelimit_,
               "wait"              : self.wait_,
               "submitType"        : self.submitType_,
@@ -486,7 +450,7 @@ class SubmitOptions( ) :
   def joinHPCResourcesOp( steps, op, print=print ) :
     resources = ""
     for step in steps :
-      resources = SubmitOptions.joinHPCResourcesStrOp( resources, step.submitOptions_.resources_, step.submitOptions_.submitType_, op, print=print )
+      resources = SubmitOptions.joinHPCResourcesStrOp( resources, step.submitOptions_.hpcArguments_, step.submitOptions_.submitType_, op, print=print )
     return resources
 
   @staticmethod

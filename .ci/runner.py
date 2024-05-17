@@ -15,6 +15,8 @@ from Step          import Step
 from SubmitOptions import SubmitOptions, SubmissionType
 from SubmitAction  import SubmitAction
 import SubmitOptions as so
+import SubmitCommon as sc
+
 
 ABS_FILEPATH = os.path.realpath( __file__ )
 
@@ -110,7 +112,7 @@ class Suite( SubmitAction ) :
       overrideResource = self.globalOpts_.joinHPC
       self.log( "Requested override of resources with '{0}'".format( overrideResource ) )
       maxDict = SubmitOptions.breakdownResources( maxResources, hpcSubmit[0] )
-      so.recursiveUpdate( maxDict, SubmitOptions.breakdownResources( overrideResource, hpcSubmit[0] ) )
+      sc.recursiveUpdate( maxDict, SubmitOptions.breakdownResources( overrideResource, hpcSubmit[0] ) )
       maxResources = SubmitOptions.formatResourceBreakdown( maxDict, hpcSubmit[0] )
     self.log_pop()
 
@@ -377,7 +379,7 @@ class Suite( SubmitAction ) :
 
 # A separated helper function to wrap this in a callable format
 def runSuite( options ) :
-  so.LABEL_LENGTH = options.labelLength
+  sc.LABEL_LENGTH = options.labelLength
 
   opts = SubmitOptions()
   opts.account_    = options.account

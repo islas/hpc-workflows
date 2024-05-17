@@ -2,7 +2,8 @@ import os
 import io
 import copy
 from SubmitOptions import SubmitOptions
-import SubmitOptions as so
+import SubmitCommon as sc
+
 
 class SubmitAction( ) :
   SUCCESS_STR = "[SUCCESS]"
@@ -16,7 +17,7 @@ class SubmitAction( ) :
     self.name_          = name
     self.globalOpts_    = globalOpts # options passed in at CLI
     # Add 8 for [item::] characters
-    self.label_            = "{0:<{1}}".format( "[{0}::{1}] ".format( self.scope(), self.name_ ), so.LABEL_LENGTH + 8 )
+    self.label_            = "{0:<{1}}".format( "[{0}::{1}] ".format( self.scope(), self.name_ ), sc.LABEL_LENGTH + 8 )
     self.labelIndentation_ = "  "
     self.labelLevel_       = 0
     self.logfile_        = None
@@ -56,7 +57,7 @@ class SubmitAction( ) :
   def parse( self ) :
     key = "submit_options"
     if key in self.options_ :
-      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.name_ ).selectHostSpecificSubmitOptions(), print=self.log )
+      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.ancestry() ).selectHostSpecificSubmitOptions(), print=self.log )
 
     # Now call child parse
     self.parseSpecificOptions()
