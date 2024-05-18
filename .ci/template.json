@@ -14,7 +14,7 @@
     // specifics to each HPC system
     "hpc_arguments"     :
     {
-      // NO KEYWORDS at this level
+      // NO KEYWORDS at this level or below
       // argpacks can be any valid string but all must be unique
       // Recommended to not contain spaces or periods, character pattern
       // '::' is reserved for regex-based argpacks
@@ -29,9 +29,9 @@
         //   -l select=1:ngpus=4
         // {"gres=":{"gpu:tesla":2,"shard":64}} for SLURM would result in the following being added to the HPC submission
         //   --gres=gpu:tesla:2,shard:64
-        "<option>" : // HPC flag or option to pass in
+        "<option>" : // HPC flag or option to pass in, only one allowed per argpack, use {} for flag only
         {
-          "<unique-resource-name>" : "number or string", // non-unit numbers do not need quotes
+          "<unique-resource-name>" : "number or string", // non-unit numbers do not need quotes, for empty value use ""
           // <regex> should be a valid regex usable by python's re module
           // <unique-resource-name> CANNOT match the above <unique-resource-name>
           // future definitions will only override the specific full unique match with <regex> included

@@ -4,11 +4,11 @@ import re
 import math
 import heapq
 from collections import OrderedDict
-from enum import Enum
 from datetime import timedelta
 
 import SubmitCommon as sc
 from SubmitArgpacks import SubmitArgpacks
+from HpcArgpacks    import HpcArgpacks
 
 
 PBS_RESOURCE_REGEX_STR = r"(?P<start>[ ]*-l[ ]+)?(?P<res>\w+)=(?P<amount>.*?)(?=:|[ ]*-l[ ]|$)"
@@ -22,14 +22,7 @@ PBS_TIMELIMIT_REGEX_STR    = r"^(?P<hh>\d+):(?P<mm>\d+):(?P<ss>\d+)$"
 PBS_TIMELIMIT_REGEX        = re.compile( PBS_TIMELIMIT_REGEX_STR )
 PBS_TIMELIMIT_FORMAT_STR   = "{:02}:{:02}:{:02}"
 
-# Move this out of nested class for pickle
-class SubmissionType( Enum ):
-  PBS   = "PBS"
-  SLURM = "SLURM"
-  LOCAL = "LOCAL"
 
-  def __str__( self ) :
-    return self.value
 
 class SubmitOptions( ) :
 
@@ -53,7 +46,7 @@ class SubmitOptions( ) :
     self.dependencies_     = None
     self.logfile_          = None
 
-    self.hpcArguments_     = None
+    self.hpcArguments_     = HpcArgpacks   ( OrderedDict() )
     self.arguments_        = SubmitArgpacks( OrderedDict() )
 
     # Allow host-specific submit options
@@ -87,19 +80,19 @@ class SubmitOptions( ) :
     key = "hpc_arguments"
     submitKeys.append( key )
     if key in self.submit_ :
-      self.hpcArguments_ = self.submit_[ key ]
+      self.hpcArguments_.update( HpcArgpacks( self.submit_[ key ], origin ), print )
     
     key = "arguments"
     submitKeys.append( key )
     if key in self.submit_ :
-      self.arguments_ = SubmitArgpacks( self.submit_[ key ], origin )
+      self.arguments_.update( SubmitArgpacks( self.submit_[ key ], origin ), print )
     
     # Allow parsing of per-action submission
     key = "submission"
     submitKeys.append( key )
     if key in self.submit_ :
       if not self.lockSubmitType_ :
-        self.submitType_ = SubmissionType( self.submit_[ key ] )
+        self.submitType_ = sc.SubmissionType( self.submit_[ key ] )
 
 
     # Process all other keys as host-specific options
@@ -134,17 +127,15 @@ class SubmitOptions( ) :
     if rhs.dependencies_        is not None : self.dependencies_     = rhs.dependencies_
 
     
-    # if rhs.hpcArguments_        is not None : self.hpcArguments_.update( rhs.hpcArguments_ )
-    if rhs.hpcArguments_        is not None : self.hpcArguments_ = rhs.hpcArguments_
-    
-    if rhs.arguments_           is not None : self.arguments_   .update( rhs.arguments_, print=print )
+    if rhs.hpcArguments_.arguments_         : self.hpcArguments_.update( rhs.hpcArguments_, print=print )    
+    if rhs.arguments_.arguments_            : self.arguments_   .update( rhs.arguments_, print=print )
 
     # Just a dictionary
     if rhs.hostSpecificOptions_             : sc.recursiveUpdate( self.hostSpecificOptions_, rhs.hostSpecificOptions_ )
 
     # This keeps things consistent but should not affect anything
     sc.recursiveUpdate( self.submit_, rhs.submit_ )
-    self.parse( print=print )
+    # self.parse( print=print )
   
   # Check non-optional fields
   def validate( self ) :
@@ -155,12 +146,12 @@ class SubmitOptions( ) :
       err   = "submission type"
     elif self.name_     is None :
       err = "submission job name"
-    elif self.submitType_ is not SubmissionType.LOCAL :
+    elif self.submitType_ is not sc.SubmissionType.LOCAL :
       if self.account_ is None :
         err = "account"
       elif self.queue_ is None :
         err = "queue"
-      elif self.hpcArguments_ is None :
+      elif not self.hpcArguments_.arguments_ :
         err = "hpc_arguments"
       
       if err is not None :
@@ -175,9 +166,9 @@ class SubmitOptions( ) :
   def setName( self, name ) :
     self.name_ = name
     self.arguments_.name_ = name
-    # self.hpcArguments_.name_ = name
+    self.hpcArguments_.name_ = name
 
-  def selectHostSpecificSubmitOptions( self ) :
+  def selectHostSpecificSubmitOptions( self, print=print ) :
     # Must be valid for this specific host or generically
     fqdn = socket.getfqdn()
 
@@ -189,7 +180,7 @@ class SubmitOptions( ) :
 
     if hostSpecificOptKey is not None :
       # Update with host-specifics
-      currentSubmitOptions.update( self.hostSpecificOptions_[ hostSpecificOptKey ] )
+      currentSubmitOptions.update( self.hostSpecificOptions_[ hostSpecificOptKey ], print )
 
     return currentSubmitOptions
 
@@ -200,21 +191,21 @@ class SubmitOptions( ) :
     # Why this can't be a dict value of the enum
     # https://github.com/python/cpython/issues/88508
     submitDict = {}
-    if self.submitType_ == SubmissionType.PBS :
+    if self.submitType_ == sc.SubmissionType.PBS :
       submitDict    = { "submit" : "qsub",   "arguments"  : "{0}",
                         "name"   : "-N {0}", "dependency" : "-W depend={0}",
                         "queue"  : "-q {0}", "account"    : "-A {0}",
                         "output" : "-j oe -o {0}",
                         "time"   : "-l walltime={0}",
                         "wait"   : "-W block=true" }
-    elif self.submitType_ == SubmissionType.SLURM :
+    elif self.submitType_ == sc.SubmissionType.SLURM :
       submitDict    = { "submit" : "sbtach", "arguments"  : "{0}",
                         "name"   : "-J {0}", "dependency" : "-d {0}",
                         "queue"  : "-p {0}", "account"    : "-A {0}",
                         "output" : "-j -o {0}",
                         "time"   : "-t {0}",
                         "wait"   : "-W" }
-    elif self.submitType_ == SubmissionType.LOCAL :
+    elif self.submitType_ == sc.SubmissionType.LOCAL :
       submitDict    = { "submit" : "",       "arguments"  : "",
                         "name"   : "",       "dependency" : "",
                         "queue"  : "",       "account"    : "",
@@ -222,16 +213,25 @@ class SubmitOptions( ) :
                         "time"   : "",
                         "wait"   : "" }
 
+    if self.arguments_.arguments_ :
+      print( "Gathering argument packs..." )
     additionalArgs = self.arguments_.selectAncestrySpecificSubmitArgpacks().format( print=print )
 
-    if self.submitType_ == SubmissionType.LOCAL :
+    if self.submitType_ == sc.SubmissionType.LOCAL :
       return [], additionalArgs
     else :
       cmd = [ submitDict[ "submit" ] ]
 
       # Set through config
-      if self.hpcArguments_ is not None :
-        cmd.extend( submitDict[ "arguments" ].format( self.hpcArguments_ ).split( " " ) )
+      if self.hpcArguments_.arguments_ :
+        print( "Gathering HPC argument packs..." )
+
+        cmd.extend( submitDict[ "arguments" ].format(
+                                                      self.hpcArguments_.
+                                                        selectAncestrySpecificSubmitArgpacks().
+                                                        format( self.submitType_, print=print ) ).
+                                                        split( " " )
+                                                      )
 
       if self.queue_ is not None :
         cmd.extend( submitDict[ "queue" ].format( self.queue_ ).split( " " ) )
@@ -255,7 +255,7 @@ class SubmitOptions( ) :
       if self.dependencies_ is not None :
         cmd.extend( submitDict[ "dependency" ].format( self.dependencies_ ).split( " " ) )
 
-      if self.submitType_ == SubmissionType.PBS :
+      if self.submitType_ == sc.SubmissionType.PBS :
         # Extra bit to delineate command + args
         cmd.append( "--" )
 
@@ -282,9 +282,9 @@ class SubmitOptions( ) :
   @staticmethod
   def parseTimelimit( timelimit, submitType ) :
     timeMatch = None
-    if submitType == SubmissionType.PBS :
+    if submitType == sc.SubmissionType.PBS :
       timeMatch = PBS_TIMELIMIT_REGEX.match( timelimit )
-    elif submitType == SubmissionType.SLURM :
+    elif submitType == sc.SubmissionType.SLURM :
       pass
     if timeMatch is not None :
       timeGroups = timeMatch.groupdict()
@@ -299,21 +299,21 @@ class SubmitOptions( ) :
   @staticmethod
   def formatTimelimit( timelimit, submitType ) :
     totalSeconds = timelimit.total_seconds()
-    if submitType == SubmissionType.PBS :
+    if submitType == sc.SubmissionType.PBS :
       return '{:02}:{:02}:{:02}'.format(
                                         int(totalSeconds//3600),
                                         int(totalSeconds%3600//60),
                                         int(totalSeconds%60)
                                         )
-    elif submitType == SubmissionType.SLURM :
+    elif submitType == sc.SubmissionType.SLURM :
       return None
 
   @staticmethod
   def resourceMemSizeDict( amountStr, submitType ) :
     memMatch = None 
-    if submitType == SubmissionType.PBS :
+    if submitType == sc.SubmissionType.PBS :
       memMatch = PBS_RESOURCE_SIZE_REGEX.match( amountStr )
-    elif submitType == SubmissionType.SLURM :
+    elif submitType == sc.SubmissionType.SLURM :
       pass
 
     if memMatch is not None :
@@ -365,7 +365,7 @@ class SubmitOptions( ) :
   @staticmethod
   def breakdownResources( resourceStr, submitType ) :
     resourceBreakDown = OrderedDict()
-    if   submitType == SubmissionType.PBS :
+    if   submitType == sc.SubmissionType.PBS :
       currentKey        = ""
       # Fill first amount up, generating resource groups
       for resFound in PBS_RESOURCE_REGEX.finditer( resourceStr ) :
@@ -377,7 +377,7 @@ class SubmitOptions( ) :
           resourceBreakDown[currentKey] = OrderedDict()
         resourceBreakDown[ currentKey ][ groups[ "res" ] ] = groups[ "amount" ]
 
-    elif submitType == SubmissionType.SLURM :
+    elif submitType == sc.SubmissionType.SLURM :
       pass
 
     return resourceBreakDown
@@ -385,10 +385,10 @@ class SubmitOptions( ) :
   @staticmethod
   def formatResourceBreakdown( resourceBreakDown, submitType ) :
     finalResources = ""
-    if   submitType == SubmissionType.PBS :
+    if   submitType == sc.SubmissionType.PBS :
       # Do PBS-specific merging
       finalResources = "-l " + " -l ".join( [ ":".join( [ "{0}={1}".format( k,v ) for k,v in resources.items() ] ) for resources in resourceBreakDown.values() ] )
-    elif submitType == SubmissionType.SLURM :
+    elif submitType == sc.SubmissionType.SLURM :
       pass
     
     return finalResources

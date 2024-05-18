@@ -8,8 +8,9 @@ from datetime import timedelta
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
+from SubmitCommon  import SubmissionType
 from SubmitAction  import SubmitAction
-from SubmitOptions import SubmitOptions, SubmissionType
+from SubmitOptions import SubmitOptions
 from Step          import Step
 
 HPC_DELAY_PERIOD_SECONDS =  60

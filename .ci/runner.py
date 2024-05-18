@@ -10,12 +10,15 @@ from multiprocessing import Pool
 from contextlib import redirect_stdout
 from datetime import timedelta
 
+
+import SubmitCommon as sc
+import SubmitOptions as so
+
+from SubmitAction  import SubmitAction
 from Test          import Test
 from Step          import Step
-from SubmitOptions import SubmitOptions, SubmissionType
-from SubmitAction  import SubmitAction
-import SubmitOptions as so
-import SubmitCommon as sc
+from SubmitOptions import SubmitOptions
+
 
 
 ABS_FILEPATH = os.path.realpath( __file__ )
@@ -80,7 +83,7 @@ class Suite( SubmitAction ) :
   ##############################################################################
   def runHPCJoin( self, tests ) :
     # All steps must have the same submission type
-    hpcSubmit = [ step.submitOptions_.submitType_ for test in tests for step in self.tests_[ test ].steps_.values() if step.submitOptions_.submitType_ != SubmissionType.LOCAL ]
+    hpcSubmit = [ step.submitOptions_.submitType_ for test in tests for step in self.tests_[ test ].steps_.values() if step.submitOptions_.submitType_ != sc.SubmissionType.LOCAL ]
     allEqual  = ( not hpcSubmit or hpcSubmit.count( hpcSubmit[0] ) == len( hpcSubmit ) )
 
     if not allEqual :
@@ -153,7 +156,7 @@ class Suite( SubmitAction ) :
     hpcJoinOpts = copy.deepcopy( self.globalOpts_ )
     # Overwrite certain options to force running in a particular state
     hpcJoinOpts.joinHPC = None
-    hpcJoinOpts.submitType = SubmissionType.LOCAL
+    hpcJoinOpts.submitType = sc.SubmissionType.LOCAL
 
     for key, value in vars( hpcJoinOpts ).items() :
       # Do our positional args first
@@ -386,13 +389,13 @@ def runSuite( options ) :
 
   if options.submitType is None :
     # Set default to LOCAL, but do not force
-    opts.submitType_ = SubmissionType.LOCAL
+    opts.submitType_ = sc.SubmissionType.LOCAL
   else :
     opts.submitType_         = options.submitType
     opts.lockSubmitType_     = True
     print( "Forcing submission type to {0} for all steps".format( opts.submitType_ ) )
   
-  if opts.submitType_ != SubmissionType.LOCAL and opts.account_ is None:
+  if opts.submitType_ != sc.SubmissionType.LOCAL and opts.account_ is None:
     # We don't have an account && we are not running local
     err = "Error: No account provided for non-local run."
     print( err )
@@ -485,8 +488,8 @@ def getOptionsParser():
                       "-s", "--submitType",
                       dest="submitType",
                       help="Override type of submission to use for all steps submitted",
-                      type=SubmissionType,
-                      choices=list( SubmissionType),
+                      type=sc.SubmissionType,
+                      choices=list( sc.SubmissionType ),
                       default=None
                       )
   parser.add_argument( 

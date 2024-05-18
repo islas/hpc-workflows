@@ -5,8 +5,9 @@ import os
 import re
 import io
 
+from SubmitCommon  import SubmissionType
 from SubmitAction  import SubmitAction
-from SubmitOptions import SubmitOptions, SubmissionType
+from SubmitOptions import SubmitOptions
 
 jobidRegex  = re.compile( r"(\d{5,})" )
 

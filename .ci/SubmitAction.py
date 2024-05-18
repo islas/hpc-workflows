@@ -57,7 +57,7 @@ class SubmitAction( ) :
   def parse( self ) :
     key = "submit_options"
     if key in self.options_ :
-      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.ancestry() ).selectHostSpecificSubmitOptions(), print=self.log )
+      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.ancestry() ).selectHostSpecificSubmitOptions( print=self.log ), print=self.log )
 
     # Now call child parse
     self.parseSpecificOptions()
