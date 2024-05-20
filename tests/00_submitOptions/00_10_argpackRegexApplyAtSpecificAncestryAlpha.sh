@@ -82,16 +82,16 @@ $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_S
    \.\*setB\.\*::beSecondSet=\['setB'\]             \
    \.\*setA\.\*::shouldBeLast=\['setA'\]" \
   "argset_01=$suite                              \
-   \.\*regex\.\*::argset_02=$test0               \
-   \.\*setB\.\*::beSecondSet=$test0                 \
-   \.\*setA\.\*::shouldBeLast=$test0"
+   \.\*regex\.\*::argset_02=$suite.$test0        \
+   \.\*setB\.\*::beSecondSet=$suite.$test0       \
+   \.\*setA\.\*::shouldBeLast=$suite.$test0"
 result=$?
 
 $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 \
   "\.\*setD\.\*::alwaysFirst=\['setD'\]             \
    \.\*setC\.\*::needsToBeBetween_b_and_s=\['setC'\]" \
-  "\.\*setD\.\*::alwaysFirst=$test0                \
-   \.\*setC\.\*::needsToBeBetween_b_and_s=$test0" false
+  "\.\*setD\.\*::alwaysFirst=$suite.$test0                \
+   \.\*setC\.\*::needsToBeBetween_b_and_s=$suite.$test0" false
 result=$?
 
 $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 "arg0 arg1 setB setA" true
@@ -103,17 +103,17 @@ $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_S
   argset_01=\['arg0','arg1'\]                         \
    \.\*regex\.\*::argset_02=\[\]                      \
    \.\*setC\.\*::needsToBeBetween_b_and_s=\['setC'\]" \
-  "\.\*setD\.\*::alwaysFirst=$test0                \
+  "\.\*setD\.\*::alwaysFirst=$suite.$test0            \
    argset_01=$suite                                \
-   \.\*regex\.\*::argset_02=$test0
-   \.\*setC\.\*::needsToBeBetween_b_and_s=$test0"
+   \.\*regex\.\*::argset_02=$suite.$test0
+   \.\*setC\.\*::needsToBeBetween_b_and_s=$suite.$test0"
 result=$?
 
 $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 \
   "\.\*setB\.\*::beSecondSet=\['setB'\]             \
    \.\*setA\.\*::shouldBeLast=\['setA'\]" \
-  "\.\*setB\.\*::beSecondSet=$test0                \
-   \.\*setA\.\*::shouldBeLast=$test0" false
+  "\.\*setB\.\*::beSecondSet=$suite.$test0          \
+   \.\*setA\.\*::shouldBeLast=$suite.$test0" false
 result=$?
 
 
@@ -128,12 +128,12 @@ $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_S
    \.\*setB\.\*::beSecondSet=\['setB'\]                 \
    \.\*setC\.\*::needsToBeBetween_b_and_s=\['setC'\] \
    \.\*setA\.\*::shouldBeLast=\['setA'\]"            \
-  "\.\*setD\.\*::alwaysFirst=$test0                  \
+  "\.\*setD\.\*::alwaysFirst=$suite.$test0           \
    argset_01=$suite                                  \
-   \.\*regex\.\*::argset_02=$test0                   \
-   \.\*setB\.\*::beSecondSet=$test0                     \
-   \.\*setC\.\*::needsToBeBetween_b_and_s=$test0     \
-   \.\*setA\.\*::shouldBeLast=$test0"
+   \.\*regex\.\*::argset_02=$suite.$test0            \
+   \.\*setB\.\*::beSecondSet=$suite.$test0                  \
+   \.\*setC\.\*::needsToBeBetween_b_and_s=$suite.$test0     \
+   \.\*setA\.\*::shouldBeLast=$suite.$test0"
 result=$?
 
 $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step2 "setD arg0 arg1 setB setC setA" true
@@ -144,7 +144,7 @@ $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_S
   "argset_01=\['arg0','arg1'\]                    \
    \.\*regex\.\*::argset_02=\[\]" \
   "argset_01=$suite                              \
-   \.\*regex\.\*::argset_02=$test0"
+   \.\*regex\.\*::argset_02=$suite.$test0"
 result=$?
 
 $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step3 \
@@ -152,10 +152,10 @@ $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_S
    \.\*setA\.\*::shouldBeLast=\['setA'\]             \
    \.\*setD\.\*::alwaysFirst=\['setD'\]             \
    \.\*setC\.\*::needsToBeBetween_b_and_s=\['setC'\]" \
-  "\.\*setB\.\*::beSecondSet=$test0                \
-   \.\*setA\.\*::shouldBeLast=$test0                \
-   \.\*setD\.\*::alwaysFirst=$test0                \
-   \.\*setC\.\*::needsToBeBetween_b_and_s=$test0" false
+  "\.\*setB\.\*::beSecondSet=$suite.$test0            \
+   \.\*setA\.\*::shouldBeLast=$suite.$test0           \
+   \.\*setD\.\*::alwaysFirst=$suite.$test0            \
+   \.\*setC\.\*::needsToBeBetween_b_and_s=$suite.$test0" false
 result=$?
 
 $CURRENT_SOURCE_DIR/../scripts/helper_step_stdout.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step3 "arg0 arg1" true

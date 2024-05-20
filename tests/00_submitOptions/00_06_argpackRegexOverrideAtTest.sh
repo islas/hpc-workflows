@@ -58,7 +58,7 @@ $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_working_dir.sh $result $CURREN
 result=$?
 
 $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step0 \
-  "argset_01=\['arg0','arg1'\] \.\*regex\.\*::argset_02=\['overrideAtTest'\]" "argset_01=$suite \.\*regex\.\*::argset_02=$test0"
+  "argset_01=\['arg0','arg1'\] \.\*regex\.\*::argset_02=\['overrideAtTest'\]" "argset_01=$suite \.\*regex\.\*::argset_02=$suite.$test0"
 result=$?
 
 $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_report.sh $result $CURRENT_SOURCE_DIR $suite $test0 true "$test0_step0=true"
