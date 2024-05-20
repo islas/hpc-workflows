@@ -2,7 +2,6 @@
   "submit_options" :
   {
     "working_directory" : "../../",
-    "resources"  : "list your resources here based on HPC specific system",
     "queue"      : "economy",
     "timelimit"  : "01:00:00",
     "wait"       : "True if set, use with caution",
