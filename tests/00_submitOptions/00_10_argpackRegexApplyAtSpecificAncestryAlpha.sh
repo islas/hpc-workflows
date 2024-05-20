@@ -106,14 +106,14 @@ $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_S
   "\.\*setD\.\*::alwaysFirst=$suite.$test0            \
    argset_01=$suite                                \
    \.\*regex\.\*::argset_02=$suite.$test0
-   \.\*setC\.\*::needsToBeBetween_b_and_s=$test0"
+   \.\*setC\.\*::needsToBeBetween_b_and_s=$suite.$test0"
 result=$?
 
 $CURRENT_SOURCE_DIR/../scripts/helper_test_stdout_argpacks.sh $result $CURRENT_SOURCE_DIR $suite $test0 $test0_step1 \
   "\.\*setB\.\*::beSecondSet=\['setB'\]             \
    \.\*setA\.\*::shouldBeLast=\['setA'\]" \
   "\.\*setB\.\*::beSecondSet=$suite.$test0          \
-   \.\*setA\.\*::shouldBeLast=$test0" false
+   \.\*setA\.\*::shouldBeLast=$suite.$test0" false
 result=$?
 
 
