@@ -23,7 +23,7 @@ class SubmitAction( ) :
 
     self.parent_        = parent
     self.options_       = options
-    self.submitOptions_ = copy.deepcopy( defaultSubmitOptions ).selectHostSpecificSubmitOptions()
+    self.submitOptions_ = copy.deepcopy( defaultSubmitOptions )
 
     self.rootDir_          = rootDir
     self.printDir_         = False
@@ -56,7 +56,7 @@ class SubmitAction( ) :
   def parse( self ) :
     key = "submit_options"
     if key in self.options_ :
-      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.name_ ).selectHostSpecificSubmitOptions(), print=self.log )
+      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.ancestry() ), print=self.log )
 
     # Now call child parse
     self.parseSpecificOptions()
