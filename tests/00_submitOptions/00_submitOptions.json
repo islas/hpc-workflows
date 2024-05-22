@@ -238,6 +238,39 @@
       }
     }
   },
+  "applyAtSpecificAncestry-sameregex" :
+  {
+    "submit_options" : 
+    { 
+      "arguments" : 
+      { 
+        ".*regex.*::argset_02" : [ ],
+        ".*setB.*::argRegex" : [ "setB" ],
+        ".*setA.*::argRegex" : [ "setA" ],
+        ".*setD.*::argRegex" : [ "setD" ],
+        ".*setC.*::argRegex" : [ "setC" ]
+      }
+    },
+    "steps" :
+    {
+      "step_setA_setB" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_setD_setC" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_setA_setB_setC_setD" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      },
+      "step_none_set_a_set_B_settC_dSet" :
+      {
+        "command"      : "./tests/scripts/echo_normal.sh"
+      }
+    }
+  },
   "applyAtSpecificAncestry-alpharegex" :
   {
     "submit_options" : 
