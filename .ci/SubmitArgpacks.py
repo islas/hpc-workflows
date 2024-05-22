@@ -100,7 +100,7 @@ class SubmitArgpacks( ) :
       finalArgpacksToUse = OrderedDict( 
                                   sorted(
                                           argpacksToUse.items(),
-                                          key=lambda pack : pack[0] if SubmitArgpacks.REGEX_DELIMETER not in pack[0] else pack[0].split( SubmitArgpacks.REGEX_DELIMETER )[1]
+                                          key=lambda pack : pack[0].split( SubmitArgpacks.REGEX_DELIMETER )[-1]
                                           )
                                   )
     

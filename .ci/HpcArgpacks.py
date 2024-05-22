@@ -1,10 +1,13 @@
 import re
+import copy
 from collections import OrderedDict
 
 import SubmitCommon as sc
 from SubmitArgpacks import SubmitArgpacks
 
 class HpcArgpacks( SubmitArgpacks ) :
+
+  HPC_JOIN_NAME = "join"
 
   def __init__( self, arguments, origin=None ) :
     self.nestedArguments_ = OrderedDict()
@@ -104,4 +107,394 @@ class HpcArgpacks( SubmitArgpacks ) :
       additionalArgs.append( argpackOption )
     
     return " ".join( additionalArgs )
+
+  def join( self, rhs, submitType, op, print=print ) :
+    # Because we are joining all origins and regex don't matter anymore so don't 
+    # try to track them anymore - join on the underlying name of the argpacks
+    # not the flags or resources as this would provide the greatest flexibility
+    # to users in partitioning out resources. Only throw error on conflict in option
+    # flag if it doesn't match
+    for key, value in rhs.arguments_.items() : 
+      # print( "Checking if {key} exists in {name}".format( key=key, name=self.name_ ) )
+      exists, occurrences = self.keyExists( key )
+      if exists :
+
+        # Join with the first occurrence ONLY!!
+        argpack = next(iter(occurrences))
+
+        # check if flags match
+        rhsOption = next(iter(value))
+        lhsOption = next(iter(self.arguments_[argpack]))
+        if rhsOption != lhsOption :
+          msg = "Options {0} from {1} and {2} from {3} do not match".format(
+                                                                            lhsOption,
+                                                                            argpack,
+                                                                            rhsOption,
+                                                                            key
+                                                                            )
+          print( msg )
+          raise Exception( msg )
+
+        print( "  Joining argpack {key} from {rhs} into {name}".format( key=key, rhs=rhs.name_, name=self.name_) )
+
+        for res, amount in rhs.nestedArguments_[key].arguments_.items() :
+          resExists, resOccurrences = self.nestedArguments_[argpack].keyExists( res )
+          resName = next(iter(resOccurrences))
+          if resExists and amount != "" :
+            try :
+              self.nestedArguments_[argpack].arguments_[resName] = op( 
+                                                                      self.nestedArguments_[argpack].arguments_[resName],
+                                                                      amount
+                                                                      )
+            except ValueError:
+              # Not an int value, size value / maybe this is a memory resource
+              lhsMem = HpcArgpacks.resourceMemSizeDict( self.nestedArguments_[argpack].arguments_[resName], submitType )
+              if lhsMem is not None :
+                rhsMem = SubmitOptions.resourceMemSizeDict( amount, submitType )
+                if lhsMem[ "unit" ] == rhsMem[ "unit" ] :
+                  # Can add
+                  rhsAmount = HpcArgpacks.resourceMemSizeBase( rhsMem )
+                  lhsAmount = HpcArgpacks.resourceMemSizeBase( lhsMem )
+
+                  totalAmount = op( rhsAmount, lhsAmount )
+                  self.nestedArguments_[argpack].arguments_[resName] = HpcArgpacks.resourceMemSizeFormat( 
+                                                                        HpcArgpacks.resourceMemSizeReduce(
+                                                                                                            {
+                                                                                                              "numeric" : totalAmount,
+                                                                                                              "scale"   : None,
+                                                                                                              "unit"    : resMem["unit"]
+                                                                                                            }
+                                                                                                          )
+                                                                                                        )
+                else :
+                  msg = "Error : cannot perform operation with values {0} and {1}".format( lhsMem["multi"], rhsMem["multi"] )
+                  print( msg )
+                  raise Exception( msg )
+              else :
+                # No idea how to join this arg
+                print( "Unsure how to operate on resources {0} and {1} together, defaulting to {0}".format( self.nestedArguments_[argpack].arguments_[resName], amount ) )
+          
+          else :
+            # assign new resource - remove all regex to signify generalization
+            self.nestedArguments_[argpack].arguments_[res.split( SubmitArgpacks.REGEX_DELIMETER )[-1]] = amount
+            self.nestedArguments_[argpack].origins_  [res.split( SubmitArgpacks.REGEX_DELIMETER )[-1]] = HpcArgpacks.HPC_JOIN_NAME
+
+      else :
+        # Just add
+        # print( "No {key} in {name}, adding to list".format( key=key, name=self.name_ ) )
+        genArgpack = key.split( SubmitArgpacks.REGEX_DELIMETER )[-1]
+        self.arguments_[genArgpack]       = copy.deepcopy(value)
+        self.origins_  [genArgpack]       = HpcArgpacks.HPC_JOIN_NAME
+        self.nestedArguments_[genArgpack] = SubmitArgpacks( OrderedDict() )
+        self.nestedArguments_[genArgpack].unique_ = True
+
+        for res, amount in rhs.nestedArguments_[key].arguments_.items() :
+          self.nestedArguments_[genArgpack].arguments_[res.split( SubmitArgpacks.REGEX_DELIMETER )[-1]] = amount
+          self.nestedArguments_[genArgpack].origins_  [res.split( SubmitArgpacks.REGEX_DELIMETER )[-1]] = HpcArgpacks.HPC_JOIN_NAME 
   
+
+
+  @staticmethod
+  def joinAll( hpcArgpacks, submitType, op, print=print ) :
+    finalHpcArgpacks = HpcArgpacks( OrderedDict() )
+    finalHpcArgpacks.name_ = HpcArgpacks.HPC_JOIN_NAME + "all"
+    if len( hpcArgpacks ) == 0 :
+      return finalHpcArgpacks
+    
+    for argpack in hpcArgpacks :
+      finalHpcArgpacks.join( argpack, submitType, op, print=print )
+    
+    return finalHpcArgpacks
+
+
+  # @staticmethod
+  # def joinHPCResourcesMax( hpcArgpacks, submitType, maxN, print=print ) :
+  #   # Because we are joining all origins and regex don't matter anymore so don't 
+  #   # try to track them anymore - join on the underlying name of the argpacks
+  #   # not the flags or resources as this would provide the greatest flexibility
+  #   # to users in partitioning out resources. Only throw error on conflict in option
+  #   # flag if it doesn't match
+  #   allArgpacks = set( [ key.split( "::" )[-1] for key in argpack.arguments_.keys() for argpack in hpcArgpacks ] )
+  #   allArgpacksResources = OrderedDict( [ ( key, OrderedDict() ) for key in allArgpacks ] )
+
+  #   if len( hpcArgpacks ) == 0 :
+  #     return finalHpcArgpacks
+
+  #   for key, value in rhs.arguments_.items() : 
+  #     exists, occurrences = self.keyExists( key )
+  #     if exists :
+
+  #       # Join with the first occurrence ONLY!!
+  #       argpack = next(iter(occurrences))
+
+  #       # check if flags match
+  #       rhsOption = next(iter(value))
+  #       lhsOption = next(iter(self.arguments_[argpack]))
+  #       if rhsOption != lhsOption :
+  #         msg = "Options {0} from {1} and {2} from {3} do not match".format(
+  #                                                                           lhsOption,
+  #                                                                           argpack,
+  #                                                                           rhsOption,
+  #                                                                           key
+  #                                                                           )
+  #         print( msg )
+  #         raise Exception( msg )
+
+  #       for res, amount in rhs.nestedArguments_.items() :
+  #         resExists, resOccurrences = self.nestedArguments_[argpack].keyExists( res )
+  #         resName = next(iter(resOccurrences))
+  #         if resExists and amount != "" :
+  #           try :
+  #             self.nestedArguments_[argpack].arguments_[resName] = op( 
+  #                                                                     self.nestedArguments_[argpack].arguments_[resName],
+  #                                                                     amount
+  #                                                                     )
+  #           except ValueError:
+  #             # Not an int value, size value / maybe this is a memory resource
+  #             lhsMem = HpcArgpacks.resourceMemSizeDict( self.nestedArguments_[argpack].arguments_[resName], submitType )
+  #             if lhsMem is not None :
+  #               rhsMem = SubmitOptions.resourceMemSizeDict( amount, submitType )
+  #               if lhsMem[ "unit" ] == rhsMem[ "unit" ] :
+  #                 # Can add
+  #                 rhsAmount = HpcArgpacks.resourceMemSizeBase( rhsMem )
+  #                 lhsAmount = HpcArgpacks.resourceMemSizeBase( lhsMem )
+
+  #                 totalAmount = op( rhsAmount, lhsAmount )
+  #                 self.nestedArguments_[argpack].arguments_[resName] = HpcArgpacks.resourceMemSizeFormat( 
+  #                                                                       HpcArgpacks.resourceMemSizeReduce(
+  #                                                                                                           {
+  #                                                                                                             "numeric" : totalAmount,
+  #                                                                                                             "scale"   : None,
+  #                                                                                                             "unit"    : resMem["unit"]
+  #                                                                                                           }
+  #                                                                                                         )
+  #                                                                                                       )
+  #               else :
+  #                 msg = "Error : cannot perform operation with values {0} and {1}".format( lhsMem["multi"], rhsMem["multi"] )
+  #                 print( msg )
+  #                 raise Exception( msg )
+  #             else :
+  #               # No idea how to join this arg
+  #               print( "Unsure how to operate on resources {0} and {1} together, defaulting to {0}".format( self.nestedArguments_[argpack].arguments_[resName], amount ) )
+          
+  #         else :
+  #           # assign new resource
+  #           self.nestedArguments_[argpack].arguments_[res] = amount
+
+  #     else :
+  #       # Just add
+  #       self.arguments_[key] = copy.deepcopy(value)
+  #       self.nestedArguments_[key] = copy.deepcopy(rhs.nestedArguments_[key])
+
+
+    
+  #   allBreakdowns = [ SubmitOptions.breakdownResources( res, submitType ) for res in resourceStrs ]
+
+  #   # # Flatten and get all keys
+  #   # allResourceTypes = list( set( [ res for breakdown in allBreakdowns for resGroup in breakdown.values() for res in resGroup.keys() ] ) )
+
+  #   organizedResources = OrderedDict()
+  #   for breakdown in allBreakdowns :
+  #     for group, resources in breakdown.items() :
+  #       if group not in organizedResources :
+  #         organizedResources[ group ] = OrderedDict()
+  #       for resource, amount in resources.items() :
+  #         if resource not in organizedResources[ group ] :
+  #           organizedResources[ group ][ resource ] = []
+  #         # Accumulate all resources' amounts into lists
+  #         organizedResources[ group ][ resource ].append( amount )
+
+  #   finalBreakdown = OrderedDict()
+  #   for group, resources in organizedResources.items() :
+  #     finalBreakdown[ group ] = OrderedDict()
+  #     for resource, amounts in resources.items() : 
+  #       try :
+  #         finalBreakdown[ group ][ resource ] = sum( [ int(amount) for amount in heapq.nlargest( maxN, amounts ) ] )
+  #       except ValueError :
+  #         resMem = SubmitOptions.resourceMemSizeDict( amounts[0], submitType )
+  #         if resMem is not None :
+  #           amountsAsDicts = [ SubmitOptions.resourceMemSizeDict( amount, submitType ) for amount in amounts ]
+  #           baseAmount = sum( [ SubmitOptions.resourceMemSizeBase( memDict ) for memDict in
+  #                               heapq.nlargest(
+  #                                               maxN,
+  #                                               amountsAsDicts,
+  #                                               key=lambda amount : SubmitOptions.resourceMemSizeBase( amount )
+  #                                               )
+  #                             ]
+  #                           )
+  #           finalBreakdown[ group ][ resource ] = SubmitOptions.resourceMemSizeFormat(
+  #                                                   SubmitOptions.resourceMemSizeReduce(
+  #                                                     {
+  #                                                       "numeric" : baseAmount,
+  #                                                       "scale"   : None,
+  #                                                       "unit"    : resMem[ "unit" ]
+  #                                                     }
+  #                                                   )
+  #                                                 )
+
+  #         else :
+  #           print( "Unable to sort resource type {0}, using {1}".format( resource, amounts[0] ) )
+  #           finalBreakdown[ group ][ resource ] = amounts[0]
+
+  #   return SubmitOptions.formatResourceBreakdown( finalBreakdown, submitType )
+
+
+  
+
+
+  @staticmethod
+  def resourceMemSizeDict( amountStr, submitType ) :
+    memMatch = None 
+    if submitType == sc.SubmissionType.PBS :
+      memMatch = PBS_RESOURCE_SIZE_REGEX.match( amountStr )
+    elif submitType == sc.SubmissionType.SLURM :
+      pass
+
+    if memMatch is not None :
+      return { k : ( v.lower() if v is not None else v ) for k,v in memMatch.groupdict().items() }
+    else :
+      return None
+
+  @staticmethod
+  def resourceMemSizeBase( amountDict ) :
+    multipliers   = { None : 1, "k" : 1024, "m" : 1024**2, "g" : 1024**3, "t" : 1024**4 }
+    return multipliers[ amountDict["scale" ] ] * int( amountDict["numeric"] )
+
+  @staticmethod
+  def resourceMemSizeFormat( amountDict ) :
+    memSizeFormat = "{num}{scale}{unit}"
+    return memSizeFormat.format(
+                                num=amountDict["numeric"],
+                                scale=amountDict[ "scale" ] if amountDict[ "scale" ] else "",
+                                unit=amountDict["unit"]
+                                )
+  
+  @staticmethod
+  def resourceMemSizeReduce( amountDict ) :
+    multipliers   = { None : 1, "k" : 1024, "m" : 1024**2, "g" : 1024**3, "t" : 1024**4 }
+
+    totalAmount = SubmitOptions.resourceMemSizeBase( amountDict )
+    
+    # Convert to simplified size, round up if needed
+    log2 = math.log( totalAmount, 2 )
+    scale = None
+    if log2 > 30.0 :
+      # Do it in gibi
+      scale = "g"
+    elif log2 > 20.0 :
+      # mebi
+      scale = "m"
+    elif log2 > 10.0 :
+      # kibi
+      scale = "k"
+    
+    reducedDict = {
+                    "numeric" : math.ceil( totalAmount / float( multipliers[ scale ] ) ),
+                    "scale"   : scale,
+                    "unit"    : amountDict["unit"]
+                  }
+    return reducedDict
+
+
+  # @staticmethod
+  # def breakdownResources( resourceStr, submitType ) :
+  #   resourceBreakDown = OrderedDict()
+  #   if   submitType == sc.SubmissionType.PBS :
+  #     currentKey        = ""
+  #     # Fill first amount up, generating resource groups
+  #     for resFound in PBS_RESOURCE_REGEX.finditer( resourceStr ) :
+  #       groups = resFound.groupdict( )
+  #       if groups[ "start" ] is not None :
+  #         currentKey = groups["res"]
+        
+  #       if currentKey not in resourceBreakDown :
+  #         resourceBreakDown[currentKey] = OrderedDict()
+  #       resourceBreakDown[ currentKey ][ groups[ "res" ] ] = groups[ "amount" ]
+
+  #   elif submitType == sc.SubmissionType.SLURM :
+  #     pass
+
+  #   return resourceBreakDown
+  
+  # @staticmethod
+  # def formatResourceBreakdown( resourceBreakDown, submitType ) :
+  #   finalResources = ""
+  #   if   submitType == sc.SubmissionType.PBS :
+  #     # Do PBS-specific merging
+  #     finalResources = "-l " + " -l ".join( [ ":".join( [ "{0}={1}".format( k,v ) for k,v in resources.items() ] ) for resources in resourceBreakDown.values() ] )
+  #   elif submitType == sc.SubmissionType.SLURM :
+  #     pass
+    
+  #   return finalResources
+
+  
+
+  # def joinHPCResourcesOp( steps, op, print=print ) :
+  #   resources = ""
+  #   for step in steps :
+  #     resources = SubmitOptions.joinHPCResourcesStrOp( resources, step.submitOptions_.hpcArguments_, step.submitOptions_.submitType_, op, print=print )
+  #   return resources
+
+  # @staticmethod
+  # def joinHPCResourcesStrOp( res1, res2, submitType, op, print=print ) :
+  #   finalResources = ""
+  #   finalResourceBreakdown = OrderedDict()
+
+  #   # Only join if both are not empty, else take the not empty one
+  #   if res1 and res2 :
+  #     finalResourceBreakdown = SubmitOptions.breakdownResources( res1, submitType )
+  #     mergeResourceBreakdown = SubmitOptions.breakdownResources( res2, submitType )
+      
+  #     # Loop merge and add if possible
+  #     for group, resources in mergeResourceBreakdown.items() :
+  #       if group in finalResourceBreakdown :
+  #         for res, amount in resources.items() :
+  #           if res in finalResourceBreakdown[ group ] :
+  #             # Now for the tricky part
+  #             try :
+  #               finalAmount = op( int( amount ), int( finalResourceBreakdown[ group ][ res ] ) )
+  #               finalResourceBreakdown[ group ][ res ] = finalAmount
+  #             except ValueError:
+  #               # Not an int value, size value?
+  #               resMem = SubmitOptions.resourceMemSizeDict( amount, submitType )
+  #               if resMem is not None :
+  #                 finalAmountMem = SubmitOptions.resourceMemSizeDict( finalResourceBreakdown[ group ][ res ], submitType )
+  #                 if resMem[ "unit" ] == finalAmountMem[ "unit" ] :
+  #                   # Can add
+  #                   rhsAmount = SubmitOptions.resourceMemSizeBase( resMem )
+  #                   lhsAmount = SubmitOptions.resourceMemSizeBase( finalAmountMem )
+
+  #                   totalAmount = op( rhsAmount, lhsAmount )
+  #                   finalResourceBreakdown[ group ][ res ] = SubmitOptions.resourceMemSizeFormat( 
+  #                                                               SubmitOptions.resourceMemSizeReduce(
+  #                                                                                                   {
+  #                                                                                                     "numeric" : totalAmount,
+  #                                                                                                     "scale"   : None,
+  #                                                                                                     "unit"    : resMem["unit"]
+  #                                                                                                   }
+  #                                                                                                 )
+  #                                                                                               )
+  #                 else :
+  #                   msg = "Error : cannot perform operation with values {0} and {1}".format( rhs["multi"], lhs["multi"] )
+  #                   print( msg )
+  #                   raise Exception( msg )
+  #               else :
+  #                 # Not sure how to add, leave as is
+  #                 pass
+  #                 # print( "Unsure how to operate on resources {0} and {1} together, defaulting to {0}".format( finalResourceBreakdown[ group ][ res ], amount ) )
+  #           else :
+  #             # Just add
+  #             finalResourceBreakdown[ group ][ res ] = amount
+  #       else :
+  #         # Just add
+  #         finalResourceBreakdown[ group ] = resources
+      
+  #     # Generate the final resource in our HPC format
+  #     finalResources = SubmitOptions.formatResourceBreakdown( finalResourceBreakdown, submitType )
+
+  #   else :
+  #     finalResources = res1 if res1 else res2
+
+  #   return finalResources
+
+

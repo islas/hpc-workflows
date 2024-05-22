@@ -12,6 +12,7 @@ from SubmitCommon  import SubmissionType
 from SubmitAction  import SubmitAction
 from SubmitOptions import SubmitOptions
 from Step          import Step
+from HpcArgpacks   import HpcArgpacks
 
 HPC_DELAY_PERIOD_SECONDS =  60
 HPC_POLL_PERIOD_SECONDS  = 120
@@ -110,7 +111,7 @@ class Test( SubmitAction ):
       self.log( "No waiting for HPC submissions requested, skipping results sync" )
       return
     
-    self.log( "Checking if results wait is required" )
+    self.log( "Checking if results wait is required..." )
     self.log_push()
     # Get all current steps submission type
     subs = [ step.submitOptions_.submitType_ for step in self.steps_.values() if step.submitOptions_.submitType_ != SubmissionType.LOCAL ]
@@ -119,7 +120,7 @@ class Test( SubmitAction ):
       self.log( "Final results will wait for all jobs complete" )
       self.waitResults_ = True
     else :
-      self.log( "No HPC submissions, no results job added" )
+      self.log( "No HPC submissions, no results waiting required" )
 
     self.log_pop()
   
@@ -225,8 +226,9 @@ class Test( SubmitAction ):
     #   for stepname, depType in step.dependencies_ :
     #     deps[ depType ][ stepname ] = None
 
-    maxResources = ""
+    maxResources = HpcArgpacks( OrderedDict() )
     maxTimelimit = timedelta()
+    maxResources.name_ = HpcArgpacks.HPC_JOIN_NAME + "max"
     hpcSubmit = [ step.submitOptions_.submitType_ for step in self.steps_.values() if step.submitOptions_.submitType_ != SubmissionType.LOCAL ]
     if not hpcSubmit :
       self.log( "No HPC steps in this test" )
@@ -234,7 +236,6 @@ class Test( SubmitAction ):
 
     longestStep = len( max( [ stepname for stepname in self.steps_.keys() ], key=len ) )
     phase = 0
-    self.log( "Joining steps..." )
     self.log_push()
 
     # We need to break it down by expected runtime of each test by size of pool
@@ -265,19 +266,30 @@ class Test( SubmitAction ):
 
       for key in psuedoRunningMap.keys() :
         psuedoRunningMap[ key ][ "timelimit" ] -= runFor
-
+      
+      ##################################################################################################################
+      # RESOURCE CALCULATIONS
       # What would our max resource consumption be whilst running this set?
       # Add all concurrent resources together
-      currentResources = SubmitOptions.joinHPCResourcesOp( [ pj[ "step" ] for pj in psuedoRunningMap.values() ], lambda rhs,lhs : rhs + lhs, print=self.log  )
+      self.log( "Calculate max instantaneous resources for this phase" )
+      self.log_push()
+      currentResources = HpcArgpacks.joinAll( [ 
+                                                pj[ "step" ].submitOptions_.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=pj["step"].log )
+                                                  for pj in psuedoRunningMap.values() 
+                                              ],
+                                              hpcSubmit[0],
+                                              lambda rhs,lhs : rhs + lhs,
+                                              print=self.log
+                                            )
 
       # Get maximum
-      maxResources = SubmitOptions.joinHPCResourcesStrOp(
-                                                          maxResources,
-                                                          currentResources,
-                                                          hpcSubmit[0],
-                                                          max,
-                                                          print=self.log
-                                                          )
+      maxResources.join(
+                        currentResources,
+                        hpcSubmit[0],
+                        max,
+                        print=self.log
+                        )
+      self.log_pop()
       self.log( "[PHASE {phase}] Resources for [ {steps} ] : '{res}', timelimit = {time}".format(
                                                                                                   phase=phase,
                                                                                                   steps="".join(
@@ -287,11 +299,13 @@ class Test( SubmitAction ):
                                                                                                                                     psuedoRunningMap.keys()
                                                                                                                                   ).split( '[:space:]' )
                                                                                                                 ),
-                                                                                                  res=currentResources,
+                                                                                                  res=currentResources.format( hpcSubmit[0], print=lambda *args : None ),
                                                                                                   time=runFor
                                                                                                   )
                 )
       phase += 1
+      #
+      ##################################################################################################################
 
       
       # Re-evaluate for any jobs that completed
@@ -318,15 +332,17 @@ class Test( SubmitAction ):
       self.log_pop()
 
 
-
+    
     self.log_pop()
+    self.log( "All jobs simulated, stopping" )
+    self.log_pop()
+
 
     # Reset the pipeline
     for step in self.steps_.values() :
       step.resetRunnable()
-    self.log_pop()
     self.log( "Maximum HPC resources required will be '{0}' with timelimit '{1}'".format(
-                                                                                          maxResources,
+                                                                                          maxResources.format( hpcSubmit[0], print=lambda *args : None ),
                                                                                           SubmitOptions.formatTimelimit(
                                                                                             maxTimelimit,
                                                                                             hpcSubmit[0]
