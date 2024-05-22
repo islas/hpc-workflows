@@ -55,7 +55,10 @@ class SubmitArgpacks( ) :
 
       if key == argpackName :
         exists = True
-        occurrences[argpack] = self.origins_[argpack]
+        if self.origins_ :
+          occurrences[argpack] = self.origins_[argpack]
+        else :
+          occurrences[argpack] = "unknown"
     
     return exists, occurrences
 
