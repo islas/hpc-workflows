@@ -113,8 +113,12 @@ class SubmitArgpacks( ) :
     return finalArgpacks
 
   def format( self, print=print ) :
-    longestPack   = len( max( self.origins_.keys(),   key=len ) )
-    longestOrigin = len( max( self.origins_.values(), key=len ) )
+    longestPack   = None
+    longestOrigin = None
+    if self.arguments_ :
+      longestPack   = len( max( self.origins_.keys(),   key=len ) )
+      longestOrigin = len( max( self.origins_.values(), key=len ) )
+
     additionalArgs = []
 
     for key, value in self.arguments_.items() :
