@@ -13,6 +13,7 @@ class HpcArgpacks( SubmitArgpacks ) :
   def parseSpecificOptions( self, origin=None ) :
     for key, value in self.arguments_.items() :
       self.nestedArguments_[key] = SubmitArgpacks( value[next( iter( value ) )], origin )
+      self.nestedArguments_[key].unique_ = True
 
   # Updates and overrides current with values from rhs if they exist
   def update( self, rhs, print=print ) :
@@ -36,19 +37,23 @@ class HpcArgpacks( SubmitArgpacks ) :
       argpacks.validate( print )
     
 
-  def selectAncestrySpecificSubmitArgpacks( self, sortArgpacks=False ) :
-    keysToUse = super().selectAncestrySpecificSubmitArgpacks( sortArgpacks ).arguments_.keys()
+  def selectAncestrySpecificSubmitArgpacks( self, sortArgpacks=False, print=print ) :
+    keysToUse = super().selectAncestrySpecificSubmitArgpacks( sortArgpacks, print ).arguments_.keys()
     hpcArgpacksToUse = OrderedDict()
 
     for argpack in keysToUse :
       # We've downselected which hpc argpacks to use, now further select which resources if present
       hpcArgpacksToUse[argpack] = OrderedDict()
-      hpcArgpacksToUse[argpack][next( iter( self.arguments_[argpack] ) )] = self.nestedArguments_[argpack].selectAncestrySpecificSubmitArgpacks( sortArgpacks ).arguments_
+      hpcArgpacksToUse[argpack][next( iter( self.arguments_[argpack] ) )] = self.nestedArguments_[argpack].selectAncestrySpecificSubmitArgpacks( sortArgpacks, print ).arguments_
     
     finalHpcArgpacks = HpcArgpacks( hpcArgpacksToUse )
     finalHpcArgpacks.origins_ = self.origins_
     for argpack in finalHpcArgpacks.nestedArguments_.keys() :
       finalHpcArgpacks.nestedArguments_[argpack].origins_ = self.nestedArguments_[argpack].origins_
+
+    # final selection does not allow for duplicates
+    finalHpcArgpacks.unique_ = True
+    finalHpcArgpacks.validate( print=print )
 
     return finalHpcArgpacks
 

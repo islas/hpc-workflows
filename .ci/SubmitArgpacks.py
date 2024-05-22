@@ -15,6 +15,9 @@ class SubmitArgpacks( ) :
     # Should be set via the SubmitOptions
     self.name_             = None
 
+    # Internal control for forcing uniqueness
+    self.unique_           = False
+
     self.parse( origin=origin )
 
   def parse( self, origin=None ):
@@ -40,28 +43,44 @@ class SubmitArgpacks( ) :
 
     self.validate( print=print )
 
-  def validate( self, print=print ) :
-    allArgpacks =  {}
+  def keyExists( self, rawkey ) :
+    # dictionaries already handle key exist checks, this is for matching regex
+    key = rawkey.split( SubmitArgpacks.REGEX_DELIMETER )[-1]
+    
+    exists = False
+    occurrences = OrderedDict()
+
     for argpack in self.arguments_.keys() :
-      argpackName = argpack
+      argpackName = argpack.split( SubmitArgpacks.REGEX_DELIMETER )[-1]
 
-      if SubmitArgpacks.REGEX_DELIMETER in argpack :
-        argpackName = argpack.split( SubmitArgpacks.REGEX_DELIMETER )[1]
+      if key == argpackName :
+        exists = True
+        occurrences[argpack] = self.origins_[argpack]
+    
+    return exists, occurrences
 
-        if argpackName in allArgpacks :
-          err = "Regex argument pack at {conflict} '{repack}' name conflict with '{argpack}', declared at {origin}".format(
-                  repack=argpack,
-                  argpack=allArgpacks[argpackName],
-                  conflict=self.origins_[argpack],
-                  origin=self.origins_[allArgpacks[argpackName]]
-                  )
-          print( err )
-          raise Exception( err )
+  def validate( self, print=print ) :
+    if not self.unique_ :
+      return
 
-      # add to the known argpacks
-      allArgpacks[argpackName] = argpack
+    for argpack in self.arguments_.keys() :
+      # of course our key exists, but HOW much
+      _, occurrences = self.keyExists( argpack )
 
-  def selectAncestrySpecificSubmitArgpacks( self, sortArgpacks=True ) :
+      if len( occurrences ) > 1 :
+        argpackName = argpack.split( SubmitArgpacks.REGEX_DELIMETER )[-1]
+        err = "Argument pack {root} at {conflict} '{offender}' name conflict with '{argpack}', declared at {origin}".format(
+                root=argpackName,
+                offender=list(occurrences.keys())[1],
+                argpack=list(occurrences.keys())[0],
+                conflict=occurrences.values()[1],
+                origin=occurrences.values()[0]
+                )
+        print( err )
+        raise Exception( err )
+
+
+  def selectAncestrySpecificSubmitArgpacks( self, sortArgpacks=True, print=print ) :
     # Find all argument packs that match our ancestry
     argpacksToUse = OrderedDict()
 
