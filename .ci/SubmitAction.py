@@ -45,10 +45,10 @@ class SubmitAction( ) :
     output.close()
     print( self.label_ + self.labelIndentation_ * self.labelLevel_ + contents, flush=True )
   
-  def log_push( self ) :
-    self.labelLevel_ += 1
-  def log_pop( self ) :
-    self.labelLevel_ -= 1
+  def log_push( self, levels=1 ) :
+    self.labelLevel_ += levels
+  def log_pop( self, levels=1 ) :
+    self.labelLevel_ -= levels
 
   def parseSpecificOptions( self ) :
     # Children should override this for their respective parse()
