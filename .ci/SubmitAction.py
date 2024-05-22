@@ -2,7 +2,8 @@ import os
 import io
 import copy
 from SubmitOptions import SubmitOptions
-import SubmitOptions as so
+import SubmitCommon as sc
+
 
 class SubmitAction( ) :
   SUCCESS_STR = "[SUCCESS]"
@@ -16,14 +17,14 @@ class SubmitAction( ) :
     self.name_          = name
     self.globalOpts_    = globalOpts # options passed in at CLI
     # Add 8 for [item::] characters
-    self.label_            = "{0:<{1}}".format( "[{0}::{1}] ".format( self.scope(), self.name_ ), so.LABEL_LENGTH + 8 )
+    self.label_            = "{0:<{1}}".format( "[{0}::{1}] ".format( self.scope(), self.name_ ), sc.LABEL_LENGTH + 8 )
     self.labelIndentation_ = "  "
     self.labelLevel_       = 0
     self.logfile_        = None
 
     self.parent_        = parent
     self.options_       = options
-    self.submitOptions_ = copy.deepcopy( defaultSubmitOptions ).selectHostSpecificSubmitOptions()
+    self.submitOptions_ = copy.deepcopy( defaultSubmitOptions )
 
     self.rootDir_          = rootDir
     self.printDir_         = False
@@ -44,10 +45,10 @@ class SubmitAction( ) :
     output.close()
     print( self.label_ + self.labelIndentation_ * self.labelLevel_ + contents, flush=True )
   
-  def log_push( self ) :
-    self.labelLevel_ += 1
-  def log_pop( self ) :
-    self.labelLevel_ -= 1
+  def log_push( self, levels=1 ) :
+    self.labelLevel_ += levels
+  def log_pop( self, levels=1 ) :
+    self.labelLevel_ -= levels
 
   def parseSpecificOptions( self ) :
     # Children should override this for their respective parse()
@@ -56,7 +57,9 @@ class SubmitAction( ) :
   def parse( self ) :
     key = "submit_options"
     if key in self.options_ :
-      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.name_ ).selectHostSpecificSubmitOptions(), print=self.log )
+      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.ancestry() ), print=self.log )
+    
+    self.submitOptions_.setName( self.ancestry() )
 
     # Now call child parse
     self.parseSpecificOptions()

@@ -2,7 +2,13 @@
   "submit_options" :
   {
     "working_directory" : "../../",
-    "resources"  : "list your resources here based on HPC specific system",
+    "hpc_arguments"     : 
+    {
+      "select" :
+      {
+        "-l " : { "select" : 1, "ncpus" : 4  }
+      }
+    },
     "queue"      : "economy",
     "timelimit"  : "01:00:00",
     "wait"       : "True if set, use with caution",
@@ -15,7 +21,13 @@
     "host-specific"   :
     {
       "working_directory" : "../../",
-      "resources"  : "list your resources here based on HPC specific system",
+      "hpc_arguments"     : 
+      {
+        "select" :
+        {
+          "-l " : { "select" : 1, "ncpus" : 4  }
+        }
+      },
       "queue"      : "economy",
       "timelimit"  : "01:00:00",
       "wait"       : "True if set, use with caution",
@@ -66,7 +78,13 @@
     "submit_options" : 
     {
       "working_directory" : "../",
-      "resources"  : "list your resources here based on HPC specific system",
+      "hpc_arguments"     : 
+      {
+        "select" :
+        {
+          "-l " : { "select" : 1, "ncpus" : 4  }
+        }
+      },
       "queue"      : "economy",
       "timelimit"  : "01:00:00",
       "wait"       : "True if set, use with caution",
@@ -79,7 +97,13 @@
       "host-specific"   :
       {
         "working_directory" : "../../",
-        "resources"  : "list your resources here based on HPC specific system",
+        "hpc_arguments"     : 
+        {
+          "select" :
+          {
+            "-l " : { "select" : 1, "ncpus" : 4  }
+          }
+        },
         "queue"      : "economy",
         "timelimit"  : "01:00:00",
         "wait"       : "True if set, use with caution",
@@ -109,7 +133,13 @@
         "submit_options" :
         {
           "working_directory" : ".",
-          "resources"  : "list your resources here based on HPC specific system",
+          "hpc_arguments"     : 
+            {
+              "select" :
+              {
+                "-l " : { "select" : 1, "ncpus" : 4  }
+              }
+            },
           "queue"      : "economy",
           "timelimit"  : "01:00:00",
           "wait"       : "True if set, use with caution",
@@ -122,7 +152,13 @@
           "host-specific"   :
           {
             "working_directory" : "../../",
-            "resources"  : "list your resources here based on HPC specific system",
+            "hpc_arguments"     : 
+            {
+              "select" :
+              {
+                "-l " : { "select" : 1, "ncpus" : 4  }
+              }
+            },
             "queue"      : "economy",
             "timelimit"  : "01:00:00",
             "wait"       : "True if set, use with caution",

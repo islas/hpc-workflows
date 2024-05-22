@@ -10,11 +10,18 @@ from multiprocessing import Pool
 from contextlib import redirect_stdout
 from datetime import timedelta
 
-from Test          import Test
-from Step          import Step
-from SubmitOptions import SubmitOptions, SubmissionType
-from SubmitAction  import SubmitAction
-import SubmitOptions as so
+
+import SubmitCommon as sc
+
+from SubmitAction   import SubmitAction
+from SubmitOptions  import SubmitOptions
+from SubmitArgpacks import SubmitArgpacks
+from Test           import Test
+from Step           import Step
+from HpcArgpacks    import HpcArgpacks
+
+
+
 
 ABS_FILEPATH = os.path.realpath( __file__ )
 
@@ -77,8 +84,10 @@ class Suite( SubmitAction ) :
   #
   ##############################################################################
   def runHPCJoin( self, tests ) :
+
+    self.log( "Computing maximum HPC resources of tests..." )
     # All steps must have the same submission type
-    hpcSubmit = [ step.submitOptions_.submitType_ for test in tests for step in self.tests_[ test ].steps_.values() if step.submitOptions_.submitType_ != SubmissionType.LOCAL ]
+    hpcSubmit = [ step.submitOptions_.submitType_ for test in tests for step in self.tests_[ test ].steps_.values() if step.submitOptions_.submitType_ != sc.SubmissionType.LOCAL ]
     allEqual  = ( not hpcSubmit or hpcSubmit.count( hpcSubmit[0] ) == len( hpcSubmit ) )
 
     if not allEqual :
@@ -90,7 +99,7 @@ class Suite( SubmitAction ) :
       self.log( "No HPC steps in any of these tests" )
       return False, [ "no logfile" ]
 
-    self.log( "Computing maximum HPC resources per test..." )
+    self.log( "Accumulate maximum HPC resources per test..." )
     self.log_push()
     maxResourcesPerTest = {}
     maxTimePerTest      = {}
@@ -101,57 +110,111 @@ class Suite( SubmitAction ) :
     
     self.log_pop()
 
-    # This is a naive way of calculating total usage but it is an okayish start
-    # especially if YOU THE USER submit tests grouped together logically
-    self.log( "Combining top {0} [pool size] resources across all tests".format( self.globalOpts_.pool ) )
-    self.log_push()
-    maxResources = SubmitOptions.joinHPCResourcesMax( maxResourcesPerTest.values(), hpcSubmit[0], self.globalOpts_.pool, print=self.log )
-    if self.globalOpts_.joinHPC :
-      overrideResource = self.globalOpts_.joinHPC
-      self.log( "Requested override of resources with '{0}'".format( overrideResource ) )
-      maxDict = SubmitOptions.breakdownResources( maxResources, hpcSubmit[0] )
-      so.recursiveUpdate( maxDict, SubmitOptions.breakdownResources( overrideResource, hpcSubmit[0] ) )
-      maxResources = SubmitOptions.formatResourceBreakdown( maxDict, hpcSubmit[0] )
-    self.log_pop()
+    
+    longestTest = len( max( tests, key=len ) )
+    phase = 0
 
     # We need to break it down by expected runtime of each test by size of pool
     # as that is the order they will run in. Could we optimize? Yea probably. Will we? Not right now
     self.log( "Calculating expected runtime of tests across {0} workers [pool size]".format( self.globalOpts_.pool ) )
     self.log_push()
-    psuedoJobs = [ copy.deepcopy(maxTimePerTest[test]) for test in tests ]
-    psuedoRunning  = []
+    
+
+    psuedoJobs = [ testname for testname in tests ]
+    psuedoRunningMap = {}
+
+    maxResources   = HpcArgpacks( OrderedDict() )
     maxTimelimit   = timedelta()
     # Continue while we have jobs in queue or running
-    while len( psuedoJobs ) > 0 or len( psuedoRunning ) > 0 :
+    while len( psuedoJobs ) > 0 or len( psuedoRunningMap ) > 0 :
       # If we have slots in our pool and jobs left, fill in
-      while len( psuedoRunning ) < self.globalOpts_.pool and len( psuedoJobs ) > 0 :
-        psuedoRunning.append( psuedoJobs.pop(0) )
+      while len( psuedoRunningMap ) < self.globalOpts_.pool and len( psuedoJobs ) > 0 :
+        pjTest = psuedoJobs.pop( 0 )
+        psuedoRunningMap[ pjTest ] = { "hpc_arguments" : maxResourcesPerTest[pjTest], "timelimit" : maxTimePerTest[pjTest] }
 
       # Find smallest job
-      runFor = copy.deepcopy( min( [ timelimit for timelimit in psuedoRunning ] ) )
+      runForKey = min( psuedoRunningMap, key= lambda k : psuedoRunningMap[k]["timelimit"] )
+      runFor    = copy.deepcopy( psuedoRunningMap[runForKey]["timelimit"] )
       maxTimelimit += runFor
       # "Run" for that amount of time
-      self.log( "Simulating pool for {0}".format( SubmitOptions.formatTimelimit( runFor, hpcSubmit[0] ) ) )
-      for pjIdx, pj in enumerate(psuedoRunning) :
-        psuedoRunning[ pjIdx ] = pj - runFor
+      self.log( "Simulating threadpool for {0}".format( psuedoRunningMap[runForKey]["timelimit"] ) )
+      self.log_push()
 
-      previous = len( psuedoRunning )
+      for key in psuedoRunningMap.keys() :
+        psuedoRunningMap[ key ][ "timelimit" ] -= runFor
+
+      ##################################################################################################################
+      # RESOURCE CALCULATIONS
+      # What would our max resource consumption be whilst running this set?
+      # Add all concurrent resources together
+      currentResources = HpcArgpacks.joinAll( [ pj["hpc_arguments"] for pj in psuedoRunningMap.values() ], hpcSubmit[0], lambda rhs,lhs : rhs + lhs, print=self.log  )
+
+      # Get maximum
+      maxResources.join(
+                        currentResources,
+                        hpcSubmit[0],
+                        max,
+                        print=self.log
+                        )
+      self.log( "[PHASE {phase}] Resources for [ {tests} ] : '{res}', timelimit = {time}".format(
+                                                                                                  phase=phase,
+                                                                                                  tests="".join(
+                                                                                                                "{0:>{1}}".format(
+                                                                                                                                  step, longestTest + ( 1 if len( psuedoRunningMap ) > 1 else 0 ) )
+                                                                                                                                  for step in ",[:space:]".join( 
+                                                                                                                                    psuedoRunningMap.keys()
+                                                                                                                                  ).split( '[:space:]' )
+                                                                                                                ),
+                                                                                                  res=currentResources.format( hpcSubmit[0], print=lambda *args : None ),
+                                                                                                  time=runFor
+                                                                                                  )
+                )
+      phase += 1
+      #
+      ##################################################################################################################
+    
+
       # Re-evaluate for any jobs that completed
-      psuedoRunning = [ pj for pj in psuedoRunning if pj.total_seconds() > 0 ]
-      self.log( "{0} jobs completed during this runtime".format( previous - len( psuedoRunning ) ) )
+      completed = []
+      for testname in psuedoRunningMap :
+        if psuedoRunningMap[ testname ][ "timelimit" ].total_seconds() <= 0 :
+          completed.append( testname )
 
+      # Remove completed
+      for pj in completed :
+        psuedoRunningMap.pop( pj )
+
+      self.log( "{0} jobs completed during this runtime".format( len( completed ) ) )
+      self.log_pop()
+
+    # end of simulated runs
     self.log_pop()
 
     maxTimelimitStr = SubmitOptions.formatTimelimit( maxTimelimit, hpcSubmit[0] )
-    self.log( "Maximum calculated resources for running all tests is '{0}'".format( maxResources ) )
+    self.log( "Maximum calculated resources for running all tests is '{0}'".format( maxResources.format( hpcSubmit[0], print=lambda *args : None ) ) )
     self.log( "Maximum calculated timelimit for running all tests is '{0}'".format( maxTimelimitStr ) )
+    ####################################################################################################################
 
+
+
+    # Overrides
+    if self.globalOpts_.joinHPC :
+      overrideResource = self.globalOpts_.joinHPC
+      self.log( "Requested override of resources with '{0}'".format( overrideResource ) )
+      maxResources.update( HpcArgpacks( json.loads( self.globalOpts_.joinHPC, object_pairs_hook=OrderedDict ), origin="cli" ) )
+      self.log( "  New maximum resources for running all tests is '{0}'".format( maxResources.format( hpcSubmit[0], print=lambda *args : None ) ) )
+
+
+    self.log_pop()
+
+    ####################################################################################################################
+    # reconstruct cli arguments
     posArgs = {}
     optArgs = {}
     hpcJoinOpts = copy.deepcopy( self.globalOpts_ )
     # Overwrite certain options to force running in a particular state
     hpcJoinOpts.joinHPC = None
-    hpcJoinOpts.submitType = SubmissionType.LOCAL
+    hpcJoinOpts.submitType = sc.SubmissionType.LOCAL
 
     for key, value in vars( hpcJoinOpts ).items() :
       # Do our positional args first
@@ -179,13 +242,14 @@ class Suite( SubmitAction ) :
           args.extend( list( map( str, v ) ) )
         else :
           args.append( "{val}".format( val=v ) )
+    ####################################################################################################################
+    # Construct and run
 
     self.log( "Using current file as launch executable : " + ABS_FILEPATH )
     stepDict = {
                   "submit_options" : 
                   {
                     "submission" : hpcSubmit[0],
-                    "resources"  : maxResources,
                     "timelimit"  : maxTimelimitStr
                   },
                   "command"   : ABS_FILEPATH,
@@ -201,10 +265,16 @@ class Suite( SubmitAction ) :
 
     hpcJoinTest = Test( "joinHPC_" + "_".join( tests ), testDict, self.submitOptions_, hpcJoinOpts, parent=self.ancestry(), rootDir=self.rootDir_ )
     # No argpacks
-    hpcJoinTest.steps_["submit"].submitOptions_.arguments_ = {}
+    hpcJoinTest.steps_["submit"].submitOptions_.arguments_    = SubmitArgpacks( OrderedDict() )
+    hpcJoinTest.steps_["submit"].submitOptions_.hpcArguments_ = maxResources
     # No other args
     hpcJoinTest.steps_["submit"].addWorkingDirArg_ = False
+
+    hpcJoinTest.validate()
     success = hpcJoinTest.run()
+
+    ####################################################################################################################
+    # Custom wait if requested
 
     self.log( "Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success" )
     success = True
@@ -358,6 +428,8 @@ class Suite( SubmitAction ) :
         msg = "Error: no test named '{0}'".format( test )
         self.log( msg )
         raise Exception( msg )
+      
+      self.tests_[test].validate()
 
     self.setWorkingDirectory()
 
@@ -377,20 +449,20 @@ class Suite( SubmitAction ) :
 
 # A separated helper function to wrap this in a callable format
 def runSuite( options ) :
-  so.LABEL_LENGTH = options.labelLength
+  sc.LABEL_LENGTH = options.labelLength
 
   opts = SubmitOptions()
   opts.account_    = options.account
 
   if options.submitType is None :
     # Set default to LOCAL, but do not force
-    opts.submitType_ = SubmissionType.LOCAL
+    opts.submitType_ = sc.SubmissionType.LOCAL
   else :
     opts.submitType_         = options.submitType
     opts.lockSubmitType_     = True
     print( "Forcing submission type to {0} for all steps".format( opts.submitType_ ) )
   
-  if opts.submitType_ != SubmissionType.LOCAL and opts.account_ is None:
+  if opts.submitType_ != sc.SubmissionType.LOCAL and opts.account_ is None:
     # We don't have an account && we are not running local
     err = "Error: No account provided for non-local run."
     print( err )
@@ -483,8 +555,8 @@ def getOptionsParser():
                       "-s", "--submitType",
                       dest="submitType",
                       help="Override type of submission to use for all steps submitted",
-                      type=SubmissionType,
-                      choices=list( SubmissionType),
+                      type=sc.SubmissionType,
+                      choices=list( sc.SubmissionType ),
                       default=None
                       )
   parser.add_argument( 
