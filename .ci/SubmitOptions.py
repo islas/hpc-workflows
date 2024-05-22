@@ -215,7 +215,7 @@ class SubmitOptions( ) :
 
     if self.arguments_.arguments_ :
       print( "Gathering argument packs..." )
-    additionalArgs = self.arguments_.selectAncestrySpecificSubmitArgpacks().format( print=print )
+    additionalArgs = self.arguments_.selectAncestrySpecificSubmitArgpacks( print=print ).format( print=print )
 
     if self.submitType_ == sc.SubmissionType.LOCAL :
       return [], additionalArgs
@@ -228,7 +228,7 @@ class SubmitOptions( ) :
 
         cmd.extend( submitDict[ "arguments" ].format(
                                                       self.hpcArguments_.
-                                                        selectAncestrySpecificSubmitArgpacks().
+                                                        selectAncestrySpecificSubmitArgpacks( print=print ).
                                                         format( self.submitType_, print=print ) ).
                                                         split( " " )
                                                       )

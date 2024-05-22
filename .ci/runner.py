@@ -363,6 +363,8 @@ class Suite( SubmitAction ) :
         msg = "Error: no test named '{0}'".format( test )
         self.log( msg )
         raise Exception( msg )
+      
+      self.tests_[test].validate()
 
     self.setWorkingDirectory()
 

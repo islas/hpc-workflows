@@ -63,9 +63,9 @@ class Step( SubmitAction ):
         self.dependencies_[ depStep ] = Step.DependencyType( depType )
 
     # Now set things manually
-    self.submitOptions_ = self.submitOptions_.selectHostSpecificSubmitOptions()
-    self.submitOptions_.setName( self.ancestry() )
+    self.submitOptions_ = self.submitOptions_.selectHostSpecificSubmitOptions( print=print )
 
+  def validate( self ) :
     valid, msg = self.submitOptions_.validate()
     if not valid :
       err = "Error: Invalid submission options [{msg}]\n{opts}".format( msg=msg, opts=self.submitOptions_ )

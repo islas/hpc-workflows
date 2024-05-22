@@ -58,6 +58,8 @@ class SubmitAction( ) :
     key = "submit_options"
     if key in self.options_ :
       self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.ancestry() ), print=self.log )
+    
+    self.submitOptions_.setName( self.ancestry() )
 
     # Now call child parse
     self.parseSpecificOptions()

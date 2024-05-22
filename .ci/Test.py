@@ -51,6 +51,9 @@ class Test( SubmitAction ):
     # Now that steps are fully parsed, attempt to organize dependencies
     Step.sortDependencies( self.steps_ )
 
+  def validate( self ) :
+    for step in self.steps_.values() :
+      step.validate()
 
   def executeAction( self ) :
     self.checkWaitResults()
