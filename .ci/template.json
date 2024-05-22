@@ -88,7 +88,7 @@
   // everything that isn't "submit_options" is considered a test name
   // Like argpacks, they can be named anything unique amongst tests, but
   // avoid using spaces and periods. Recommended characters are [a-zA-Z_-+]
-  "test-name" :
+  "<test-name>" :
   {
     "submit_options" : {}, // EXACT SAME RULES AS ABOVE APPLY
     // Additional KEYWORD
@@ -97,7 +97,7 @@
     {
       // NO KEYWORDS AT THIS LEVEL, EVERYTHING IS CONSIDERED A STEP
       // Same naming rules as tests apply
-      "step-A" :
+      "<step-name-A>" :
       {
         "submit_options" : {}, // EXACT SAME RULES AS ABOVE APPLY (see the pattern?)
         // ADDITIONAL KEYWORDS
@@ -117,10 +117,10 @@
           // dict of step names verbatim and dependency mapping using 
           // generally standard HPC-dependency nomenclature
           // 
-          "step-B" : "afterany" // after|afterok|afternotok|afterany
+          "<step-name-B>" : "afterany" // after|afterok|afternotok|afterany
         }
       },
-      "step-B" :
+      "<step-name-B>" :
       {
         // submit_options, arguments, and dependecies  are OPTIONAL KEYWORDS
         "command" : "other/command.py"
