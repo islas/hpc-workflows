@@ -22,7 +22,7 @@
       {
         // <option> will be appended to the job submission, if an empty dict
         // is provided nothing more will happen with respect to this <argpack>
-        // Entries will joined HPC-specific syntax then concatenated with "<option>" :
+        // Entries will be joined via HPC-specific syntax then concatenated with "<option>" :
         //   non-empty values in key-value pairs join with ( '=' for PBS | ':' for SLURM )
         //   keys (with value if present)             with ( ':' for PBS | ',' for SLURM )
         // {"-l ":{"select":1,"ngpus":4}} for PBS would result in the following being added to the HPC submission
@@ -39,7 +39,7 @@
         }
       },
       // <regex> should be a valid regex usable by python's re module
-      // <argpack> CANNOT match the above <argpack>
+      // <argpack> can match the above <argpack>, but final resolving at the step level should be unique
       // future definitions will only override the specific full unique match with <regex> included
       "<regex>::<argpack>" : {} // same layout as the above "hpc_arguments" <argpack>
     },
@@ -66,7 +66,6 @@
       "<argpack>"          : [ "list", "of", "arguments" ],
      
       // <regex> should be a valid regex usable by python's re module
-      // <argpack> CANNOT match the above <argpack>
       // future definitions will only override the specific full unique match with <regex> included
       "<regex>::<argpack>" : [ "-f", "one whole arg", "-x" ]
     },
