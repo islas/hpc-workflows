@@ -576,7 +576,7 @@ def getOptionsParser():
   parser.add_argument( 
                       "-j", "--joinHPC",
                       dest="joinHPC",
-                      help="Join test submissions into single collective HPC submission, use additional argument (MUST USE '=') to override submission resources, e.g -j='-l select=1'",
+                      help="Join test submissions into single collective HPC submission, use additional argument (MUST USE '=') to override submission arguments using config syntax, e.g -j='{\"select\":{\"-l \":{\"select\":1}}}'",
                       type=str,
                       nargs="?",
                       default=argparse.SUPPRESS
