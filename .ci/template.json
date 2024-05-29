@@ -126,13 +126,13 @@
       }
     }
   },
-  "other-test" :
+  "<other-test>" :
   {
     // submit_options is OPTIONAL KEYWORD
     "steps" :
     {
       // step names only need to be unique within their respective test's "steps" section
-      "step-A" : { "command" : "foobar.csh" }
+      "<step-name-A>" : { "command" : "foobar.csh" }
     }
   }
   // ...and so on...
