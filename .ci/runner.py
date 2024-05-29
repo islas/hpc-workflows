@@ -671,13 +671,13 @@ def getOptionsParser():
                       const=True,
                       action='store_const'
                       )
-  # parser.add_argument(
-  #                     "-m", "--message",
-  #                     dest="message",
-  #                     help="Message to output at the end of running tests if successful, helpful for signalling with same logic as steps",
-  #                     default=None,
-  #                     type=str
-  #                     )
+  parser.add_argument(
+                      "-ff", "--forceFQDN",
+                      dest="forceFQDN",
+                      help="Force the selection of host-specific \"submit_options\" to use input as the assumed FQDN",
+                      default=None,
+                      type=str
+                      )
 
   parser.add_argument(
                       "-fs", "--forceSingle",

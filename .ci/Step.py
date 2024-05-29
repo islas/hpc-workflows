@@ -63,7 +63,7 @@ class Step( SubmitAction ):
         self.dependencies_[ depStep ] = Step.DependencyType( depType )
 
     # Now set things manually
-    self.submitOptions_ = self.submitOptions_.selectHostSpecificSubmitOptions( print=print )
+    self.submitOptions_ = self.submitOptions_.selectHostSpecificSubmitOptions( forceFQDN=self.globalOpts_.forceFQDN, print=print )
 
   def validate( self ) :
     self.submitOptions_.validate( print=self.log )
