@@ -76,8 +76,8 @@ class SubmitArgpacks( ) :
                 root=argpackName,
                 offender=list(occurrences.keys())[1],
                 argpack=list(occurrences.keys())[0],
-                conflict=occurrences.values()[1],
-                origin=occurrences.values()[0]
+                conflict=list(occurrences.values())[1],
+                origin=list(occurrences.values())[0]
                 )
         print( err )
         raise Exception( err )
