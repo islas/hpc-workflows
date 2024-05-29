@@ -26,7 +26,7 @@ PBS_TIMELIMIT_FORMAT_STR   = "{:02}:{:02}:{:02}"
 
 class SubmitOptions( ) :
 
-  def __init__( self, optDict={}, isHostSpecific=False, lockSubmitType=False, origin=None ) :
+  def __init__( self, optDict={}, isHostSpecific=False, lockSubmitType=False, origin=None, print=print ) :
     self.submit_            = optDict
     self.workingDirectory_  = None
     self.queue_             = None
@@ -52,7 +52,7 @@ class SubmitOptions( ) :
     # Allow host-specific submit options
     self.isHostSpecific_      = isHostSpecific
     self.hostSpecificOptions_ = {}
-    self.parse( origin=origin )
+    self.parse( origin=origin, print=print )
 
   def parse( self, print=print, origin=None ):
     submitKeys = []
@@ -138,9 +138,8 @@ class SubmitOptions( ) :
     # self.parse( print=print )
   
   # Check non-optional fields
-  def validate( self ) :
+  def validate( self, print=print ) :
     err          = None
-    errMsgFormat = "Missing {opt}"
 
     if self.submitType_ is None :
       err   = "submission type"
@@ -155,10 +154,13 @@ class SubmitOptions( ) :
       if err is not None :
         err += " on non-LOCAL submission"
 
-    errMsg = "okay"
     if err is not None :
-      errMsg = errMsgFormat.format( opt=err )
-    return err is None, errMsg
+      errMsg = "Error: Invalid submission options [Missing {opt}]\n{opts}".format( opt=err, opts=self.submitOptions_ )
+      print( errMsg )
+      raise Exception( errMsg )
+
+    self.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=print ).format( self.submitType_, print=lambda *args : None  )
+
 
 
   def setName( self, name ) :
