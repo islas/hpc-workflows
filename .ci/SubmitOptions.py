@@ -151,9 +151,7 @@ class SubmitOptions( ) :
         err = "account"
       elif self.queue_ is None :
         err = "queue"
-      elif not self.hpcArguments_.arguments_ :
-        err = "hpc_arguments"
-      
+
       if err is not None :
         err += " on non-LOCAL submission"
 
