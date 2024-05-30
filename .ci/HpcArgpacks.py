@@ -164,8 +164,8 @@ class HpcArgpacks( SubmitArgpacks ) :
 
         for res, amount in rhs.nestedArguments_[key].arguments_.items() :
           resExists, resOccurrences = self.nestedArguments_[argpack].keyExists( res )
-          resName = next(iter(resOccurrences))
           if resExists and amount != "" :
+            resName = next(iter(resOccurrences))
             try :
               self.nestedArguments_[argpack].arguments_[resName] = op( 
                                                                       self.nestedArguments_[argpack].arguments_[resName],
