@@ -168,8 +168,8 @@ class HpcArgpacks( SubmitArgpacks ) :
             resName = next(iter(resOccurrences))
             try :
               self.nestedArguments_[argpack].arguments_[resName] = op( 
-                                                                      self.nestedArguments_[argpack].arguments_[resName],
-                                                                      amount
+                                                                      int( self.nestedArguments_[argpack].arguments_[resName] ),
+                                                                      int( amount )
                                                                       )
             except ValueError:
               # Not an int value, size value / maybe this is a memory resource
