@@ -228,7 +228,7 @@ class Test( SubmitAction ):
 
     maxResources = HpcArgpacks( OrderedDict() )
     maxTimelimit = timedelta()
-    maxResources.name_ = HpcArgpacks.HPC_JOIN_NAME + "max"
+    maxResources.setName( HpcArgpacks.HPC_JOIN_NAME + "max" )
     hpcSubmit = [ step.submitOptions_.submitType_ for step in self.steps_.values() if step.submitOptions_.submitType_ != SubmissionType.LOCAL ]
     if not hpcSubmit :
       self.log( "No HPC steps in this test" )

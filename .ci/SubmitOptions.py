@@ -161,8 +161,8 @@ class SubmitOptions( ) :
 
   def setName( self, name ) :
     self.name_ = name
-    self.arguments_.name_ = name
-    self.hpcArguments_.name_ = name
+    self.arguments_.setName( name )
+    self.hpcArguments_.setName( name )
 
   def selectHostSpecificSubmitOptions( self, forceFQDN=None, print=print ) :
     # Must be valid for this specific host or generically

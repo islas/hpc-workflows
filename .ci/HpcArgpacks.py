@@ -22,6 +22,11 @@ class HpcArgpacks( SubmitArgpacks ) :
     for key, value in self.arguments_.items() :
       self.nestedArguments_[key] = SubmitArgpacks( value[next( iter( value ) )], origin )
       self.nestedArguments_[key].unique_ = True
+  
+  def setName( self, name ) :
+    super().setName( name )
+    for key, nestedArg in self.nestedArguments_.items() :
+      nestedArg.setName( name )
 
   # Updates and overrides current with values from rhs if they exist
   def update( self, rhs, print=print ) :
@@ -202,7 +207,7 @@ class HpcArgpacks( SubmitArgpacks ) :
   @staticmethod
   def joinAll( hpcArgpacks, submitType, op, print=print ) :
     finalHpcArgpacks = HpcArgpacks( OrderedDict() )
-    finalHpcArgpacks.name_ = HpcArgpacks.HPC_JOIN_NAME + "all"
+    finalHpcArgpacks.setName( HpcArgpacks.HPC_JOIN_NAME + "all" )
     if len( hpcArgpacks ) == 0 :
       return finalHpcArgpacks
     

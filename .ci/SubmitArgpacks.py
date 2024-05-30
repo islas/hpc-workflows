@@ -31,6 +31,9 @@ class SubmitArgpacks( ) :
   def parseSpecificOptions( self, origin=None ) :
     # Children should override this for their respective parse()
     pass
+  
+  def setName( self, name ) :
+    self.name_ = name
 
   # Updates and overrides current with values from rhs if they exist
   def update( self, rhs, print=print ) :
