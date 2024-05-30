@@ -292,12 +292,10 @@ class Test( SubmitAction ):
       self.log_pop()
       self.log( "[PHASE {phase}] Resources for [ {steps} ] : '{res}', timelimit = {time}".format(
                                                                                                   phase=phase,
-                                                                                                  steps="".join(
+                                                                                                  steps=" ".join(
                                                                                                                 "{0:>{1}}".format(
                                                                                                                                   step, longestStep + ( 1 if len( psuedoRunningMap ) > 1 else 0 ) )
-                                                                                                                                  for step in ",[:space:]".join( 
-                                                                                                                                    psuedoRunningMap.keys()
-                                                                                                                                  ).split( '[:space:]' )
+                                                                                                                                  for step in psuedoRunningMap.keys()
                                                                                                                 ),
                                                                                                   res=currentResources.format( hpcSubmit[0], print=lambda *args : None ),
                                                                                                   time=runFor
