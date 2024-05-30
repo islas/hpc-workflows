@@ -6,6 +6,10 @@ from collections import OrderedDict
 import SubmitCommon as sc
 from SubmitArgpacks import SubmitArgpacks
 
+# http://docs.adaptivecomputing.com/torque/4-1-3/Content/topics/2-jobs/requestingRes.htm
+PBS_RESOURCE_SIZE_REGEX_STR = r"(?P<numeric>\d+)(?P<multi>(?P<scale>k|m|g|t)?(?P<unit>b|w))"
+PBS_RESOURCE_SIZE_REGEX     = re.compile( PBS_RESOURCE_SIZE_REGEX_STR, re.I )
+
 class HpcArgpacks( SubmitArgpacks ) :
 
   HPC_JOIN_NAME = "join"
