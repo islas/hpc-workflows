@@ -70,6 +70,20 @@ class HpcArgpacks( SubmitArgpacks ) :
 
     return finalHpcArgpacks
 
+  def getPrintInfo( self, argpack ) :
+    origins       = [ self.origins_[argpack] ]
+    longestPack   = len( max( self.origins_.keys(), key=len ) )
+    longestNestedPack   = None
+    longestNestedOrigin = None
+
+
+    if self.nestedArguments_[argpack].arguments_ :
+      origins = set( self.nestedArguments_[argpack].origins_.values() )
+      longestNestedPack   = len( max( self.nestedArguments_[argpack].origins_.keys(),   key=len ) )
+      longestNestedOrigin = len( max( self.nestedArguments_[argpack].origins_.values(), key=len ) )
+  
+    return origins, longestPack, longestNestedPack, longestNestedOrigin
+
 
   def format( self, submitType, print=print ) :
     additionalArgs = []
@@ -85,19 +99,11 @@ class HpcArgpacks( SubmitArgpacks ) :
 
 
     for argpack, nestedArgs in self.arguments_.items() :
-      origins       = [ self.origins_[argpack] ]
-      longestPack   = None
-      longestOrigin = None
-
-
-      if self.nestedArguments_[argpack].arguments_ :
-        origins = set( self.nestedArguments_[argpack].origins_.values() )
-        longestPack   = len( max( self.nestedArguments_[argpack].origins_.keys(),   key=len ) )
-        longestOrigin = len( max( self.nestedArguments_[argpack].origins_.values(), key=len ) )
+      origins, _, longestNestedPack, longestNestedOrigin = self.getPrintInfo( argpack )
       
       argpackOption = next( iter( nestedArgs ) )
 
-      print( "  From {0} adding HPC argument pack '{1}' :".format( "[{0}]".format(", ".join( origins ) ), argpack ) )
+      print( "  From [{0}] adding HPC argument pack '{1}' :".format( ", ".join( origins ), argpack ) )
       print( "    Adding option '{0}'".format( argpackOption ) )
 
       for key, value in self.nestedArguments_[argpack].arguments_.items() :
@@ -105,8 +111,8 @@ class HpcArgpacks( SubmitArgpacks ) :
         print( 
               "      From {origin:<{length}} adding resource {key:<{packlength}}{val}".format(
                                                                                                       origin=self.nestedArguments_[argpack].origins_[key],
-                                                                                                      length=longestOrigin,
-                                                                                                      packlength=longestPack + 2,
+                                                                                                      length=longestNestedOrigin,
+                                                                                                      packlength=longestNestedPack + 2,
                                                                                                       key="'{0}'".format( key ),
                                                                                                       val="" if not value else " : {0}".format( value )
                                                                                                       )
@@ -145,7 +151,16 @@ class HpcArgpacks( SubmitArgpacks ) :
           print( msg )
           raise Exception( msg )
 
-        print( "  Joining argpack {key} from {rhs} into {name}".format( key=key, rhs=rhs.name_, name=self.name_) )
+        origins, argpackLen, longestPack, longestOrigin = rhs.getPrintInfo( key )
+        print( "  Joining argpack {key:<{arglen}} from [{rhs}] into {name}".format( 
+                                                                                    key="'{0}'".format( key ),
+                                                                                    arglen=argpackLen + 2,
+                                                                                    rhs=", ".join(
+                                                                                                  set( rhs.nestedArguments_[key].origins_.values() )
+                                                                                                  ),
+                                                                                    name=self.name_
+                                                                                    )
+                                                                                  )
 
         for res, amount in rhs.nestedArguments_[key].arguments_.items() :
           resExists, resOccurrences = self.nestedArguments_[argpack].keyExists( res )
