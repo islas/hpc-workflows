@@ -187,7 +187,7 @@ class HpcArgpacks( SubmitArgpacks ) :
                                                                                                             {
                                                                                                               "numeric" : totalAmount,
                                                                                                               "scale"   : None,
-                                                                                                              "unit"    : resMem["unit"]
+                                                                                                              "unit"    : lhsMem["unit"]
                                                                                                             }
                                                                                                           )
                                                                                                         )
