@@ -175,7 +175,7 @@ class HpcArgpacks( SubmitArgpacks ) :
               # Not an int value, size value / maybe this is a memory resource
               lhsMem = HpcArgpacks.resourceMemSizeDict( self.nestedArguments_[argpack].arguments_[resName], submitType )
               if lhsMem is not None :
-                rhsMem = SubmitOptions.resourceMemSizeDict( amount, submitType )
+                rhsMem = HpcArgpacks.resourceMemSizeDict( amount, submitType )
                 if lhsMem[ "unit" ] == rhsMem[ "unit" ] :
                   # Can add
                   rhsAmount = HpcArgpacks.resourceMemSizeBase( rhsMem )
@@ -263,7 +263,7 @@ class HpcArgpacks( SubmitArgpacks ) :
   def resourceMemSizeReduce( amountDict ) :
     multipliers   = { None : 1, "k" : 1024, "m" : 1024**2, "g" : 1024**3, "t" : 1024**4 }
 
-    totalAmount = SubmitOptions.resourceMemSizeBase( amountDict )
+    totalAmount = HpcArgpacks.resourceMemSizeBase( amountDict )
     
     # Convert to simplified size, round up if needed
     log2 = math.log( totalAmount, 2 )
