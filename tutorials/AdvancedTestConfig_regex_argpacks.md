@@ -803,9 +803,6 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     
 
 
-    [test::regex-test]  Checking remaining steps...
-
-
     [step::build-omp-fp32-ftA] Preparing working directory
 
 
@@ -816,6 +813,9 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
 
 
     [step::build-omp-fp32-ftA] Submitting step build-omp-fp32-ftA...
+
+
+    [test::regex-test]  Checking remaining steps...
 
 
     [step::build-omp-fp32-ftA]   Gathering argument packs...

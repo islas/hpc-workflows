@@ -1705,7 +1705,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 \
     [step::submit]        Gathering HPC argument packs...
 
 
-    [step::submit]          From [join, cli] adding HPC argument pack 'select' :
+    [step::submit]          From [cli, join] adding HPC argument pack 'select' :
 
 
     [step::submit]            Adding option '-l '
@@ -2654,7 +2654,7 @@ $1/../.ci/runner.py $1/../our-config.json -t quartnode-simple quartnode fullnode
     [test::quartnode-simple]         Calculate max instantaneous resources for this phase
 
 
-    [test::quartnode-simple]             Joining argpack '.*quartnode.*::select' from [our-config, our-config.quartnode-simple] into joinall
+    [test::quartnode-simple]             Joining argpack '.*quartnode.*::select' from [our-config.quartnode-simple, our-config] into joinall
 
 
     [test::quartnode-simple]             Joining argpack 'priority'              from [our-config] into joinall
@@ -2753,7 +2753,7 @@ $1/../.ci/runner.py $1/../our-config.json -t quartnode-simple quartnode fullnode
     [test::fullnode-double]         Calculate max instantaneous resources for this phase
 
 
-    [test::fullnode-double]             Joining argpack '.*fullnode.*::select'  from [our-config.fullnode-double, our-config] into joinall
+    [test::fullnode-double]             Joining argpack '.*fullnode.*::select'  from [our-config, our-config.fullnode-double] into joinall
 
 
     [test::fullnode-double]             Joining argpack 'priority'              from [our-config] into joinall

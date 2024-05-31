@@ -1922,10 +1922,10 @@ echo ""
         self.submitOptions_.validate( print=self.log )
 
 
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 158, in validate
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 159, in validate
 
 
-        self.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=print ).format( self.submitType_, print=lambda *args : None  )
+        self.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=print )
 
 
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/HpcArgpacks.py", line 69, in selectAncestrySpecificSubmitArgpacks
