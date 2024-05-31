@@ -1705,7 +1705,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 \
     [step::submit]        Gathering HPC argument packs...
 
 
-    [step::submit]          From [cli, join] adding HPC argument pack 'select' :
+    [step::submit]          From [join, cli] adding HPC argument pack 'select' :
 
 
     [step::submit]            Adding option '-l '
