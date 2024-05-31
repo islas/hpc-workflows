@@ -5,6 +5,7 @@ on:
     types: [ opened, synchronize ]
     paths:
       - tutorials/**
+      - .github/workflows/gendocs.yml
 
 jobs:
   markdowndocs:
