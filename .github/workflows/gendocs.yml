@@ -29,7 +29,7 @@ jobs:
           # --execute is hot garbage compared to manual execution, they produce different file outputs
           # which leads to weird newlines as code output stdout streams separate EVERY line as individual outputs
           jupyter nbconvert --execute      --inplace $notebook
-          ./tutorials/sanitize.py                    $notebook
+          ./tutorials/sanitizer.py                   $notebook
           jupyter nbconvert --to=markdown            $notebook
           jupyter nbconvert --clear-output --inplace $notebook
         done
