@@ -118,68 +118,26 @@ cat $1/../our-config.json
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "regex-test" : 
-
-
       {
-
-
         "submit_options" :
-
-
         {
-
-
           "arguments" :
-
-
           {
-
-
             ".*send.*::send_prefix" : [ "[send] " ],
-
-
             ".*recv.*::recv_prefix" : [ "[recv] " ]
-
-
           }
-
-
         },
-
-
         "steps" :
-
-
         {
-
-
           "send-step0" : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "Hello!" ] },
-
-
           "recv-step1" : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "Hello back!" ] },
-
-
           "send-step2" : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "Ping 1" ] },
-
-
           "send-step3" : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "Ping 2" ] },
-
-
           "recv-step4" : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "Pings received" ] }
-
-
         }
-
-
       }
-
-
     }
 
 
@@ -192,365 +150,125 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
 ```
 
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [file::our-config]  Preparing working directory
-
-
     [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::regex-test]  Preparing working directory
-
-
     [test::regex-test]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::regex-test]  Checking if results wait is required...
-
-
     [test::regex-test]    No HPC submissions, no results waiting required
-
-
     [step::send-step0]  Preparing working directory
-
-
     [step::send-step0]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::send-step0]    Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::send-step0]  Submitting step send-step0...
-
-
     [step::send-step0]    Gathering argument packs...
-
-
     [step::send-step0]      From our-config.regex-test adding arguments pack '.*send.*::send_prefix' : ['[send] ']
-
-
     [step::send-step0]    Script : ./tests/scripts/echo_normal.sh
-
-
     [step::send-step0]    Running command:
-
-
     [step::send-step0]      /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows Hello! "[send] "
-
-
     [step::send-step0]    ***************START send-step0***************
-
-
     
-
-
     Hello! [send]
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::send-step0]    ***************STOP send-step0***************
-
-
     [step::send-step0]  Finished submitting step send-step0
-
-
     
-
-
     [step::recv-step1]  Preparing working directory
-
-
     [step::recv-step1]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::regex-test]  Checking remaining steps...
-
-
     [step::recv-step1]    Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::recv-step1]  Submitting step recv-step1...
-
-
     [step::recv-step1]    Gathering argument packs...
-
-
     [step::recv-step1]      From our-config.regex-test adding arguments pack '.*recv.*::recv_prefix' : ['[recv] ']
-
-
     [step::recv-step1]    Script : ./tests/scripts/echo_normal.sh
-
-
     [step::recv-step1]    Running command:
-
-
     [step::recv-step1]      /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows "Hello back!" "[recv] "
-
-
     [step::recv-step1]    ***************START recv-step1***************
-
-
     
-
-
     Hello back! [recv]
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::recv-step1]    ***************STOP recv-step1***************
-
-
     [step::recv-step1]  Finished submitting step recv-step1
-
-
     
-
-
     [step::send-step2]  Preparing working directory
-
-
     [step::send-step2]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::send-step2]    Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::send-step2]  Submitting step send-step2...
-
-
     [step::send-step2]    Gathering argument packs...
-
-
     [step::send-step2]      From our-config.regex-test adding arguments pack '.*send.*::send_prefix' : ['[send] ']
-
-
     [step::send-step2]    Script : ./tests/scripts/echo_normal.sh
-
-
     [step::send-step2]    Running command:
-
-
     [step::send-step2]      /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows "Ping 1" "[send] "
-
-
     [step::send-step2]    ***************START send-step2***************
-
-
     
-
-
     Ping 1 [send]
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::send-step2]    ***************STOP send-step2***************
-
-
     [step::send-step2]  Finished submitting step send-step2
-
-
     
-
-
     [step::send-step3]  Preparing working directory
-
-
     [step::send-step3]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::send-step3]    Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::send-step3]  Submitting step send-step3...
-
-
     [step::send-step3]    Gathering argument packs...
-
-
     [step::send-step3]      From our-config.regex-test adding arguments pack '.*send.*::send_prefix' : ['[send] ']
-
-
     [step::send-step3]    Script : ./tests/scripts/echo_normal.sh
-
-
     [step::send-step3]    Running command:
-
-
     [step::send-step3]      /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows "Ping 2" "[send] "
-
-
     [step::send-step3]    ***************START send-step3***************
-
-
     
-
-
     Ping 2 [send]
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::send-step3]    ***************STOP send-step3***************
-
-
     [step::send-step3]  Finished submitting step send-step3
-
-
     
-
-
     [step::recv-step4]  Preparing working directory
-
-
     [step::recv-step4]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::recv-step4]    Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::recv-step4]  Submitting step recv-step4...
-
-
     [step::recv-step4]    Gathering argument packs...
-
-
     [step::recv-step4]      From our-config.regex-test adding arguments pack '.*recv.*::recv_prefix' : ['[recv] ']
-
-
     [step::recv-step4]    Script : ./tests/scripts/echo_normal.sh
-
-
     [step::recv-step4]    Running command:
-
-
     [step::recv-step4]      /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows "Pings received" "[recv] "
-
-
     [step::recv-step4]    ***************START recv-step4***************
-
-
     
-
-
     Pings received [recv]
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::recv-step4]    ***************STOP recv-step4***************
-
-
     [step::recv-step4]  Finished submitting step recv-step4
-
-
     
-
-
     [test::regex-test]  No remaining steps, test submission complete
-
-
     [test::regex-test]  Outputting results...
-
-
     [step::send-step0]  Results for send-step0
-
-
     [step::send-step0]    Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.send-step0.log
-
-
     [step::send-step0]    Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::send-step0]    [SUCCESS]
-
-
     [step::recv-step1]  Results for recv-step1
-
-
     [step::recv-step1]    Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.recv-step1.log
-
-
     [step::recv-step1]    Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::recv-step1]    [SUCCESS]
-
-
     [step::send-step2]  Results for send-step2
-
-
     [step::send-step2]    Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.send-step2.log
-
-
     [step::send-step2]    Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::send-step2]    [SUCCESS]
-
-
     [step::send-step3]  Results for send-step3
-
-
     [step::send-step3]    Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.send-step3.log
-
-
     [step::send-step3]    Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::send-step3]    [SUCCESS]
-
-
     [step::recv-step4]  Results for recv-step4
-
-
     [step::recv-step4]    Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.recv-step4.log
-
-
     [step::recv-step4]    Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::recv-step4]    [SUCCESS]
-
-
     [test::regex-test]  Writing relevant logfiles to view in master log file : 
-
-
     [test::regex-test]    /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.log
-
-
     [test::regex-test]  [SUCCESS] : Test regex-test completed successfully
 
 
@@ -622,92 +340,34 @@ cat $1/../our-config.json
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "regex-test" : 
-
-
       {
-
-
         "submit_options" :
-
-
         {
-
-
           "arguments" :
-
-
           {
-
-
             ".*dbg.*::dbg_flag" : [ "-d" ],
-
-
             ".*mpi.*::mpi_flag" : [ "--mpi" ],
-
-
             ".*omp.*::omp_flag" : [ "--omp" ],
-
-
             ".*fp64.*::fp64_flag" : [ "--double" ],
-
-
             ".*ft[^A]*A.*::feature_a" : [ "-a" ],
-
-
             ".*ft[^B]*B.*::feature_b" : [ "-b" ],
-
-
             ".*ft[^C]*C.*::feature_b" : [ "-c" ]
-
-
           }
-
-
         },
-
-
         "steps" :
-
-
         {
-
-
           "build-omp-fp32-dbg"  : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "-o", "build-omp-fp32-dbg" ] },
-
-
           "build-omp-fp32-ftA"  : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "-o", "build-omp-fp32-ftA" ] },
-
-
           "build-omp-fp32-ftAB" : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "-o", "build-omp-fp32-ftAB" ] },
-
-
           "build-omp-fp32-ftBC" : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "-o", "build-omp-fp32-ftBC" ] },
-
-
           "build-omp-fp64-ftB"  : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "-o", "build-omp-fp64-ftB" ] },
-
-
           "build-mpi-fp32-dbg"  : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "-o", "build-mpi-fp32-dbg" ] },
-
-
           "build-mpi-fp32"      : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "-o", "build-mpi-fp32" ] },
-
-
           "build-mpi-fp64"      : { "command" : "./tests/scripts/echo_normal.sh", "arguments" : [ "-o", "build-mpi-fp64" ] }
-
-
         }
-
-
       }
-
-
     }
 
 
@@ -720,584 +380,198 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
 ```
 
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [file::our-config]  Preparing working directory
-
-
     [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::regex-test]  Preparing working directory
-
-
     [test::regex-test]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::regex-test]  Checking if results wait is required...
-
-
     [test::regex-test]    No HPC submissions, no results waiting required
-
-
     [step::build-omp-fp32-dbg] Preparing working directory
-
-
     [step::build-omp-fp32-dbg]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-omp-fp32-dbg]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-omp-fp32-dbg] Submitting step build-omp-fp32-dbg...
-
-
     [step::build-omp-fp32-dbg]   Gathering argument packs...
-
-
     [step::build-omp-fp32-dbg]     From our-config.regex-test adding arguments pack '.*dbg.*::dbg_flag' : ['-d']
-
-
     [step::build-omp-fp32-dbg]     From our-config.regex-test adding arguments pack '.*omp.*::omp_flag' : ['--omp']
-
-
     [step::build-omp-fp32-dbg]   Script : ./tests/scripts/echo_normal.sh
-
-
     [step::build-omp-fp32-dbg]   Running command:
-
-
     [step::build-omp-fp32-dbg]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-dbg -d --omp
-
-
     [step::build-omp-fp32-dbg]   ***************START build-omp-fp32-dbg***************
-
-
     
-
-
     -o build-omp-fp32-dbg -d --omp
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::build-omp-fp32-dbg]   ***************STOP build-omp-fp32-dbg***************
-
-
     [step::build-omp-fp32-dbg] Finished submitting step build-omp-fp32-dbg
-
-
     
-
-
-    [step::build-omp-fp32-ftA] Preparing working directory
-
-
-    [step::build-omp-fp32-ftA]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
-    [step::build-omp-fp32-ftA]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
-    [step::build-omp-fp32-ftA] Submitting step build-omp-fp32-ftA...
-
-
     [test::regex-test]  Checking remaining steps...
-
-
+    [step::build-omp-fp32-ftA] Preparing working directory
+    [step::build-omp-fp32-ftA]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::build-omp-fp32-ftA]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::build-omp-fp32-ftA] Submitting step build-omp-fp32-ftA...
     [step::build-omp-fp32-ftA]   Gathering argument packs...
-
-
     [step::build-omp-fp32-ftA]     From our-config.regex-test adding arguments pack '.*ft[^A]*A.*::feature_a' : ['-a']
-
-
     [step::build-omp-fp32-ftA]     From our-config.regex-test adding arguments pack '.*omp.*::omp_flag'       : ['--omp']
-
-
     [step::build-omp-fp32-ftA]   Script : ./tests/scripts/echo_normal.sh
-
-
     [step::build-omp-fp32-ftA]   Running command:
-
-
     [step::build-omp-fp32-ftA]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-ftA -a --omp
-
-
     [step::build-omp-fp32-ftA]   ***************START build-omp-fp32-ftA***************
-
-
     
-
-
     -o build-omp-fp32-ftA -a --omp
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::build-omp-fp32-ftA]   ***************STOP build-omp-fp32-ftA***************
-
-
     [step::build-omp-fp32-ftA] Finished submitting step build-omp-fp32-ftA
-
-
     
-
-
     [step::build-omp-fp32-ftAB] Preparing working directory
-
-
     [step::build-omp-fp32-ftAB]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-omp-fp32-ftAB]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-omp-fp32-ftAB] Submitting step build-omp-fp32-ftAB...
-
-
     [step::build-omp-fp32-ftAB]   Gathering argument packs...
-
-
     [step::build-omp-fp32-ftAB]     From our-config.regex-test adding arguments pack '.*ft[^A]*A.*::feature_a' : ['-a']
-
-
     [step::build-omp-fp32-ftAB]     From our-config.regex-test adding arguments pack '.*ft[^B]*B.*::feature_b' : ['-b']
-
-
     [step::build-omp-fp32-ftAB]     From our-config.regex-test adding arguments pack '.*omp.*::omp_flag'       : ['--omp']
-
-
     [step::build-omp-fp32-ftAB]   Script : ./tests/scripts/echo_normal.sh
-
-
     [step::build-omp-fp32-ftAB]   Running command:
-
-
     [step::build-omp-fp32-ftAB]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-ftAB -a -b --omp
-
-
     [step::build-omp-fp32-ftAB]   ***************START build-omp-fp32-ftAB***************
-
-
     
-
-
     -o build-omp-fp32-ftAB -a -b --omp
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::build-omp-fp32-ftAB]   ***************STOP build-omp-fp32-ftAB***************
-
-
     [step::build-omp-fp32-ftAB] Finished submitting step build-omp-fp32-ftAB
-
-
     
-
-
     [step::build-omp-fp32-ftBC] Preparing working directory
-
-
     [step::build-omp-fp32-ftBC]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-omp-fp32-ftBC]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-omp-fp32-ftBC] Submitting step build-omp-fp32-ftBC...
-
-
     [step::build-omp-fp32-ftBC]   Gathering argument packs...
-
-
     [step::build-omp-fp32-ftBC]     From our-config.regex-test adding arguments pack '.*ft[^B]*B.*::feature_b' : ['-b']
-
-
     [step::build-omp-fp32-ftBC]     From our-config.regex-test adding arguments pack '.*ft[^C]*C.*::feature_b' : ['-c']
-
-
     [step::build-omp-fp32-ftBC]     From our-config.regex-test adding arguments pack '.*omp.*::omp_flag'       : ['--omp']
-
-
     [step::build-omp-fp32-ftBC]   Script : ./tests/scripts/echo_normal.sh
-
-
     [step::build-omp-fp32-ftBC]   Running command:
-
-
     [step::build-omp-fp32-ftBC]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-ftBC -b -c --omp
-
-
     [step::build-omp-fp32-ftBC]   ***************START build-omp-fp32-ftBC***************
-
-
     
-
-
     -o build-omp-fp32-ftBC -b -c --omp
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::build-omp-fp32-ftBC]   ***************STOP build-omp-fp32-ftBC***************
-
-
     [step::build-omp-fp32-ftBC] Finished submitting step build-omp-fp32-ftBC
-
-
     
-
-
     [step::build-omp-fp64-ftB] Preparing working directory
-
-
     [step::build-omp-fp64-ftB]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-omp-fp64-ftB]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-omp-fp64-ftB] Submitting step build-omp-fp64-ftB...
-
-
     [step::build-omp-fp64-ftB]   Gathering argument packs...
-
-
     [step::build-omp-fp64-ftB]     From our-config.regex-test adding arguments pack '.*ft[^B]*B.*::feature_b' : ['-b']
-
-
     [step::build-omp-fp64-ftB]     From our-config.regex-test adding arguments pack '.*fp64.*::fp64_flag'     : ['--double']
-
-
     [step::build-omp-fp64-ftB]     From our-config.regex-test adding arguments pack '.*omp.*::omp_flag'       : ['--omp']
-
-
     [step::build-omp-fp64-ftB]   Script : ./tests/scripts/echo_normal.sh
-
-
     [step::build-omp-fp64-ftB]   Running command:
-
-
     [step::build-omp-fp64-ftB]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp64-ftB -b --double --omp
-
-
     [step::build-omp-fp64-ftB]   ***************START build-omp-fp64-ftB***************
-
-
     
-
-
     -o build-omp-fp64-ftB -b --double --omp
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::build-omp-fp64-ftB]   ***************STOP build-omp-fp64-ftB***************
-
-
     [step::build-omp-fp64-ftB] Finished submitting step build-omp-fp64-ftB
-
-
     
-
-
     [step::build-mpi-fp32-dbg] Preparing working directory
-
-
     [step::build-mpi-fp32-dbg]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-mpi-fp32-dbg]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-mpi-fp32-dbg] Submitting step build-mpi-fp32-dbg...
-
-
     [step::build-mpi-fp32-dbg]   Gathering argument packs...
-
-
     [step::build-mpi-fp32-dbg]     From our-config.regex-test adding arguments pack '.*dbg.*::dbg_flag' : ['-d']
-
-
     [step::build-mpi-fp32-dbg]     From our-config.regex-test adding arguments pack '.*mpi.*::mpi_flag' : ['--mpi']
-
-
     [step::build-mpi-fp32-dbg]   Script : ./tests/scripts/echo_normal.sh
-
-
     [step::build-mpi-fp32-dbg]   Running command:
-
-
     [step::build-mpi-fp32-dbg]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -o build-mpi-fp32-dbg -d --mpi
-
-
     [step::build-mpi-fp32-dbg]   ***************START build-mpi-fp32-dbg***************
-
-
     
-
-
     -o build-mpi-fp32-dbg -d --mpi
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::build-mpi-fp32-dbg]   ***************STOP build-mpi-fp32-dbg***************
-
-
     [step::build-mpi-fp32-dbg] Finished submitting step build-mpi-fp32-dbg
-
-
     
-
-
     [step::build-mpi-fp32] Preparing working directory
-
-
     [step::build-mpi-fp32]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-mpi-fp32]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-mpi-fp32] Submitting step build-mpi-fp32...
-
-
     [step::build-mpi-fp32]   Gathering argument packs...
-
-
     [step::build-mpi-fp32]     From our-config.regex-test adding arguments pack '.*mpi.*::mpi_flag' : ['--mpi']
-
-
     [step::build-mpi-fp32]   Script : ./tests/scripts/echo_normal.sh
-
-
     [step::build-mpi-fp32]   Running command:
-
-
     [step::build-mpi-fp32]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -o build-mpi-fp32 --mpi
-
-
     [step::build-mpi-fp32]   ***************START build-mpi-fp32***************
-
-
     
-
-
     -o build-mpi-fp32 --mpi
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::build-mpi-fp32]   ***************STOP build-mpi-fp32***************
-
-
     [step::build-mpi-fp32] Finished submitting step build-mpi-fp32
-
-
     
-
-
     [step::build-mpi-fp64] Preparing working directory
-
-
     [step::build-mpi-fp64]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-mpi-fp64]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::build-mpi-fp64] Submitting step build-mpi-fp64...
-
-
     [step::build-mpi-fp64]   Gathering argument packs...
-
-
     [step::build-mpi-fp64]     From our-config.regex-test adding arguments pack '.*fp64.*::fp64_flag' : ['--double']
-
-
     [step::build-mpi-fp64]     From our-config.regex-test adding arguments pack '.*mpi.*::mpi_flag'   : ['--mpi']
-
-
     [step::build-mpi-fp64]   Script : ./tests/scripts/echo_normal.sh
-
-
     [step::build-mpi-fp64]   Running command:
-
-
     [step::build-mpi-fp64]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -o build-mpi-fp64 --double --mpi
-
-
     [step::build-mpi-fp64]   ***************START build-mpi-fp64***************
-
-
     
-
-
     -o build-mpi-fp64 --double --mpi
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::build-mpi-fp64]   ***************STOP build-mpi-fp64***************
-
-
     [step::build-mpi-fp64] Finished submitting step build-mpi-fp64
-
-
     
-
-
     [test::regex-test]  No remaining steps, test submission complete
-
-
     [test::regex-test]  Outputting results...
-
-
     [step::build-omp-fp32-dbg] Results for build-omp-fp32-dbg
-
-
     [step::build-omp-fp32-dbg]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.build-omp-fp32-dbg.log
-
-
     [step::build-omp-fp32-dbg]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::build-omp-fp32-dbg]   [SUCCESS]
-
-
     [step::build-omp-fp32-ftA] Results for build-omp-fp32-ftA
-
-
     [step::build-omp-fp32-ftA]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.build-omp-fp32-ftA.log
-
-
     [step::build-omp-fp32-ftA]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::build-omp-fp32-ftA]   [SUCCESS]
-
-
     [step::build-omp-fp32-ftAB] Results for build-omp-fp32-ftAB
-
-
     [step::build-omp-fp32-ftAB]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.build-omp-fp32-ftAB.log
-
-
     [step::build-omp-fp32-ftAB]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::build-omp-fp32-ftAB]   [SUCCESS]
-
-
     [step::build-omp-fp32-ftBC] Results for build-omp-fp32-ftBC
-
-
     [step::build-omp-fp32-ftBC]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.build-omp-fp32-ftBC.log
-
-
     [step::build-omp-fp32-ftBC]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::build-omp-fp32-ftBC]   [SUCCESS]
-
-
     [step::build-omp-fp64-ftB] Results for build-omp-fp64-ftB
-
-
     [step::build-omp-fp64-ftB]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.build-omp-fp64-ftB.log
-
-
     [step::build-omp-fp64-ftB]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::build-omp-fp64-ftB]   [SUCCESS]
-
-
     [step::build-mpi-fp32-dbg] Results for build-mpi-fp32-dbg
-
-
     [step::build-mpi-fp32-dbg]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.build-mpi-fp32-dbg.log
-
-
     [step::build-mpi-fp32-dbg]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::build-mpi-fp32-dbg]   [SUCCESS]
-
-
     [step::build-mpi-fp32] Results for build-mpi-fp32
-
-
     [step::build-mpi-fp32]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.build-mpi-fp32.log
-
-
     [step::build-mpi-fp32]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::build-mpi-fp32]   [SUCCESS]
-
-
     [step::build-mpi-fp64] Results for build-mpi-fp64
-
-
     [step::build-mpi-fp64]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.build-mpi-fp64.log
-
-
     [step::build-mpi-fp64]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::build-mpi-fp64]   [SUCCESS]
-
-
     [test::regex-test]  Writing relevant logfiles to view in master log file : 
-
-
     [test::regex-test]    /home/runner/work/hpc-workflows/hpc-workflows/our-config.regex-test.log
-
-
     [test::regex-test]  [SUCCESS] : Test regex-test completed successfully
 
 

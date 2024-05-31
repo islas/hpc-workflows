@@ -100,56 +100,22 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "our-test" : { "steps" : { "our-step0" : { "command" : "./tests/scripts/echo_normal.sh" } } }
-
-
     }
-
-
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [file::our-config]  Preparing working directory
-
-
     [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [file::our-config]  Preparing to run multiple tests
-
-
     [file::our-config]    Automatically redirecting our-test to /home/runner/work/hpc-workflows/hpc-workflows/our-test_stdout.log
-
-
     [file::our-config]  Spawning process pool of size 4 to perform 1 tests
-
-
     [file::our-config]    Launching test our-test
-
-
     [file::our-config]    Waiting for tests to complete - BE PATIENT
-
-
     [file::our-config]    [SUCCESS] : Test our-test reported success
-
-
     [file::our-config]  Test suite complete, writing test results to master log file : 
-
-
     [file::our-config]    /home/runner/work/hpc-workflows/hpc-workflows/our-config.log
-
-
     [file::our-config]  [SUCCESS] : All tests passed
 
 
@@ -164,107 +130,39 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i
 ```
 
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [file::our-config]  Preparing working directory
-
-
     [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Preparing working directory
-
-
     [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Checking if results wait is required...
-
-
     [test::our-test]      No HPC submissions, no results waiting required
-
-
     [step::our-step0]   Preparing working directory
-
-
     [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]   Submitting step our-step0...
-
-
     [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-
-
     [step::our-step0]     Running command:
-
-
     [step::our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]     ***************START our-step0***************
-
-
     
-
-
     
-
-
     TEST echo_normal.sh PASS
-
-
     
-
-
     [step::our-step0]     ***************STOP our-step0 ***************
-
-
     [step::our-step0]   Finished submitting step our-step0
-
-
     
-
-
     [test::our-test]    Checking remaining steps...
-
-
     [test::our-test]    No remaining steps, test submission complete
-
-
     [test::our-test]    Outputting results...
-
-
     [step::our-step0]   Results for our-step0
-
-
     [step::our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
-
-
     [step::our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-
-
     [step::our-step0]     [SUCCESS]
-
-
     [test::our-test]    Writing relevant logfiles to view in master log file : 
-
-
     [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-
-
     [test::our-test]    [SUCCESS] : Test our-test completed successfully
 
 
@@ -293,89 +191,33 @@ echo ""
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "submit_options" :
-
-
       {
-
-
         "submission" : "PBS"
-
-
       },
-
-
       "our-test" : { "steps" : { "our-step0" : { "command" : "./tests/scripts/echo_normal.sh" } } }
-
-
     }
-
-
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     Traceback (most recent call last):
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 707, in <module>
-
-
         main()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 701, in main
-
-
         success, tests, logs = runSuite( options )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 510, in runSuite
-
-
         success, logs = testSuite.run( options.tests )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 430, in run
-
-
         self.tests_[test].validate()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 57, in validate
-
-
         step.validate()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 69, in validate
-
-
         self.submitOptions_.validate( print=self.log )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 154, in validate
-
-
         errMsg = "Error: Invalid submission options [Missing {opt}]\n{opts}".format( opt=err, opts=self.submitOptions_ )
-
-
     AttributeError: 'SubmitOptions' object has no attribute 'submitOptions_'
-
-
     
 
 
@@ -404,89 +246,33 @@ echo ""
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "submit_options" :
-
-
       {
-
-
         "submission" : "PBS"
-
-
       },
-
-
       "our-test" : { "steps" : { "our-step0" : { "command" : "./tests/scripts/echo_normal.sh" } } }
-
-
     }
-
-
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     Traceback (most recent call last):
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 707, in <module>
-
-
         main()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 701, in main
-
-
         success, tests, logs = runSuite( options )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 510, in runSuite
-
-
         success, logs = testSuite.run( options.tests )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 430, in run
-
-
         self.tests_[test].validate()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 57, in validate
-
-
         step.validate()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 69, in validate
-
-
         self.submitOptions_.validate( print=self.log )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 154, in validate
-
-
         errMsg = "Error: Invalid submission options [Missing {opt}]\n{opts}".format( opt=err, opts=self.submitOptions_ )
-
-
     AttributeError: 'SubmitOptions' object has no attribute 'submitOptions_'
-
-
     
 
 
@@ -517,134 +303,48 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "submit_options" :
-
-
       {
-
-
         "submission" : "PBS",
-
-
         "queue"      : "economy",
-
-
         "timelimit"  : "00:01:00"
-
-
       },
-
-
       "our-test" : { "steps" : { "our-step0" : { "command" : "./tests/scripts/echo_normal.sh" } } }
-
-
     }
-
-
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [file::our-config]  Preparing working directory
-
-
     [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Preparing working directory
-
-
     [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Checking if results wait is required...
-
-
     [test::our-test]      Final results will wait for all jobs complete
-
-
     [step::our-step0]   Preparing working directory
-
-
     [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]   Submitting step our-step0...
-
-
     [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-
-
     [step::our-step0]     Running command:
-
-
     [step::our-step0]       qsub -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]     ***************START our-step0***************
-
-
     
-
-
     [step::our-step0]     Doing dry-run, no ouptut
-
-
     
-
-
     [step::our-step0]     ***************STOP our-step0 ***************
-
-
     [step::our-step0]     Finding job ID in "12345"
-
-
     [step::our-step0]   Finished submitting step our-step0
-
-
     
-
-
     [test::our-test]    Checking remaining steps...
-
-
     [test::our-test]    No remaining steps, test submission complete
-
-
     [test::our-test]    Doing dry-run, assumed complete
-
-
     [test::our-test]    Outputting results...
-
-
     [step::our-step0]   Results for our-step0
-
-
     [step::our-step0]     Doing dry-run, assumed success
-
-
     [test::our-test]    Writing relevant logfiles to view in master log file : 
-
-
     [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-
-
     [test::our-test]    [SUCCESS] : Test our-test completed successfully
 
 
@@ -740,158 +440,56 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "submit_options" :
-
-
       {
-
-
         "submission" : "PBS",
-
-
         "queue"      : "economy",
-
-
         "timelimit"  : "00:01:00",
-
-
         "hpc_arguments" :
-
-
         {
-
-
           "node_select" : { "-l" : {} }
-
-
         }
-
-
       },
-
-
       "our-test" : { "steps" : { "our-step0" : { "command" : "./tests/scripts/echo_normal.sh" } } }
-
-
     }
-
-
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [file::our-config]  Preparing working directory
-
-
     [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Preparing working directory
-
-
     [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Checking if results wait is required...
-
-
     [test::our-test]      Final results will wait for all jobs complete
-
-
     [step::our-step0]   Preparing working directory
-
-
     [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]   Submitting step our-step0...
-
-
     [step::our-step0]     Gathering HPC argument packs...
-
-
     [step::our-step0]       From [our-config] adding HPC argument pack 'node_select' :
-
-
     [step::our-step0]         Adding option '-l'
-
-
     [step::our-step0]       Final argpack output for node_select : '-l'
-
-
     [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-
-
     [step::our-step0]     Running command:
-
-
     [step::our-step0]       qsub -l -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]     ***************START our-step0***************
-
-
     
-
-
     [step::our-step0]     Doing dry-run, no ouptut
-
-
     
-
-
     [step::our-step0]     ***************STOP our-step0 ***************
-
-
     [step::our-step0]     Finding job ID in "12345"
-
-
     [step::our-step0]   Finished submitting step our-step0
-
-
     
-
-
     [test::our-test]    Checking remaining steps...
-
-
     [test::our-test]    No remaining steps, test submission complete
-
-
     [test::our-test]    Doing dry-run, assumed complete
-
-
     [test::our-test]    Outputting results...
-
-
     [step::our-step0]   Results for our-step0
-
-
     [step::our-step0]     Doing dry-run, assumed success
-
-
     [test::our-test]    Writing relevant logfiles to view in master log file : 
-
-
     [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-
-
     [test::our-test]    [SUCCESS] : Test our-test completed successfully
 
 
@@ -927,161 +525,57 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "submit_options" :
-
-
       {
-
-
         "submission" : "PBS",
-
-
         "queue"      : "economy",
-
-
         "timelimit"  : "00:01:00",
-
-
         "hpc_arguments" :
-
-
         {
-
-
           "select" : { "-l" : { "select" : 1 } }
-
-
         }
-
-
       },
-
-
       "our-test" : { "steps" : { "our-step0" : { "command" : "./tests/scripts/echo_normal.sh" } } }
-
-
     }
-
-
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [file::our-config]  Preparing working directory
-
-
     [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Preparing working directory
-
-
     [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Checking if results wait is required...
-
-
     [test::our-test]      Final results will wait for all jobs complete
-
-
     [step::our-step0]   Preparing working directory
-
-
     [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]   Submitting step our-step0...
-
-
     [step::our-step0]     Gathering HPC argument packs...
-
-
     [step::our-step0]       From [our-config] adding HPC argument pack 'select' :
-
-
     [step::our-step0]         Adding option '-l'
-
-
     [step::our-step0]           From our-config adding resource 'select' : 1
-
-
     [step::our-step0]       Final argpack output for select : '-lselect=1'
-
-
     [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-
-
     [step::our-step0]     Running command:
-
-
     [step::our-step0]       qsub -lselect=1 -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]     ***************START our-step0***************
-
-
     
-
-
     [step::our-step0]     Doing dry-run, no ouptut
-
-
     
-
-
     [step::our-step0]     ***************STOP our-step0 ***************
-
-
     [step::our-step0]     Finding job ID in "12345"
-
-
     [step::our-step0]   Finished submitting step our-step0
-
-
     
-
-
     [test::our-test]    Checking remaining steps...
-
-
     [test::our-test]    No remaining steps, test submission complete
-
-
     [test::our-test]    Doing dry-run, assumed complete
-
-
     [test::our-test]    Outputting results...
-
-
     [step::our-step0]   Results for our-step0
-
-
     [step::our-step0]     Doing dry-run, assumed success
-
-
     [test::our-test]    Writing relevant logfiles to view in master log file : 
-
-
     [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-
-
     [test::our-test]    [SUCCESS] : Test our-test completed successfully
 
 
@@ -1142,161 +636,57 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "submit_options" :
-
-
       {
-
-
         "submission" : "PBS",
-
-
         "queue"      : "economy",
-
-
         "timelimit"  : "00:01:00",
-
-
         "hpc_arguments" :
-
-
         {
-
-
           "select" : { "-l " : { "select" : 1 } }
-
-
         }
-
-
       },
-
-
       "our-test" : { "steps" : { "our-step0" : { "command" : "./tests/scripts/echo_normal.sh" } } }
-
-
     }
-
-
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [file::our-config]  Preparing working directory
-
-
     [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Preparing working directory
-
-
     [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Checking if results wait is required...
-
-
     [test::our-test]      Final results will wait for all jobs complete
-
-
     [step::our-step0]   Preparing working directory
-
-
     [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]   Submitting step our-step0...
-
-
     [step::our-step0]     Gathering HPC argument packs...
-
-
     [step::our-step0]       From [our-config] adding HPC argument pack 'select' :
-
-
     [step::our-step0]         Adding option '-l '
-
-
     [step::our-step0]           From our-config adding resource 'select' : 1
-
-
     [step::our-step0]       Final argpack output for select : '-l select=1'
-
-
     [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-
-
     [step::our-step0]     Running command:
-
-
     [step::our-step0]       qsub -l select=1 -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0]     ***************START our-step0***************
-
-
     
-
-
     [step::our-step0]     Doing dry-run, no ouptut
-
-
     
-
-
     [step::our-step0]     ***************STOP our-step0 ***************
-
-
     [step::our-step0]     Finding job ID in "12345"
-
-
     [step::our-step0]   Finished submitting step our-step0
-
-
     
-
-
     [test::our-test]    Checking remaining steps...
-
-
     [test::our-test]    No remaining steps, test submission complete
-
-
     [test::our-test]    Doing dry-run, assumed complete
-
-
     [test::our-test]    Outputting results...
-
-
     [step::our-step0]   Results for our-step0
-
-
     [step::our-step0]     Doing dry-run, assumed success
-
-
     [test::our-test]    Writing relevant logfiles to view in master log file : 
-
-
     [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-
-
     [test::our-test]    [SUCCESS] : Test our-test completed successfully
 
 
@@ -1354,179 +744,63 @@ echo ""
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "submit_options" :
-
-
       {
-
-
         "submission" : "PBS",
-
-
         "queue"      : "economy",
-
-
         "timelimit"  : "00:01:00",
-
-
         "hpc_arguments" :
-
-
         {
-
-
           "select" : { "-l " : { ".*less-nodes.*::select" : 1 } }
-
-
         }
-
-
       },
-
-
       "our-test" :
-
-
       {
-
-
         "submit_options" :
-
-
         {
-
-
           "hpc_arguments" : 
-
-
           {
-
-
             "select" : { "-l " : { ".*more-nodes.*::select" : 2 } }
-
-
           }
-
-
         },
-
-
         "steps" : { "our-step0-less-nodes" : { "command" : "./tests/scripts/echo_normal.sh" } }
-
-
       }
-
-
     }
-
-
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [test::our-test]    Argument pack select at our-config.our-test '.*more-nodes.*::select' name conflict with '.*less-nodes.*::select', declared at our-config
-
-
     Traceback (most recent call last):
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 707, in <module>
-
-
         main()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 701, in main
-
-
         success, tests, logs = runSuite( options )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 502, in runSuite
-
-
         testSuite = Suite( 
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 39, in __init__
-
-
         super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitAction.py", line 32, in __init__
-
-
         self.parse()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitAction.py", line 65, in parse
-
-
         self.parseSpecificOptions()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 52, in parseSpecificOptions
-
-
         self.tests_[ test ] = Test( test, testDict, self.submitOptions_, self.globalOpts_, parent=self.ancestry(), rootDir=self.rootDir_ )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 30, in __init__
-
-
         super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitAction.py", line 32, in __init__
-
-
         self.parse()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitAction.py", line 60, in parse
-
-
         self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.ancestry(), print=self.log ), print=self.log )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 126, in update
-
-
         if rhs.hpcArguments_.arguments_         : self.hpcArguments_.update( rhs.hpcArguments_, print=print )    
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/HpcArgpacks.py", line 35, in update
-
-
         self.nestedArguments_[key].update( rhs.nestedArguments_[key], print )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitArgpacks.py", line 47, in update
-
-
         self.validate( print=print )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitArgpacks.py", line 86, in validate
-
-
         raise Exception( err )
-
-
     Exception: Argument pack select at our-config.our-test '.*more-nodes.*::select' name conflict with '.*less-nodes.*::select', declared at our-config
-
-
     
 
 
@@ -1570,191 +844,67 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "submit_options" :
-
-
       {
-
-
         "submission" : "PBS",
-
-
         "queue"      : "economy",
-
-
         "timelimit"  : "00:01:00",
-
-
         "hpc_arguments" :
-
-
         {
-
-
           ".*less-nodes.*::select" : { "-l " : { "select" : 1 } }
-
-
         }
-
-
       },
-
-
       "our-test" :
-
-
       {
-
-
         "submit_options" :
-
-
         {
-
-
           "hpc_arguments" : 
-
-
           {
-
-
             ".*more-nodes.*::select" : { "-l " : { "select" : 2 } }
-
-
           }
-
-
         },
-
-
         "steps" : { "our-step0-less-nodes" : { "command" : "./tests/scripts/echo_normal.sh" } }
-
-
       }
-
-
     }
-
-
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [file::our-config]  Preparing working directory
-
-
     [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Preparing working directory
-
-
     [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [test::our-test]    Checking if results wait is required...
-
-
     [test::our-test]      Final results will wait for all jobs complete
-
-
     [step::our-step0-less-nodes] Preparing working directory
-
-
     [step::our-step0-less-nodes]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0-less-nodes]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0-less-nodes] Submitting step our-step0-less-nodes...
-
-
     [step::our-step0-less-nodes]   Gathering HPC argument packs...
-
-
     [step::our-step0-less-nodes]     From [our-config] adding HPC argument pack '.*less-nodes.*::select' :
-
-
     [step::our-step0-less-nodes]       Adding option '-l '
-
-
     [step::our-step0-less-nodes]         From our-config adding resource 'select' : 1
-
-
     [step::our-step0-less-nodes]     Final argpack output for .*less-nodes.*::select : '-l select=1'
-
-
     [step::our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
-
-
     [step::our-step0-less-nodes]   Running command:
-
-
     [step::our-step0-less-nodes]     qsub -l select=1 -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0-less-nodes -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0-less-nodes.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0-less-nodes]   ***************START our-step0-less-nodes***************
-
-
     
-
-
     [step::our-step0-less-nodes]   Doing dry-run, no ouptut
-
-
     
-
-
     [step::our-step0-less-nodes]   ***************STOP our-step0-less-nodes***************
-
-
     [step::our-step0-less-nodes]   Finding job ID in "12345"
-
-
     [step::our-step0-less-nodes] Finished submitting step our-step0-less-nodes
-
-
     
-
-
     [test::our-test]    Checking remaining steps...
-
-
     [test::our-test]    No remaining steps, test submission complete
-
-
     [test::our-test]    Doing dry-run, assumed complete
-
-
     [test::our-test]    Outputting results...
-
-
     [step::our-step0-less-nodes] Results for our-step0-less-nodes
-
-
     [step::our-step0-less-nodes]   Doing dry-run, assumed success
-
-
     [test::our-test]    Writing relevant logfiles to view in master log file : 
-
-
     [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-
-
     [test::our-test]    [SUCCESS] : Test our-test completed successfully
 
 
@@ -1797,158 +947,56 @@ echo ""
 ```
 
     /home/runner/work/hpc-workflows/hpc-workflows/our-config.json :
-
-
     {
-
-
       "submit_options" :
-
-
       {
-
-
         "submission" : "PBS",
-
-
         "queue"      : "economy",
-
-
         "timelimit"  : "00:01:00",
-
-
         "hpc_arguments" :
-
-
         {
-
-
           ".*less-nodes.*::select" : { "-l " : { "select" : 1 } }
-
-
         }
-
-
       },
-
-
       "our-test" :
-
-
       {
-
-
         "submit_options" :
-
-
         {
-
-
           "hpc_arguments" : 
-
-
           {
-
-
             ".*our.*::select" : { "-l " : { "select" : 2 } }
-
-
           }
-
-
         },
-
-
         "steps" : { "our-step0-less-nodes" : { "command" : "./tests/scripts/echo_normal.sh" } }
-
-
       }
-
-
     }
-
-
     Using Python version : 
-
-
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-
-
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-
-
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-
-
     [step::our-step0-less-nodes] Argument pack select at our-config.our-test '.*our.*::select' name conflict with '.*less-nodes.*::select', declared at our-config
-
-
     Traceback (most recent call last):
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 707, in <module>
-
-
         main()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 701, in main
-
-
         success, tests, logs = runSuite( options )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 510, in runSuite
-
-
         success, logs = testSuite.run( options.tests )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 430, in run
-
-
         self.tests_[test].validate()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 57, in validate
-
-
         step.validate()
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 69, in validate
-
-
         self.submitOptions_.validate( print=self.log )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 159, in validate
-
-
         self.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=print )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/HpcArgpacks.py", line 69, in selectAncestrySpecificSubmitArgpacks
-
-
         finalHpcArgpacks.validate( print=print )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/HpcArgpacks.py", line 42, in validate
-
-
         super().validate( print )
-
-
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitArgpacks.py", line 86, in validate
-
-
         raise Exception( err )
-
-
     Exception: Argument pack select at our-config.our-test '.*our.*::select' name conflict with '.*less-nodes.*::select', declared at our-config
-
-
     
 
 
