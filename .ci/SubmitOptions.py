@@ -151,7 +151,7 @@ class SubmitOptions( ) :
         err += " on non-LOCAL submission"
 
     if err is not None :
-      errMsg = "Error: Invalid submission options [Missing {opt}]\n{opts}".format( opt=err, opts=self.submitOptions_ )
+      errMsg = "Error: Invalid submission options [Missing {opt}]\n{opts}".format( opt=err, opts=self )
       print( errMsg )
       raise Exception( errMsg )
     

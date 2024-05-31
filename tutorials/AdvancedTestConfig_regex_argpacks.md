@@ -176,9 +176,9 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::send-step0]    ***************STOP send-step0***************
     [step::send-step0]  Finished submitting step send-step0
     
+    [test::regex-test]  Checking remaining steps...
     [step::recv-step1]  Preparing working directory
     [step::recv-step1]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::regex-test]  Checking remaining steps...
     [step::recv-step1]    Current directory : /home/runner/work/hpc-workflows/hpc-workflows
     [step::recv-step1]  Submitting step recv-step1...
     [step::recv-step1]    Gathering argument packs...
@@ -407,7 +407,6 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::build-omp-fp32-dbg]   ***************STOP build-omp-fp32-dbg***************
     [step::build-omp-fp32-dbg] Finished submitting step build-omp-fp32-dbg
     
-    [test::regex-test]  Checking remaining steps...
     [step::build-omp-fp32-ftA] Preparing working directory
     [step::build-omp-fp32-ftA]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
     [step::build-omp-fp32-ftA]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
@@ -420,6 +419,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::build-omp-fp32-ftA]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-ftA -a --omp
     [step::build-omp-fp32-ftA]   ***************START build-omp-fp32-ftA***************
     
+    [test::regex-test]  Checking remaining steps...
     -o build-omp-fp32-ftA -a --omp
     TEST echo_normal.sh PASS
     

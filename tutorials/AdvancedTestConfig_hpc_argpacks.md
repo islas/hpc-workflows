@@ -202,6 +202,8 @@ echo ""
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-step0]   Error: Invalid submission options [Missing account on non-LOCAL submission]
+    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7f0df3eb2fb0>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': None, 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7f0df3eb3490>, 'union_parse': {'submission': 'PBS'}}
     Traceback (most recent call last):
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 707, in <module>
         main()
@@ -215,13 +217,14 @@ echo ""
         step.validate()
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 69, in validate
         self.submitOptions_.validate( print=self.log )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 154, in validate
-        errMsg = "Error: Invalid submission options [Missing {opt}]\n{opts}".format( opt=err, opts=self.submitOptions_ )
-    AttributeError: 'SubmitOptions' object has no attribute 'submitOptions_'
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 156, in validate
+        raise Exception( errMsg )
+    Exception: Error: Invalid submission options [Missing account on non-LOCAL submission]
+    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7f0df3eb2fb0>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': None, 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7f0df3eb3490>, 'union_parse': {'submission': 'PBS'}}
     
 
 
-Our run should have failed with some helpful output that we have not given an account to use for our submission. As accounts are what are used to bill to grid allocations and sometimes they are kept private within an organization this is not put into the test config. Instead we will provide it via command-line options using `--account/-a`. Let's say our account is "WORKFLOWS" : 
+Our run should have failed with some helpful output that we have not given an account to use for our submission. As accounts are what are used to bill to grid allocations and sometimes they are kept private within an organization this is not put into the test config. Instead we will provide it via command-line options using `--account/-a`. Let's say our account is `WORKFLOWS` : 
 
 
 ```bash
@@ -257,6 +260,8 @@ echo ""
     3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-step0]   Error: Invalid submission options [Missing queue on non-LOCAL submission]
+    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7fb07deb2fb0>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': 'WORKFLOWS', 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7fb07deb3490>, 'union_parse': {'submission': 'PBS'}}
     Traceback (most recent call last):
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 707, in <module>
         main()
@@ -270,9 +275,10 @@ echo ""
         step.validate()
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 69, in validate
         self.submitOptions_.validate( print=self.log )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 154, in validate
-        errMsg = "Error: Invalid submission options [Missing {opt}]\n{opts}".format( opt=err, opts=self.submitOptions_ )
-    AttributeError: 'SubmitOptions' object has no attribute 'submitOptions_'
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 156, in validate
+        raise Exception( errMsg )
+    Exception: Error: Invalid submission options [Missing queue on non-LOCAL submission]
+    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7fb07deb2fb0>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': 'WORKFLOWS', 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7fb07deb3490>, 'union_parse': {'submission': 'PBS'}}
     
 
 
