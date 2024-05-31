@@ -31,10 +31,14 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        echo "1"
         git config user.email "aislas@ucar.edu"
         git config user.name  "Anthony Islas"
+        echo "2"
         git add ./tutorials/*.md
+        echo "3"
         git diff --cached --quiet
+        echo "4"
         if [ $? -ne 0 ]; then
           git status
           git commit -m "Generating tutorials markdown"
