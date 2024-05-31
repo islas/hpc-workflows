@@ -96,6 +96,8 @@ class HpcArgpacks( SubmitArgpacks ) :
     elif submitType == sc.SubmissionType.SLURM :
       kvGlue  = ":"
       argGlue = ","
+    else :
+      return ""
 
 
     for argpack, nestedArgs in self.arguments_.items() :

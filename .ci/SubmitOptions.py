@@ -154,8 +154,9 @@ class SubmitOptions( ) :
       errMsg = "Error: Invalid submission options [Missing {opt}]\n{opts}".format( opt=err, opts=self.submitOptions_ )
       print( errMsg )
       raise Exception( errMsg )
-
-    self.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=print ).format( self.submitType_, print=lambda *args : None  )
+    
+    if self.hpcArguments_.arguments_ :
+      self.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=print ).format( self.submitType_, print=lambda *args : None  )
 
 
 
