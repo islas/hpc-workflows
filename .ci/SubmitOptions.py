@@ -156,7 +156,7 @@ class SubmitOptions( ) :
       raise Exception( errMsg )
     
     if self.hpcArguments_.arguments_ :
-      self.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=print ).format( self.submitType_, print=lambda *args : None  )
+      self.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=print )
 
 
 
