@@ -63,14 +63,11 @@ class Step( SubmitAction ):
         self.dependencies_[ depStep ] = Step.DependencyType( depType )
 
     # Now set things manually
-    self.submitOptions_ = self.submitOptions_.selectHostSpecificSubmitOptions( print=print )
+    self.submitOptions_ = self.submitOptions_.selectHostSpecificSubmitOptions( forceFQDN=self.globalOpts_.forceFQDN, print=print )
 
   def validate( self ) :
-    valid, msg = self.submitOptions_.validate()
-    if not valid :
-      err = "Error: Invalid submission options [{msg}]\n{opts}".format( msg=msg, opts=self.submitOptions_ )
-      self.log( err )
-      raise Exception( err )
+    self.submitOptions_.validate( print=self.log )
+    
 
 
   def formatDependencies( self ) :

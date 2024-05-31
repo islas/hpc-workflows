@@ -158,12 +158,10 @@ class Suite( SubmitAction ) :
                         )
       self.log( "[PHASE {phase}] Resources for [ {tests} ] : '{res}', timelimit = {time}".format(
                                                                                                   phase=phase,
-                                                                                                  tests="".join(
+                                                                                                  tests=",".join(
                                                                                                                 "{0:>{1}}".format(
                                                                                                                                   step, longestTest + ( 1 if len( psuedoRunningMap ) > 1 else 0 ) )
-                                                                                                                                  for step in ",[:space:]".join( 
-                                                                                                                                    psuedoRunningMap.keys()
-                                                                                                                                  ).split( '[:space:]' )
+                                                                                                                                  for step in psuedoRunningMap.keys()
                                                                                                                 ),
                                                                                                   res=currentResources.format( hpcSubmit[0], print=lambda *args : None ),
                                                                                                   time=runFor
@@ -576,7 +574,7 @@ def getOptionsParser():
   parser.add_argument( 
                       "-j", "--joinHPC",
                       dest="joinHPC",
-                      help="Join test submissions into single collective HPC submission, use additional argument (MUST USE '=') to override submission resources, e.g -j='-l select=1'",
+                      help="Join test submissions into single collective HPC submission, use additional argument to override submission arguments using config syntax, e.g -j '{\"select\":{\"-l \":{\"select\":1}}}'",
                       type=str,
                       nargs="?",
                       default=argparse.SUPPRESS
@@ -671,13 +669,13 @@ def getOptionsParser():
                       const=True,
                       action='store_const'
                       )
-  # parser.add_argument(
-  #                     "-m", "--message",
-  #                     dest="message",
-  #                     help="Message to output at the end of running tests if successful, helpful for signalling with same logic as steps",
-  #                     default=None,
-  #                     type=str
-  #                     )
+  parser.add_argument(
+                      "-ff", "--forceFQDN",
+                      dest="forceFQDN",
+                      help="Force the selection of host-specific \"submit_options\" to use input as the assumed FQDN",
+                      default=None,
+                      type=str
+                      )
 
   parser.add_argument(
                       "-fs", "--forceSingle",

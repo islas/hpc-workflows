@@ -34,9 +34,11 @@ jobs:
         git config user.email "aislas@ucar.edu"
         git config user.name  "Anthony Islas"
         git add ./tutorials/*.md
-        git diff --cached --quiet
-        if [ $? -ne 0 ]; then
+        ret=$( git diff --cached --quiet; echo $? )
+        if [ $ret -ne 0 ]; then
           git status
           git commit -m "Generating tutorials markdown"
           git push
+        else
+          echo "Nothing to commit"
         fi

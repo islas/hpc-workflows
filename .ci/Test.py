@@ -228,7 +228,7 @@ class Test( SubmitAction ):
 
     maxResources = HpcArgpacks( OrderedDict() )
     maxTimelimit = timedelta()
-    maxResources.name_ = HpcArgpacks.HPC_JOIN_NAME + "max"
+    maxResources.setName( HpcArgpacks.HPC_JOIN_NAME + "max" )
     hpcSubmit = [ step.submitOptions_.submitType_ for step in self.steps_.values() if step.submitOptions_.submitType_ != SubmissionType.LOCAL ]
     if not hpcSubmit :
       self.log( "No HPC steps in this test" )
@@ -292,12 +292,10 @@ class Test( SubmitAction ):
       self.log_pop()
       self.log( "[PHASE {phase}] Resources for [ {steps} ] : '{res}', timelimit = {time}".format(
                                                                                                   phase=phase,
-                                                                                                  steps="".join(
+                                                                                                  steps=" ".join(
                                                                                                                 "{0:>{1}}".format(
                                                                                                                                   step, longestStep + ( 1 if len( psuedoRunningMap ) > 1 else 0 ) )
-                                                                                                                                  for step in ",[:space:]".join( 
-                                                                                                                                    psuedoRunningMap.keys()
-                                                                                                                                  ).split( '[:space:]' )
+                                                                                                                                  for step in psuedoRunningMap.keys()
                                                                                                                 ),
                                                                                                   res=currentResources.format( hpcSubmit[0], print=lambda *args : None ),
                                                                                                   time=runFor

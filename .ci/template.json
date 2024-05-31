@@ -22,7 +22,7 @@
       {
         // <option> will be appended to the job submission, if an empty dict
         // is provided nothing more will happen with respect to this <argpack>
-        // Entries will joined HPC-specific syntax then concatenated with "<option>" :
+        // Entries will be joined via HPC-specific syntax then concatenated with "<option>" :
         //   non-empty values in key-value pairs join with ( '=' for PBS | ':' for SLURM )
         //   keys (with value if present)             with ( ':' for PBS | ',' for SLURM )
         // {"-l ":{"select":1,"ngpus":4}} for PBS would result in the following being added to the HPC submission
@@ -39,7 +39,7 @@
         }
       },
       // <regex> should be a valid regex usable by python's re module
-      // <argpack> CANNOT match the above <argpack>
+      // <argpack> can match the above <argpack>, but final resolving at the step level should be unique
       // future definitions will only override the specific full unique match with <regex> included
       "<regex>::<argpack>" : {} // same layout as the above "hpc_arguments" <argpack>
     },
@@ -66,21 +66,20 @@
       "<argpack>"          : [ "list", "of", "arguments" ],
      
       // <regex> should be a valid regex usable by python's re module
-      // <argpack> CANNOT match the above <argpack>
       // future definitions will only override the specific full unique match with <regex> included
       "<regex>::<argpack>" : [ "-f", "one whole arg", "-x" ]
     },
     // NO MORE KEYWORDS AT THIS LEVEL, ANYTHING ELSE IS CONSIDERED A HOST-SPECIFIC SUBSET
     // subset will be applied if key is found inside host FQDN
     // NOT REGEX - this is just python `if key in fqdn`, first one found is applied
-    "match-fqdn" :      
+    "<match-fqdn>" :      
     {
       // Any of the "submit_options" KEYWORDS - host-specific subsets cannot be nested
       // When steps are resolved if a host-specific subset matches it will be applied
       // AFTER all generic submit_options have been applied
     },
     // No limit on number of host-specific subsets as long as they are unique
-    "may-match-other-host" :
+    "<may-match-other-host>" :
     {
     }
   },
@@ -88,7 +87,7 @@
   // everything that isn't "submit_options" is considered a test name
   // Like argpacks, they can be named anything unique amongst tests, but
   // avoid using spaces and periods. Recommended characters are [a-zA-Z_-+]
-  "test-name" :
+  "<test-name>" :
   {
     "submit_options" : {}, // EXACT SAME RULES AS ABOVE APPLY
     // Additional KEYWORD
@@ -97,7 +96,7 @@
     {
       // NO KEYWORDS AT THIS LEVEL, EVERYTHING IS CONSIDERED A STEP
       // Same naming rules as tests apply
-      "step-A" :
+      "<step-name-A>" :
       {
         "submit_options" : {}, // EXACT SAME RULES AS ABOVE APPLY (see the pattern?)
         // ADDITIONAL KEYWORDS
@@ -117,23 +116,23 @@
           // dict of step names verbatim and dependency mapping using 
           // generally standard HPC-dependency nomenclature
           // 
-          "step-B" : "afterany" // after|afterok|afternotok|afterany
+          "<step-name-B>" : "afterany" // after|afterok|afternotok|afterany
         }
       },
-      "step-B" :
+      "<step-name-B>" :
       {
         // submit_options, arguments, and dependecies  are OPTIONAL KEYWORDS
         "command" : "other/command.py"
       }
     }
   },
-  "other-test" :
+  "<other-test>" :
   {
     // submit_options is OPTIONAL KEYWORD
     "steps" :
     {
       // step names only need to be unique within their respective test's "steps" section
-      "step-A" : { "command" : "foobar.csh" }
+      "<step-name-A>" : { "command" : "foobar.csh" }
     }
   }
   // ...and so on...

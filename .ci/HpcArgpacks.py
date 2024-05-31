@@ -1,9 +1,14 @@
 import re
 import copy
+import math
 from collections import OrderedDict
 
 import SubmitCommon as sc
 from SubmitArgpacks import SubmitArgpacks
+
+# http://docs.adaptivecomputing.com/torque/4-1-3/Content/topics/2-jobs/requestingRes.htm
+PBS_RESOURCE_SIZE_REGEX_STR = r"(?P<numeric>\d+)(?P<multi>(?P<scale>k|m|g|t)?(?P<unit>b|w))"
+PBS_RESOURCE_SIZE_REGEX     = re.compile( PBS_RESOURCE_SIZE_REGEX_STR, re.I )
 
 class HpcArgpacks( SubmitArgpacks ) :
 
@@ -17,6 +22,11 @@ class HpcArgpacks( SubmitArgpacks ) :
     for key, value in self.arguments_.items() :
       self.nestedArguments_[key] = SubmitArgpacks( value[next( iter( value ) )], origin )
       self.nestedArguments_[key].unique_ = True
+  
+  def setName( self, name ) :
+    super().setName( name )
+    for key, nestedArg in self.nestedArguments_.items() :
+      nestedArg.setName( name )
 
   # Updates and overrides current with values from rhs if they exist
   def update( self, rhs, print=print ) :
@@ -60,6 +70,20 @@ class HpcArgpacks( SubmitArgpacks ) :
 
     return finalHpcArgpacks
 
+  def getPrintInfo( self, argpack ) :
+    origins       = [ self.origins_[argpack] ]
+    longestPack   = len( max( self.origins_.keys(), key=len ) )
+    longestNestedPack   = None
+    longestNestedOrigin = None
+
+
+    if self.nestedArguments_[argpack].arguments_ :
+      origins = set( self.nestedArguments_[argpack].origins_.values() )
+      longestNestedPack   = len( max( self.nestedArguments_[argpack].origins_.keys(),   key=len ) )
+      longestNestedOrigin = len( max( self.nestedArguments_[argpack].origins_.values(), key=len ) )
+  
+    return origins, longestPack, longestNestedPack, longestNestedOrigin
+
 
   def format( self, submitType, print=print ) :
     additionalArgs = []
@@ -72,22 +96,16 @@ class HpcArgpacks( SubmitArgpacks ) :
     elif submitType == sc.SubmissionType.SLURM :
       kvGlue  = ":"
       argGlue = ","
+    else :
+      return ""
 
 
     for argpack, nestedArgs in self.arguments_.items() :
-      origins       = [ self.origins_[argpack] ]
-      longestPack   = None
-      longestOrigin = None
-
-
-      if self.nestedArguments_[argpack].arguments_ :
-        origins = set( self.nestedArguments_[argpack].origins_.values() )
-        longestPack   = len( max( self.nestedArguments_[argpack].origins_.keys(),   key=len ) )
-        longestOrigin = len( max( self.nestedArguments_[argpack].origins_.values(), key=len ) )
+      origins, _, longestNestedPack, longestNestedOrigin = self.getPrintInfo( argpack )
       
       argpackOption = next( iter( nestedArgs ) )
 
-      print( "  From {0} adding HPC argument pack '{1}' :".format( "[{0}]".format(", ".join( origins ) ), argpack ) )
+      print( "  From [{0}] adding HPC argument pack '{1}' :".format( ", ".join( origins ), argpack ) )
       print( "    Adding option '{0}'".format( argpackOption ) )
 
       for key, value in self.nestedArguments_[argpack].arguments_.items() :
@@ -95,8 +113,8 @@ class HpcArgpacks( SubmitArgpacks ) :
         print( 
               "      From {origin:<{length}} adding resource {key:<{packlength}}{val}".format(
                                                                                                       origin=self.nestedArguments_[argpack].origins_[key],
-                                                                                                      length=longestOrigin,
-                                                                                                      packlength=longestPack + 2,
+                                                                                                      length=longestNestedOrigin,
+                                                                                                      packlength=longestNestedPack + 2,
                                                                                                       key="'{0}'".format( key ),
                                                                                                       val="" if not value else " : {0}".format( value )
                                                                                                       )
@@ -135,22 +153,31 @@ class HpcArgpacks( SubmitArgpacks ) :
           print( msg )
           raise Exception( msg )
 
-        print( "  Joining argpack {key} from {rhs} into {name}".format( key=key, rhs=rhs.name_, name=self.name_) )
+        origins, argpackLen, longestPack, longestOrigin = rhs.getPrintInfo( key )
+        print( "  Joining argpack {key:<{arglen}} from [{rhs}] into {name}".format( 
+                                                                                    key="'{0}'".format( key ),
+                                                                                    arglen=argpackLen + 2,
+                                                                                    rhs=", ".join(
+                                                                                                  set( rhs.nestedArguments_[key].origins_.values() )
+                                                                                                  ),
+                                                                                    name=self.name_
+                                                                                    )
+                                                                                  )
 
         for res, amount in rhs.nestedArguments_[key].arguments_.items() :
           resExists, resOccurrences = self.nestedArguments_[argpack].keyExists( res )
-          resName = next(iter(resOccurrences))
           if resExists and amount != "" :
+            resName = next(iter(resOccurrences))
             try :
               self.nestedArguments_[argpack].arguments_[resName] = op( 
-                                                                      self.nestedArguments_[argpack].arguments_[resName],
-                                                                      amount
+                                                                      int( self.nestedArguments_[argpack].arguments_[resName] ),
+                                                                      int( amount )
                                                                       )
             except ValueError:
               # Not an int value, size value / maybe this is a memory resource
               lhsMem = HpcArgpacks.resourceMemSizeDict( self.nestedArguments_[argpack].arguments_[resName], submitType )
               if lhsMem is not None :
-                rhsMem = SubmitOptions.resourceMemSizeDict( amount, submitType )
+                rhsMem = HpcArgpacks.resourceMemSizeDict( amount, submitType )
                 if lhsMem[ "unit" ] == rhsMem[ "unit" ] :
                   # Can add
                   rhsAmount = HpcArgpacks.resourceMemSizeBase( rhsMem )
@@ -162,7 +189,7 @@ class HpcArgpacks( SubmitArgpacks ) :
                                                                                                             {
                                                                                                               "numeric" : totalAmount,
                                                                                                               "scale"   : None,
-                                                                                                              "unit"    : resMem["unit"]
+                                                                                                              "unit"    : lhsMem["unit"]
                                                                                                             }
                                                                                                           )
                                                                                                         )
@@ -197,7 +224,7 @@ class HpcArgpacks( SubmitArgpacks ) :
   @staticmethod
   def joinAll( hpcArgpacks, submitType, op, print=print ) :
     finalHpcArgpacks = HpcArgpacks( OrderedDict() )
-    finalHpcArgpacks.name_ = HpcArgpacks.HPC_JOIN_NAME + "all"
+    finalHpcArgpacks.setName( HpcArgpacks.HPC_JOIN_NAME + "all" )
     if len( hpcArgpacks ) == 0 :
       return finalHpcArgpacks
     
@@ -222,7 +249,7 @@ class HpcArgpacks( SubmitArgpacks ) :
 
   @staticmethod
   def resourceMemSizeBase( amountDict ) :
-    multipliers   = { None : 1, "k" : 1024, "m" : 1024**2, "g" : 1024**3, "t" : 1024**4 }
+    multipliers   = { None : 1, "k" : 1000, "m" : 1000**2, "g" : 1000**3, "t" : 1000**4 }
     return multipliers[ amountDict["scale" ] ] * int( amountDict["numeric"] )
 
   @staticmethod
@@ -236,9 +263,9 @@ class HpcArgpacks( SubmitArgpacks ) :
   
   @staticmethod
   def resourceMemSizeReduce( amountDict ) :
-    multipliers   = { None : 1, "k" : 1024, "m" : 1024**2, "g" : 1024**3, "t" : 1024**4 }
+    multipliers   = { None : 1, "k" : 1000, "m" : 1000**2, "g" : 1000**3, "t" : 1000**4 }
 
-    totalAmount = SubmitOptions.resourceMemSizeBase( amountDict )
+    totalAmount = HpcArgpacks.resourceMemSizeBase( amountDict )
     
     # Convert to simplified size, round up if needed
     log2 = math.log( totalAmount, 2 )

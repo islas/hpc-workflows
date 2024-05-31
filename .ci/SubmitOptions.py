@@ -1,7 +1,6 @@
 import copy
 import socket
 import re
-import math
 import heapq
 from collections import OrderedDict
 from datetime import timedelta
@@ -14,9 +13,6 @@ from HpcArgpacks    import HpcArgpacks
 PBS_RESOURCE_REGEX_STR = r"(?P<start>[ ]*-l[ ]+)?(?P<res>\w+)=(?P<amount>.*?)(?=:|[ ]*-l[ ]|$)"
 PBS_RESOURCE_REGEX     = re.compile( PBS_RESOURCE_REGEX_STR )
 
-# http://docs.adaptivecomputing.com/torque/4-1-3/Content/topics/2-jobs/requestingRes.htm
-PBS_RESOURCE_SIZE_REGEX_STR = r"(?P<numeric>\d+)(?P<multi>(?P<scale>k|m|g|t)?(?P<unit>b|w))"
-PBS_RESOURCE_SIZE_REGEX     = re.compile( PBS_RESOURCE_SIZE_REGEX_STR, re.I )
 
 PBS_TIMELIMIT_REGEX_STR    = r"^(?P<hh>\d+):(?P<mm>\d+):(?P<ss>\d+)$"
 PBS_TIMELIMIT_REGEX        = re.compile( PBS_TIMELIMIT_REGEX_STR )
@@ -26,7 +22,7 @@ PBS_TIMELIMIT_FORMAT_STR   = "{:02}:{:02}:{:02}"
 
 class SubmitOptions( ) :
 
-  def __init__( self, optDict={}, isHostSpecific=False, lockSubmitType=False, origin=None ) :
+  def __init__( self, optDict={}, isHostSpecific=False, lockSubmitType=False, origin=None, print=print ) :
     self.submit_            = optDict
     self.workingDirectory_  = None
     self.queue_             = None
@@ -52,7 +48,7 @@ class SubmitOptions( ) :
     # Allow host-specific submit options
     self.isHostSpecific_      = isHostSpecific
     self.hostSpecificOptions_ = {}
-    self.parse( origin=origin )
+    self.parse( origin=origin, print=print )
 
   def parse( self, print=print, origin=None ):
     submitKeys = []
@@ -138,9 +134,8 @@ class SubmitOptions( ) :
     # self.parse( print=print )
   
   # Check non-optional fields
-  def validate( self ) :
+  def validate( self, print=print ) :
     err          = None
-    errMsgFormat = "Missing {opt}"
 
     if self.submitType_ is None :
       err   = "submission type"
@@ -151,26 +146,28 @@ class SubmitOptions( ) :
         err = "account"
       elif self.queue_ is None :
         err = "queue"
-      elif not self.hpcArguments_.arguments_ :
-        err = "hpc_arguments"
-      
+
       if err is not None :
         err += " on non-LOCAL submission"
 
-    errMsg = "okay"
     if err is not None :
-      errMsg = errMsgFormat.format( opt=err )
-    return err is None, errMsg
+      errMsg = "Error: Invalid submission options [Missing {opt}]\n{opts}".format( opt=err, opts=self.submitOptions_ )
+      print( errMsg )
+      raise Exception( errMsg )
+    
+    if self.hpcArguments_.arguments_ :
+      self.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=print )
+
 
 
   def setName( self, name ) :
     self.name_ = name
-    self.arguments_.name_ = name
-    self.hpcArguments_.name_ = name
+    self.arguments_.setName( name )
+    self.hpcArguments_.setName( name )
 
-  def selectHostSpecificSubmitOptions( self, print=print ) :
+  def selectHostSpecificSubmitOptions( self, forceFQDN=None, print=print ) :
     # Must be valid for this specific host or generically
-    fqdn = socket.getfqdn()
+    fqdn = forceFQDN if forceFQDN else socket.getfqdn() 
 
     # Have to do string matching rather than in dict
     hostSpecificOptKey = next( ( hostOpt for hostOpt in self.hostSpecificOptions_ if hostOpt in fqdn ), None )
