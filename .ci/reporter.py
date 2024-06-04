@@ -179,6 +179,8 @@ def main() :
         dumpFile( testlog["stdout"], errorLabel.format( title=test ), bannerMsg=testTitle, banner="\n".join([( "!#!#" * 20 )]*2 ) )
 
         print( "Finding logs for steps that failed..." )
+        print( stopGroup )
+
         for step, steplog in testlog["steps"].items() :
           stepTitle = "STDOUT FOR STEP {step}".format( step=step )
           if not options.failedStepsOnly or not steplog["success"] :
