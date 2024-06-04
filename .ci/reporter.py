@@ -189,7 +189,7 @@ def main() :
             print( noticeLabel.format( title=stepAncestry, message=stepTitle ) )
             if not steplog["success"] :
               print( "Step {step} failed, printing stdout".format( step=stepAncestry ) )
-            dumpFile( steplog["logfile"], errorLabel.format( title=step ), steplog["success"], bannerMsg=stepTitle )
+            dumpFile( steplog["logfile"], errorLabel.format( title=stepAncestry ), steplog["success"], bannerMsg=stepTitle )
             print( stopGroup )
 
         
