@@ -112,6 +112,14 @@ def getOptionsParser():
                       action='store_const'
                       )
   parser.add_argument( 
+                      "-m", "--markStepsOnly",
+                      dest="markStepsOnly",
+                      help="Only mark failur in the failed steps",
+                      default=False,
+                      const=True,
+                      action='store_const'
+                      )
+  parser.add_argument( 
                       "-s", "--summaryOnly",
                       dest="summaryOnly",
                       help="Only output the summary and no logs",
@@ -141,16 +149,23 @@ def main() :
   noticeLabel = None
   errorLabel  = None
 
+  testErrorLabel  = None
+
   if options.outputType == OutputType.STANDARD :
     startGroup  = ""
     stopGroup   = ""
     noticeLabel = ""
-    errorLabel  = "{message}"
+    errorLabel  = "{{message}}"
   elif options.outputType == OutputType.GITHUB :
     startGroup  = "::group::{title}"
     stopGroup   = "::endgroup"
-    noticeLabel = "::notice title={title}::{message}"
-    errorLabel  = "::error title={title}::{message}"
+    noticeLabel = "::notice title={title}::{{message}}"
+    errorLabel  = "::error title={title}::{{message}}"
+  
+  if options.markStepsOnly :
+    testErrorLabel = "{{message}}"
+  else :
+    testErrorLabel = errorLabel
   
 
   if not options.summaryOnly :
@@ -161,7 +176,7 @@ def main() :
         print( startGroup.format( title=testTitle ) )
         print( "\n".join([( "#" * 80 )]*3 ) )
         print( "Test {test} failed, printing stdout".format( test=test ) )
-        dumpFile( testlog["stdout"], errorLabel, bannerMsg=testTitle, banner="\n".join([( "!#!#" * 20 )]*2 ) )
+        dumpFile( testlog["stdout"], errorLabel.format( title=test ), bannerMsg=testTitle, banner="\n".join([( "!#!#" * 20 )]*2 ) )
 
         print( "Finding logs for steps that failed..." )
         for step, steplog in testlog["steps"].items() :
@@ -170,12 +185,14 @@ def main() :
             print( noticeLabel.format( title=steplog["logfile"], message=stepTitle ) )
             if not steplog["success"] :
               print( "Step {step} failed, printing stdout".format( step=step ) )
-            dumpFile( steplog["logfile"], errorLabel, steplog["success"], bannerMsg=stepTitle )
+            dumpFile( steplog["logfile"], errorLabel.format( title=step ), steplog["success"], bannerMsg=stepTitle )
 
         print( "\n".join([( "#" * 80 )]*3 ) )
         print( stopGroup )
 
     print( "\n", flush=True, end="" )
+
+    print( startGroup.format( title="Summary" ) )
   
     hereThereBeLogs = "^^ !!! ALL LOG FILES ARE PRINTED TO SCREEN ABOVE FOR REFERENCE !!! ^^"
     refLogs  = getLogsPrintedStr( logs, os.path.abspath( options.masterLog ) )
@@ -195,6 +212,9 @@ def main() :
                                                                                                     ),
       flush=True )
 
+  if options.summaryOnly :
+    print( startGroup.format( title="Summary" ) )
+    
   # Now do executive summary
   print( getSummaryPrintedStr( logs, metadata ) )
 
@@ -210,6 +230,9 @@ def main() :
     os.fsync( sys.stdout.fileno() )
   except:
     pass
+  
+  print( stopGroup.format( title="Summary" ) )
+
 
   print( "FAILURE!" )
   # Exit with bad status so people know where to look since that might be 
