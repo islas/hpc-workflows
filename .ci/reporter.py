@@ -15,7 +15,7 @@ class OutputType( Enum ):
     return self.value
 
 
-def dumpFile( filename, errorLabel, bannerMsg="", banner="!" * 80 ) :
+def dumpFile( filename, errorLabel, success=False, bannerMsg="", banner="!" * 80 ) :
   print( "\nOpening logfile {0}".format( filename ) )
   print( "{msg}\n{banner}".format( msg=bannerMsg, banner=banner ) )
   with open( filename, 'r') as f:
@@ -25,8 +25,10 @@ def dumpFile( filename, errorLabel, bannerMsg="", banner="!" * 80 ) :
       print( current, end="" )
       current = line
     # last line
-    if current is not None :
+    if current is not None and not success :
       print( errorLabel.format( title=filename, message=current )  )
+    else :
+      print( current )
       
   print( banner )
   print( "\nClosing logfile {0}".format( filename ) )
@@ -168,7 +170,7 @@ def main() :
             print( noticeLabel.format( title=steplog["logfile"], message=stepTitle ) )
             if not steplog["success"] :
               print( "Step {step} failed, printing stdout".format( step=step ) )
-            dumpFile( steplog["logfile"], errorLabel, bannerMsg=stepTitle )
+            dumpFile( steplog["logfile"], errorLabel, steplog["success"], bannerMsg=stepTitle )
 
         print( "\n".join([( "#" * 80 )]*3 ) )
         print( stopGroup )
