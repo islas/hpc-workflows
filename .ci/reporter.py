@@ -127,6 +127,14 @@ def getOptionsParser():
                       const=True,
                       action='store_const'
                       )
+  parser.add_argument(
+                      "-n", "--noExitCode",
+                      dest="noExitCode",
+                      help="Always exit normally without exit code reflecting success",
+                      default=False,
+                      const=True,
+                      action='store_const'
+                      )
   return parser
 
 class Options(object):
@@ -143,6 +151,7 @@ def main() :
 
   metadata = logs.pop( "metadata", None )
   metadata["rel_exec"] = options.exec 
+  failure = False
 
   startGroup  = None
   stopGroup   = None
@@ -172,6 +181,7 @@ def main() :
     print( "Finding tests that failed..." )
     for test, testlog in logs.items() :
       if not testlog["success"] :
+        failure = True
         testTitle = "STDOUT FOR TEST {test}".format( test=test )
         print( startGroup.format( title=testTitle ) )
         print( "\n".join([( "#" * 80 )]*3 ) )
@@ -237,11 +247,12 @@ def main() :
   
   print( stopGroup.format( title="Summary" ) )
 
-
-  print( "FAILURE!" )
-  # Exit with bad status so people know where to look since that might be 
-  # an issue as this will look "successful"
-  exit( 1 )
+  if failure :
+    print( "FAILURE!" )
+    if not options.noExitCode :
+      # Exit with bad status so people know where to look since that might be 
+      # an issue as this will look "successful"
+      exit( 1 )
 
 if __name__ == '__main__' :
   main()
