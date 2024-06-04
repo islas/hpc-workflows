@@ -158,8 +158,8 @@ def main() :
     errorLabel  = "{{message}}"
   elif options.outputType == OutputType.GITHUB :
     startGroup  = "::group::{title}"
-    stopGroup   = "::endgroup"
-    noticeLabel = "::notice title={title}::{{message}}"
+    stopGroup   = "::endgroup::"
+    noticeLabel = "::notice title={title}::{message}"
     errorLabel  = "::error title={title}::{{message}}"
   
   if options.markStepsOnly :
@@ -176,7 +176,7 @@ def main() :
         print( startGroup.format( title=testTitle ) )
         print( "\n".join([( "#" * 80 )]*3 ) )
         print( "Test {test} failed, printing stdout".format( test=test ) )
-        dumpFile( testlog["stdout"], errorLabel.format( title=test ), bannerMsg=testTitle, banner="\n".join([( "!#!#" * 20 )]*2 ) )
+        dumpFile( testlog["stdout"], testErrorLabel.format( title=test ), bannerMsg=testTitle, banner="\n".join([( "!#!#" * 20 )]*2 ) )
 
         print( "Finding logs for steps that failed..." )
         print( stopGroup )
