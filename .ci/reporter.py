@@ -191,13 +191,15 @@ def main() :
         print( "Finding logs for steps that failed..." )
         print( stopGroup )
 
+        longestStep = len( max( testlog["steps"].keys(), key=len ) )
+
         for step, steplog in testlog["steps"].items() :
           stepAncestry = "{test}.{step}".format( test=test, step=step )
           stepTitle = "  > STDOUT FOR STEP {step}".format( step=stepAncestry )
           if not options.failedStepsOnly or not steplog["success"] :
             # print( noticeLabel.format( title=stepAncestry, message=stepTitle ) )
             if not steplog["success"] :
-              print( startGroup.format( title=stepTitle + "<- CLICK HERER !!! ERROR !!!" ) )
+              print( startGroup.format( title="{0:<{1}}".format( stepTitle, longestStep + 20 ) + " <- CLICK HERER !!! ERROR !!!" ) )
               print( "Step {step} failed, printing stdout".format( step=stepAncestry ) )
             else :
               print( startGroup.format( title=stepTitle ) )
