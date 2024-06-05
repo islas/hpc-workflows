@@ -213,15 +213,29 @@ def main() :
   
     hereThereBeLogs = "^^ !!! ALL LOG FILES ARE PRINTED TO SCREEN ABOVE FOR REFERENCE !!! ^^"
     refLogs  = getLogsPrintedStr( logs, os.path.abspath( options.masterLog ) )
-    howToUse = inspect.cleandoc(
-                hereThereBeLogs +
-              """
-                    To find when a logfile is printed search for (remove single quotes) :
-                    'Opening logfile <logfile>'
-                    OR
-                    'Closing logfile <logfile>'
-                    Replacing <logfile> with the logfile you wish to see
-              """ )
+    howToUse = ""
+
+    if options.outputType == OutputType.STANDARD :
+      howToUse = inspect.cleandoc(
+                  hereThereBeLogs +
+                """
+                      To find when a logfile is printed search for (remove single quotes) :
+                      'Opening logfile <logfile>'
+                      OR
+                      'Closing logfile <logfile>'
+                      Replacing <logfile> with the logfile you wish to see
+                """ )
+    elif options.outputType == OutputType.GITHUB :
+      howToUse = inspect.cleandoc(
+                  hereThereBeLogs +
+                """
+                      To find when a logfile is printed use the above sections to view the output.
+                      They are labeled as TEST|STEP then <test> or <test>.<step>, respectively.
+                      Click on the above section to expand or collapse it.
+
+                      Sections with the errors summarized below are labelled above.
+                """ )
+
     print( "~ How to use brief ~\n{help}\n\nOr refer to log files : \n{reflogs}\n{addendum}\n".format(
                                                                                                     help=howToUse,
                                                                                                     reflogs=refLogs,
