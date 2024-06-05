@@ -261,8 +261,7 @@ def main() :
     os.fsync( sys.stdout.fileno() )
   except:
     pass
-  
-  print( stopGroup.format( title="Summary" ) )
+
 
   if failure :
     print( "FAILURE!" )
