@@ -193,12 +193,15 @@ def main() :
 
         for step, steplog in testlog["steps"].items() :
           stepAncestry = "{test}.{step}".format( test=test, step=step )
-          stepTitle = "STDOUT FOR STEP {step}".format( step=stepAncestry )
+          stepTitle = "  > STDOUT FOR STEP {step}".format( step=stepAncestry )
           if not options.failedStepsOnly or not steplog["success"] :
-            print( startGroup.format( title=stepTitle ) )
-            print( noticeLabel.format( title=stepAncestry, message=stepTitle ) )
+            # print( noticeLabel.format( title=stepAncestry, message=stepTitle ) )
             if not steplog["success"] :
+              print( startGroup.format( title=stepTitle + "<- CLICK HERER !!! ERROR !!!" ) )
               print( "Step {step} failed, printing stdout".format( step=stepAncestry ) )
+            else :
+              print( startGroup.format( title=stepTitle ) )
+
             dumpFile( steplog["logfile"], errorLabel.format( title=stepAncestry ), steplog["success"], bannerMsg=stepTitle )
             print( stopGroup )
 
