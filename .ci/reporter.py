@@ -191,7 +191,7 @@ def main() :
         print( "Finding logs for steps that failed..." )
         print( stopGroup )
 
-        longestStep = len( max( testlog["steps"].keys(), key=len ) )
+        longestStep = len( max( testlog["steps"].keys(), key=len ) ) + len( test ) + 1
 
         for step, steplog in testlog["steps"].items() :
           stepAncestry = "{test}.{step}".format( test=test, step=step )
