@@ -592,7 +592,7 @@ def getOptionsParser():
                       dest="labelLength",
                       help="Length of left-justify label string [file|test|step]",
                       type=int,
-                      default=12
+                      default=sc.LABEL_LENGTH
                       )
   parser.add_argument( 
                       "-g", "--globalPrefix",
