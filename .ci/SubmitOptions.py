@@ -165,6 +165,9 @@ class SubmitOptions( ) :
     self.arguments_.setName( name )
     self.hpcArguments_.setName( name )
 
+    for hostOpt in self.hostSpecificOptions_.values() :
+      hostOpt.setName( name )
+
   def selectHostSpecificSubmitOptions( self, forceFQDN=None, print=print ) :
     # Must be valid for this specific host or generically
     fqdn = forceFQDN if forceFQDN else socket.getfqdn() 
