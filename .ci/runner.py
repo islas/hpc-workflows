@@ -124,6 +124,7 @@ class Suite( SubmitAction ) :
     psuedoRunningMap = {}
 
     maxResources   = HpcArgpacks( OrderedDict() )
+    maxResources.setName( "maxlimit" )
     maxTimelimit   = timedelta()
     # Continue while we have jobs in queue or running
     while len( psuedoJobs ) > 0 or len( psuedoRunningMap ) > 0 :
