@@ -40,12 +40,12 @@ for test in logs.values() :
   for step in test["steps"].values() :
     files.append( step["logfile"] )
 
-common = os.path.commonprefix( files )
-replacements = { logfile.replace( commonprefix, relocation ) : logfile for logfile in files }
+common = os.path.commonpath( files )
+replacements = { logfile : logfile.replace( common, relocation ) for logfile in files }
 
-for newloc, oldloc in replacements.items() :
+for oldloc, newloc in replacements.items() :
   # change refs in new location, using copy for safety
-  os.makedirs( os.path.dirname( newloc ) )
+  os.makedirs( os.path.dirname( newloc ), exist_ok=True )
   newlocation = shutil.copy( oldloc, newloc )
   replaceReferences( newlocation, replacements )
   
