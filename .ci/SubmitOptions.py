@@ -122,12 +122,15 @@ class SubmitOptions( ) :
     if rhs.name_                is not None : self.name_             = rhs.name_
     if rhs.dependencies_        is not None : self.dependencies_     = rhs.dependencies_
 
-    
     if rhs.hpcArguments_.arguments_         : self.hpcArguments_.update( rhs.hpcArguments_, print=print )    
     if rhs.arguments_.arguments_            : self.arguments_   .update( rhs.arguments_, print=print )
 
-    # Just a dictionary
-    if rhs.hostSpecificOptions_             : sc.recursiveUpdate( self.hostSpecificOptions_, rhs.hostSpecificOptions_ )
+    for rhsHostOpt in rhs.hostSpecificOptions_ :
+      if rhsHostOpt in self.hostSpecificOptions_ :
+        self.hostSpecificOptions_[rhsHostOpt].update( rhs.hostSpecificOptions_[rhsHostOpt] )
+      else :
+        self.hostSpecificOptions_[rhsHostOpt] = copy.deepcopy( rhs.hostSpecificOptions_[rhsHostOpt] )
+
 
     # This keeps things consistent but should not affect anything
     sc.recursiveUpdate( self.submit_, rhs.submit_ )
