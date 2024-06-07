@@ -236,6 +236,9 @@ def main() :
                       Click on the above section to expand or collapse it.
 
                       Sections with the errors summarized below are labelled above.
+
+                      If logs are too long and/or truncated, please download the logfiles via the artifacts
+                      found via the summary page if available, otherwise download normally
                 """ )
 
     print( "~ How to use brief ~\n{help}\n\nOr refer to log files : \n{reflogs}\n{addendum}\n".format(
