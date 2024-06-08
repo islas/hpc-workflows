@@ -17,7 +17,7 @@ helper_steps=$( getKeys "$helper_mapping" )
 for helper_step in $helper_steps; do
 
   helper_stepEndLine=$( getLine $helper_testStdout_loc                                                        \
-                          "\[step::$helper_step\][ ]*Finished submitting step $helper_step" | awk -F ':' '{print $1}' )
+                          "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Finished submitting step $helper_step" | awk -F ':' '{print $1}' )
 
   helper_stepsParallel=$( splitValues $( getValuesAtKey "$helper_mapping" $helper_step ) )
   if [ -n "$helper_stepsParallel" ]; then
@@ -28,9 +28,9 @@ for helper_step in $helper_steps; do
     for helper_stepPar in $helper_stepsParallel; do
       # Check that the stepPar starts before our step even finishes
       helper_stepParStartLine=$( getLineBetween $helper_testStdout_loc                                                        \
-                                "\[step::$helper_stepPar\][ ]*Submitting step $helper_stepPar"   \
-                                "\[step::$helper_step\][ ]*Submitting step $helper_step"         \
-                                "\[step::$helper_step\][ ]*Finished submitting step $helper_step" | awk '{print $1}' )
+                                "\[step::$helper_suite.$helper_testname.$helper_stepPar\][ ]*Submitting step $helper_stepPar"   \
+                                "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Submitting step $helper_step"         \
+                                "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Finished submitting step $helper_step" | awk '{print $1}' )
 
       test $helper_stepEndLine -gt $helper_stepParStartLine
       reportTest                                                           \
@@ -53,8 +53,8 @@ for helper_step in $helper_steps; do
       1 $helper_result                                                              \
       $helper_testStdout_loc                                                        \
       "\[step::.*\][ ]*Submitting step"                                \
-      "\[step::$helper_step\].*START $helper_step"         \
-      "\[step::$helper_step\].*STOP $helper_step"
+      "\[step::$helper_suite.$helper_testname.$helper_step\].*START $helper_step"         \
+      "\[step::$helper_suite.$helper_testname.$helper_step\].*STOP $helper_step"
     helper_result=$?
   fi
 done

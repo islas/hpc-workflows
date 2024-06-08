@@ -30,8 +30,8 @@ for helper_argpack in $helper_argpacks; do
       1 $helper_result                                                              \
       $helper_testStdout_loc                                                        \
       "From .*[ ]*adding arguments pack '$helper_argpack'"                          \
-      "\[step::$helper_step\][ ]*Submitting step $helper_step"                      \
-      "\[step::$helper_step\][ ]*Running command:"
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Submitting step $helper_step"                      \
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Running command:"
     helper_result=$?
   else
     checkTestBetween                                                                \
@@ -40,16 +40,16 @@ for helper_argpack in $helper_argpacks; do
       0 $helper_result                                                              \
       $helper_testStdout_loc                                                        \
       "From $helper_argpack_origin[ ]*adding arguments pack '$helper_argpack'[ ]*: $helper_argpack_formatted" \
-      "\[step::$helper_step\][ ]*Submitting step $helper_step"                      \
-      "\[step::$helper_step\][ ]*Running command:"
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Submitting step $helper_step"                      \
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Running command:"
     helper_result=$?
 
     # Find line where argpack occurs - we don't need to aggregate result just yet since the above check
     # verifies the pattern
     helper_argpackCurrLine=$( getLineBetween $helper_testStdout_loc                                                        \
                                 "From $helper_argpack_origin[ ]*adding arguments pack '$helper_argpack'[ ]*: $helper_argpack_formatted" \
-                                "\[step::$helper_step\][ ]*Submitting step $helper_step"                      \
-                                "\[step::$helper_step\][ ]*Running command:" | awk '{print $1}' )
+                                "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Submitting step $helper_step"                      \
+                                "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Running command:" | awk '{print $1}' )
     test $helper_argpackCurrLine -gt $helper_argpackLine
     reportTest                                                                      \
       TEST_STDOUT_ARGPACK_ORDER_IDX_$helper_argpackIdx                              \

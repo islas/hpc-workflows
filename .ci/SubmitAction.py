@@ -16,14 +16,14 @@ class SubmitAction( ) :
 
     self.name_          = name
     self.globalOpts_    = globalOpts # options passed in at CLI
-    # Add 8 for [item::] characters
-    self.label_            = "{0:<{1}}".format( "[{0}::{1}] ".format( self.scope(), self.name_ ), sc.LABEL_LENGTH + 8 )
     self.labelIndentation_ = "  "
     self.labelLevel_       = 0
     self.logfile_        = None
 
     self.parent_        = parent
     self.options_       = options
+    # Add 8 for [item::] characters
+    self.label_            = "{0:<{1}}".format( "[{0}::{1}] ".format( self.scope(), self.ancestry() ), sc.LABEL_LENGTH + 8 )
     self.submitOptions_ = copy.deepcopy( defaultSubmitOptions )
 
     self.rootDir_          = rootDir

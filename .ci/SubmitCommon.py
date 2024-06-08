@@ -1,7 +1,7 @@
 # https://stackoverflow.com/a/3233356
 import collections.abc
 from enum import Enum
-LABEL_LENGTH = 12
+LABEL_LENGTH = 32
 
 class SubmissionType( Enum ):
   PBS   = "PBS"
