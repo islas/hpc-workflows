@@ -17,7 +17,7 @@ checkTest                                                                       
   "Correct test run"                                                            \
   0 $helper_result                                                              \
   $helper_testStdout_loc                                                        \
-  "\[test::$helper_testname\][ ]*Preparing working directory"
+  "\[test::$helper_suite.$helper_testname\][ ]*Preparing working directory"
 helper_result=$?
 
 checkTestBetween                                                                \
@@ -36,8 +36,8 @@ checkTestBetween                                                                
   0 $helper_result                                                              \
   $helper_testStdout_loc                                                        \
   "Running from root directory $helper_logdir"                                  \
-  "\[test::$helper_testname\][ ]*Preparing working directory"                   \
-  "\[test::$helper_testname\][ ]*Checking if results wait is required"
+  "\[test::$helper_suite.$helper_testname\][ ]*Preparing working directory"                   \
+  "\[test::$helper_suite.$helper_testname\][ ]*Checking if results wait is required"
 helper_result=$?
 
 
@@ -50,8 +50,8 @@ for helper_step in $helper_steps; do
     0 $helper_result                                                              \
     $helper_testStdout_loc                                                        \
     "Running from root directory $helper_logdir"                                  \
-    "\[step::$helper_step\][ ]*Preparing working directory"                       \
-    "\[step::$helper_step\][ ]*Submitting step $helper_step"
+    "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Preparing working directory"                       \
+    "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Submitting step $helper_step"
   helper_result=$?
 
   checkTestBetween                                                                \
@@ -60,8 +60,8 @@ for helper_step in $helper_steps; do
     0 $helper_result                                                              \
     $helper_testStdout_loc                                                        \
     "Local step will be redirected to logfile $helper_stepStdout_loc"             \
-    "\[step::$helper_step\].*START $helper_step"                                  \
-    "\[step::$helper_step\].*STOP $helper_step"
+    "\[step::$helper_suite.$helper_testname.$helper_step\].*START $helper_step"                                  \
+    "\[step::$helper_suite.$helper_testname.$helper_step\].*STOP $helper_step"
   helper_result=$?
 
   helper_stepScript=$( getValuesAtKey "$helper_mapping" $helper_step )
@@ -71,8 +71,8 @@ for helper_step in $helper_steps; do
     0 $helper_result                                                              \
     $helper_testStdout_loc                                                        \
     "Script : $helper_stepScript" \
-    "\[step::$helper_step\][ ]*Submitting step $helper_step"                      \
-    "\[step::$helper_step\][ ]*Running command:"
+    "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Submitting step $helper_step"                      \
+    "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Running command:"
   helper_result=$?
 done
 

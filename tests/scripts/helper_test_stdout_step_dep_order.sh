@@ -17,7 +17,7 @@ helper_steps=$( getKeys "$helper_mapping" )
 for helper_step in $helper_steps; do
 
   helper_stepStartLine=$( getLine $helper_testStdout_loc                                                        \
-                          "\[step::$helper_step\][ ]*Preparing working directory" | awk -F ':' '{print $1}' )
+                          "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Preparing working directory" | awk -F ':' '{print $1}' )
 
   helper_stepDependencies=$( splitValues $( getValuesAtKey "$helper_mapping" $helper_step ) )
   if [ -n "$helper_stepDependencies" ]; then
@@ -28,7 +28,7 @@ for helper_step in $helper_steps; do
     for helper_stepDep in $helper_stepDependencies; do
       # Check that the stepDep finishes before our step even starts
       helper_stepDepEndLine=$( getLine $helper_testStdout_loc                                                        \
-                                  "\[step::$helper_stepDep\][ ]*Finished submitting step $helper_stepDep" | awk -F ':' '{print $1}' )
+                                  "\[step::$helper_suite.$helper_testname.$helper_stepDep\][ ]*Finished submitting step $helper_stepDep" | awk -F ':' '{print $1}' )
       test $helper_stepStartLine -gt $helper_stepDepEndLine
       reportTest                                                           \
         TEST_STDOUT_STEP_ORDER_DEP_$helper_stepDepIdx                      \
@@ -47,9 +47,9 @@ for helper_step in $helper_steps; do
       "Step [$helper_step] has no dependencies and need only finish by test end"    \
       0 $helper_result                                                              \
       $helper_testStdout_loc                                                        \
-      "\[step::$helper_step\][ ]*Finished submitting step $helper_step"             \
-      "\[test::$helper_testname\][ ]*Preparing working directory"                   \
-      "\[test::$helper_testname\][ ]*No remaining steps, test submission complete"
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Finished submitting step $helper_step"             \
+      "\[test::$helper_suite.$helper_testname\][ ]*Preparing working directory"                   \
+      "\[test::$helper_suite.$helper_testname\][ ]*No remaining steps, test submission complete"
     helper_result=$?
   fi
 done

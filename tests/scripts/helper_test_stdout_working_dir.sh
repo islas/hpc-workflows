@@ -22,8 +22,8 @@ for helper_step in $helper_steps; do
     0 $helper_result                                                              \
     $helper_testStdout_loc                                                        \
     "Setting working directory to $helper_stepWorkingDir"                         \
-    "\[step::$helper_step\][ ]*Preparing working directory"                       \
-    "\[step::$helper_step\][ ]*Submitting step $helper_step"
+    "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Preparing working directory"                       \
+    "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Submitting step $helper_step"
   helper_result=$?
 
   helper_stepWorkingDirAbs=$( realpath $helper_logdir/$helper_stepWorkingDir )
@@ -33,8 +33,8 @@ for helper_step in $helper_steps; do
     0 $helper_result                                                              \
     $helper_testStdout_loc                                                        \
     "Current directory : $helper_stepWorkingDirAbs"                               \
-    "\[step::$helper_step\][ ]*Preparing working directory"                       \
-    "\[step::$helper_step\][ ]*Submitting step $helper_step"
+    "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Preparing working directory"                       \
+    "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Submitting step $helper_step"
   helper_result=$?
 done
 

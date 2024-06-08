@@ -20,7 +20,7 @@ if [ "$helper_testPass" = true ]; then
     "Test reports success as last line"                                           \
     0 $helper_result                                                              \
     $helper_testStdout_loc                                                        \
-    "\[test::$helper_testname\][ ]*\[SUCCESS\] : Test $helper_testname completed successfully"
+    "\[test::$helper_suite.$helper_testname\][ ]*\[SUCCESS\] : Test $helper_testname completed successfully"
   helper_result=$?
 else
   justify "<" "*" 100 "-->[TEST [$helper_testname] STDOUT FAILURE] "
@@ -29,7 +29,7 @@ else
     "Test reports failure as last line"                                           \
     0 $helper_result                                                              \
     $helper_testStdout_loc                                                        \
-    "\[test::$helper_testname\][ ]*\[FAILURE\] : Steps \[ .* \] failed"
+    "\[test::$helper_suite.$helper_testname\][ ]*\[FAILURE\] : Steps \[ .* \] failed"
   helper_result=$?
 fi
 
@@ -43,9 +43,9 @@ for helper_step in $helper_steps; do
       "Step [$helper_step] reports success at correct time"                         \
       0 $helper_result                                                              \
       $helper_testStdout_loc                                                        \
-      "\[step::$helper_step\][ ]*\[SUCCESS\]"                                       \
-      "\[step::$helper_step\][ ]*Results for $helper_step"                          \
-      "\[test::$helper_testname\][ ]*Writing relevant logfiles"
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*\[SUCCESS\]"                                       \
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Results for $helper_step"                          \
+      "\[test::$helper_suite.$helper_testname\][ ]*Writing relevant logfiles"
     helper_result=$?
   else
 
@@ -54,9 +54,9 @@ for helper_step in $helper_steps; do
       "Step [$helper_step] reports failure at correct time"                         \
       0 $helper_result                                                              \
       $helper_testStdout_loc                                                        \
-      "\[step::$helper_step\][ ]*\[FAILURE\]"                                       \
-      "\[step::$helper_step\][ ]*Results for $helper_step"                          \
-      "\[test::$helper_testname\][ ]*Writing relevant logfiles"
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*\[FAILURE\]"                                       \
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Results for $helper_step"                          \
+      "\[test::$helper_suite.$helper_testname\][ ]*Writing relevant logfiles"
     helper_result=$?
 
     checkTestBetween                                                                \
@@ -64,9 +64,9 @@ for helper_step in $helper_steps; do
       "Step [$helper_step] reports lastline reason for failure"                     \
       0 $helper_result                                                              \
       $helper_testStdout_loc                                                        \
-      "\[step::$helper_step\][ ]*Line: \".*\""                                      \
-      "\[step::$helper_step\][ ]*\[FAILURE\] : Missing key"                         \
-      "\[step::$helper_step\][ ]*.*ERROR ERROR ERROR"
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*Line: \".*\""                                      \
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*\[FAILURE\] : Missing key"                         \
+      "\[step::$helper_suite.$helper_testname.$helper_step\][ ]*.*ERROR ERROR ERROR"
     helper_result=$?
 
   fi
