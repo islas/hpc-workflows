@@ -50,7 +50,7 @@ def getLogsPrintedStr( masterDict, masterLog ) :
 def getSummaryPrintedStr( masterDict, metadata ) :
   indent = "  "
   outputFormat = "{name:<24} {reason:<40}\n"
-  cmdFormat    = "{runner} {file} -t {test} -d {offset} -s LOCAL"
+  cmdFormat    = "{runner} {file} -t {test} {offset} -s LOCAL"
   output = "SUMMARY OF TEST FAILURES\n" + outputFormat.format( name="NAME", reason="REASON" )
   for test, testlog in masterDict.items() :
     if not testlog["success"] :
@@ -58,7 +58,7 @@ def getSummaryPrintedStr( masterDict, metadata ) :
                                   runner=metadata["rel_exec"],
                                   file=metadata["rel_file"],
                                   test=test,
-                                  offset=metadata["rel_offset"]
+                                  offset="" if metadata["rel_offset"] == "" else "-d " + metadata["rel_offset"]
                                   )
       output += outputFormat.format( name=test, reason=testlog[ "line" ] ) + "[TO REPRODUCE LOCALLY] : " + testCmd + "\n"
       for step, steplog in testlog["steps"].items() :
