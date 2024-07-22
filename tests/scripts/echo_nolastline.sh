@@ -1,7 +1,8 @@
 #!/bin/sh
 
-dir=$1
+config=$1
+dir=$2
 cd $dir
 
-shift
+shift; shift
 echo $*

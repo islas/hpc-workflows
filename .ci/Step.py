@@ -39,7 +39,7 @@ class Step( SubmitAction ):
     self.depSignOff_    = {} # steps we are dependent on will need to tell us when to go
     self.children_      = [] # steps that are dependent on us that we will need to sign off for
     # DO NOT MODIFY THIS UNLESS YOU UNDERSTAND THE IMPLICATIONS
-    self.addWorkingDirArg_ = True
+    self.addTestScriptArgs_ = True
     self.lock_          = lock
     self.wakeTest_      = notifier
 
@@ -137,8 +137,8 @@ class Step( SubmitAction ):
 
       self.log( "Script : {0}".format( self.command_ ) )
       args.append( os.path.abspath( self.command_ ) )
-      if self.addWorkingDirArg_ :
-        args.append( workingDir )
+      if self.addTestScriptArgs_ :
+        args.extend( [ self.globalOpts_.forceFQDN, workingDir ] )
 
       if self.arguments_ :
         args.extend( self.arguments_ )

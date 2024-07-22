@@ -269,7 +269,7 @@ class Suite( SubmitAction ) :
     hpcJoinTest.steps_["submit"].submitOptions_.arguments_    = SubmitArgpacks( OrderedDict() )
     hpcJoinTest.steps_["submit"].submitOptions_.hpcArguments_ = maxResources
     # No other args
-    hpcJoinTest.steps_["submit"].addWorkingDirArg_ = False
+    hpcJoinTest.steps_["submit"].addTestScriptArgs_ = False
 
     hpcJoinTest.validate()
     success = hpcJoinTest.run()
