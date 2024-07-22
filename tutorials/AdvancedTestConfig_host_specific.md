@@ -55,7 +55,7 @@ One can conditionally control whether `"submit_options"` are applied based on th
 
 
 ```python
-# Output template file documenting options
+# Output code snippet demonstrating feature
 from IPython.display import Markdown as md
 md( "```python\n  def selectHostSpecificSubmitOptions" + 
      open( notebookDirectory + "/../.ci/SubmitOptions.py", "r" )
@@ -69,12 +69,10 @@ md( "```python\n  def selectHostSpecificSubmitOptions" +
 
 
 ```python
-  def selectHostSpecificSubmitOptions( self, forceFQDN=None, print=print ) :
-    # Must be valid for this specific host or generically
-    fqdn = forceFQDN if forceFQDN else socket.getfqdn() 
+  def selectHostSpecificSubmitOptions( self, host=None, print=print ) :
 
     # Have to do string matching rather than in dict
-    hostSpecificOptKey = next( ( hostOpt for hostOpt in self.hostSpecificOptions_ if hostOpt in fqdn ), None )
+    hostSpecificOptKey = next( ( hostOpt for hostOpt in self.hostSpecificOptions_ if hostOpt in host ), None )
 
     # Quickly generate a stand-in SubmitOptions in spitting image
     currentSubmitOptions = copy.deepcopy( self )
@@ -85,6 +83,49 @@ md( "```python\n  def selectHostSpecificSubmitOptions" +
 
     return currentSubmitOptions
 
+
+  
+```
+
+
+
+The host argument is always supplied when this function is called in `Step.py` which is originally supplied by the `globalOpts_` (command-line options)
+
+
+```python
+# Output code snippet demonstrating feature
+from IPython.display import Markdown as md
+md( "```python\n##### From Step.py #####" + 
+     open( notebookDirectory + "/../.ci/Step.py", "r" )
+                        .read()
+                        .split( "Step.DependencyType( depType )" )[1]
+                        .split( "def validate" )[0] + 
+
+   "\n##### From runner.py #####" +
+   open( notebookDirectory + "/../.ci/runner.py", "r" )
+                        .read()
+                        .split( "basename = os.path.splitext( os.path.basename( options.testsConfig ) )[0]" )[1]
+                        .split( "success = False" )[0] + 
+   "\n```" )
+
+```
+
+
+
+
+```python
+##### From Step.py #####
+
+    # Now set things manually
+    self.submitOptions_ = self.submitOptions_.selectHostSpecificSubmitOptions( host=self.globalOpts_.forceFQDN, print=self.log )
+
+  
+##### From runner.py #####
+
+  # Check if a host config was specified to use in lieu of fqdn
+  if options.forceFQDN is None :
+    # Use fqdn as the default host selection
+    options.forceFQDN = socket.getfqdn() 
 
   
 ```
@@ -107,7 +148,7 @@ $1/../.ci/runner.py $1/../our-config.json -h | \
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     usage: runner.py [-h] [-t TESTS [TESTS ...]] [-s {PBS,SLURM,LOCAL}]
                      [-a ACCOUNT] [-d DIROFFSET] [-j [JOINHPC]]
                      [-alt [ALTDIRS ...]] [-l LABELLENGTH] [-g GLOBALPREFIX]
@@ -170,42 +211,42 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -ff tutorials.hpc-w
       }
     }
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Preparing working directory
-    [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Checking if results wait is required...
-    [test::our-test]      No HPC submissions, no results waiting required
-    [step::our-step0-less-nodes] Preparing working directory
-    [step::our-step0-less-nodes]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0-less-nodes]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0-less-nodes] Submitting step our-step0-less-nodes...
-    [step::our-step0-less-nodes]   Gathering argument packs...
-    [step::our-step0-less-nodes]     From our-config adding arguments pack 'data_path' : ['-p', '/some/local/path/']
-    [step::our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
-    [step::our-step0-less-nodes]   Running command:
-    [step::our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -p /some/local/path/
-    [step::our-step0-less-nodes]   ***************START our-step0-less-nodes***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Preparing working directory
+    [test::our-config.our-test]               Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Checking if results wait is required...
+    [test::our-config.our-test]               No HPC submissions, no results waiting required
+    [step::our-config.our-test.our-step0-less-nodes] Preparing working directory
+    [step::our-config.our-test.our-step0-less-nodes]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0-less-nodes]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0-less-nodes] Submitting step our-step0-less-nodes...
+    [step::our-config.our-test.our-step0-less-nodes]   Gathering argument packs...
+    [step::our-config.our-test.our-step0-less-nodes]     From our-config adding arguments pack 'data_path' : ['-p', '/some/local/path/']
+    [step::our-config.our-test.our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step0-less-nodes]   Running command:
+    [step::our-config.our-test.our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -p /some/local/path/
+    [step::our-config.our-test.our-step0-less-nodes]   ***************START our-step0-less-nodes***************
     
     -p /some/local/path/
     TEST echo_normal.sh PASS
     
-    [step::our-step0-less-nodes]   ***************STOP our-step0-less-nodes***************
-    [step::our-step0-less-nodes] Finished submitting step our-step0-less-nodes
+    [step::our-config.our-test.our-step0-less-nodes]   ***************STOP our-step0-less-nodes***************
+    [step::our-config.our-test.our-step0-less-nodes] Finished submitting step our-step0-less-nodes
     
-    [test::our-test]    Checking remaining steps...
-    [test::our-test]    No remaining steps, test submission complete
-    [test::our-test]    Outputting results...
-    [step::our-step0-less-nodes] Results for our-step0-less-nodes
-    [step::our-step0-less-nodes]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0-less-nodes.log
-    [step::our-step0-less-nodes]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-    [step::our-step0-less-nodes]   [SUCCESS]
-    [test::our-test]    Writing relevant logfiles to view in master log file : 
-    [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-    [test::our-test]    [SUCCESS] : Test our-test completed successfully
+    [test::our-config.our-test]             Checking remaining steps...
+    [test::our-config.our-test]             No remaining steps, test submission complete
+    [test::our-config.our-test]             Outputting results...
+    [step::our-config.our-test.our-step0-less-nodes] Results for our-step0-less-nodes
+    [step::our-config.our-test.our-step0-less-nodes]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0-less-nodes.log
+    [step::our-config.our-test.our-step0-less-nodes]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
+    [step::our-config.our-test.our-step0-less-nodes]   [SUCCESS]
+    [test::our-config.our-test]             Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test]               /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
+    [test::our-config.our-test]             [SUCCESS] : Test our-test completed successfully
 
 
 Looks good, let's start overriding our `"data_path"` <ins>argpack</ins>. Recall that we _could_ override it by providing an appropriate `"submit_options"` at the test or step level, but say we have many steps and tests that will make use of this data path. Likewise, on our `tutorials.hpc-workflows.foobar.com` we have the path set to something specific like `/opt/data/path/`. Instead we want to supply a host-specific designation at the top to be our new default :
@@ -268,42 +309,42 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -ff tutorials.hpc-w
       }
     }
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Preparing working directory
-    [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Checking if results wait is required...
-    [test::our-test]      No HPC submissions, no results waiting required
-    [step::our-step0-less-nodes] Preparing working directory
-    [step::our-step0-less-nodes]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0-less-nodes]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0-less-nodes] Submitting step our-step0-less-nodes...
-    [step::our-step0-less-nodes]   Gathering argument packs...
-    [step::our-step0-less-nodes]     From our-config adding arguments pack 'data_path' : ['-p', '/opt/data/path']
-    [step::our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
-    [step::our-step0-less-nodes]   Running command:
-    [step::our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -p /opt/data/path
-    [step::our-step0-less-nodes]   ***************START our-step0-less-nodes***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Preparing working directory
+    [test::our-config.our-test]               Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Checking if results wait is required...
+    [test::our-config.our-test]               No HPC submissions, no results waiting required
+    [step::our-config.our-test.our-step0-less-nodes] Preparing working directory
+    [step::our-config.our-test.our-step0-less-nodes]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0-less-nodes]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0-less-nodes] Submitting step our-step0-less-nodes...
+    [step::our-config.our-test.our-step0-less-nodes]   Gathering argument packs...
+    [step::our-config.our-test.our-step0-less-nodes]     From our-config adding arguments pack 'data_path' : ['-p', '/opt/data/path']
+    [step::our-config.our-test.our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step0-less-nodes]   Running command:
+    [step::our-config.our-test.our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -p /opt/data/path
+    [step::our-config.our-test.our-step0-less-nodes]   ***************START our-step0-less-nodes***************
     
     -p /opt/data/path
     TEST echo_normal.sh PASS
     
-    [step::our-step0-less-nodes]   ***************STOP our-step0-less-nodes***************
-    [step::our-step0-less-nodes] Finished submitting step our-step0-less-nodes
+    [step::our-config.our-test.our-step0-less-nodes]   ***************STOP our-step0-less-nodes***************
+    [step::our-config.our-test.our-step0-less-nodes] Finished submitting step our-step0-less-nodes
     
-    [test::our-test]    Checking remaining steps...
-    [test::our-test]    No remaining steps, test submission complete
-    [test::our-test]    Outputting results...
-    [step::our-step0-less-nodes] Results for our-step0-less-nodes
-    [step::our-step0-less-nodes]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0-less-nodes.log
-    [step::our-step0-less-nodes]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-    [step::our-step0-less-nodes]   [SUCCESS]
-    [test::our-test]    Writing relevant logfiles to view in master log file : 
-    [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-    [test::our-test]    [SUCCESS] : Test our-test completed successfully
+    [test::our-config.our-test]             Checking remaining steps...
+    [test::our-config.our-test]             No remaining steps, test submission complete
+    [test::our-config.our-test]             Outputting results...
+    [step::our-config.our-test.our-step0-less-nodes] Results for our-step0-less-nodes
+    [step::our-config.our-test.our-step0-less-nodes]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0-less-nodes.log
+    [step::our-config.our-test.our-step0-less-nodes]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
+    [step::our-config.our-test.our-step0-less-nodes]   [SUCCESS]
+    [test::our-config.our-test]             Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test]               /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
+    [test::our-config.our-test]             [SUCCESS] : Test our-test completed successfully
 
 
 Notice that our input to the command script is now our host-specific `"arguments"`? Also, we need only match the name with python string [operator `in`](https://docs.python.org/3/reference/expressions.html#membership-test-details). If we then want to override this default for this host at the test level we need to match the previous string verbatim :
@@ -386,42 +427,42 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -ff tutorials.hpc-w
       }
     }
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Preparing working directory
-    [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Checking if results wait is required...
-    [test::our-test]      No HPC submissions, no results waiting required
-    [step::our-step0-less-nodes] Preparing working directory
-    [step::our-step0-less-nodes]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0-less-nodes]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0-less-nodes] Submitting step our-step0-less-nodes...
-    [step::our-step0-less-nodes]   Gathering argument packs...
-    [step::our-step0-less-nodes]     From our-config.our-test adding arguments pack 'data_path' : ['-p', '/home/user/data/path']
-    [step::our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
-    [step::our-step0-less-nodes]   Running command:
-    [step::our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -p /home/user/data/path
-    [step::our-step0-less-nodes]   ***************START our-step0-less-nodes***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Preparing working directory
+    [test::our-config.our-test]               Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Checking if results wait is required...
+    [test::our-config.our-test]               No HPC submissions, no results waiting required
+    [step::our-config.our-test.our-step0-less-nodes] Preparing working directory
+    [step::our-config.our-test.our-step0-less-nodes]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0-less-nodes]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0-less-nodes] Submitting step our-step0-less-nodes...
+    [step::our-config.our-test.our-step0-less-nodes]   Gathering argument packs...
+    [step::our-config.our-test.our-step0-less-nodes]     From our-config.our-test adding arguments pack 'data_path' : ['-p', '/home/user/data/path']
+    [step::our-config.our-test.our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step0-less-nodes]   Running command:
+    [step::our-config.our-test.our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -p /home/user/data/path
+    [step::our-config.our-test.our-step0-less-nodes]   ***************START our-step0-less-nodes***************
     
     -p /home/user/data/path
     TEST echo_normal.sh PASS
     
-    [step::our-step0-less-nodes]   ***************STOP our-step0-less-nodes***************
-    [step::our-step0-less-nodes] Finished submitting step our-step0-less-nodes
+    [step::our-config.our-test.our-step0-less-nodes]   ***************STOP our-step0-less-nodes***************
+    [step::our-config.our-test.our-step0-less-nodes] Finished submitting step our-step0-less-nodes
     
-    [test::our-test]    Checking remaining steps...
-    [test::our-test]    No remaining steps, test submission complete
-    [test::our-test]    Outputting results...
-    [step::our-step0-less-nodes] Results for our-step0-less-nodes
-    [step::our-step0-less-nodes]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0-less-nodes.log
-    [step::our-step0-less-nodes]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-    [step::our-step0-less-nodes]   [SUCCESS]
-    [test::our-test]    Writing relevant logfiles to view in master log file : 
-    [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-    [test::our-test]    [SUCCESS] : Test our-test completed successfully
+    [test::our-config.our-test]             Checking remaining steps...
+    [test::our-config.our-test]             No remaining steps, test submission complete
+    [test::our-config.our-test]             Outputting results...
+    [step::our-config.our-test.our-step0-less-nodes] Results for our-step0-less-nodes
+    [step::our-config.our-test.our-step0-less-nodes]   Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0-less-nodes.log
+    [step::our-config.our-test.our-step0-less-nodes]   Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
+    [step::our-config.our-test.our-step0-less-nodes]   [SUCCESS]
+    [test::our-config.our-test]             Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test]               /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
+    [test::our-config.our-test]             [SUCCESS] : Test our-test completed successfully
 
 
 As shown in the .ci/template.json, host-specific `"submit_options"` must first appear in a parent `"submit_options"` entry but do not need the keyword themselves as their unique name counts as that. 

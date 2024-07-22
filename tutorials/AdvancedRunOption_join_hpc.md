@@ -26,7 +26,7 @@ $1/../.ci/runner.py $1/../our-config.json -h | \
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     usage: runner.py [-h] [-t TESTS [TESTS ...]] [-s {PBS,SLURM,LOCAL}]
                      [-a ACCOUNT] [-d DIROFFSET] [-j [JOINHPC]]
                      [-alt [ALTDIRS ...]] [-l LABELLENGTH] [-g GLOBALPREFIX]
@@ -157,49 +157,49 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
       }
     }
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Preparing working directory
-    [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Checking if results wait is required...
-    [test::our-test]      Final results will wait for all jobs complete
-    [step::our-step0]   Preparing working directory
-    [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]   Submitting step our-step0...
-    [step::our-step0]     Gathering HPC argument packs...
-    [step::our-step0]       From [our-config] adding HPC argument pack 'select' :
-    [step::our-step0]         Adding option '-l '
-    [step::our-step0]           From our-config adding resource 'select' : 1
-    [step::our-step0]           From our-config adding resource 'mem'    : 32gb
-    [step::our-step0]       Final argpack output for select : '-l select=1:mem=32gb'
-    [step::our-step0]       From [our-config] adding HPC argument pack 'priority' :
-    [step::our-step0]         Adding option '-l '
-    [step::our-step0]           From our-config adding resource 'job_priority' : economy
-    [step::our-step0]       Final argpack output for priority : '-l job_priority=economy'
-    [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step0]     Running command:
-    [step::our-step0]       qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     ***************START our-step0***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Preparing working directory
+    [test::our-config.our-test]               Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Checking if results wait is required...
+    [test::our-config.our-test]               Final results will wait for all jobs complete
+    [step::our-config.our-test.our-step0]   Preparing working directory
+    [step::our-config.our-test.our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]   Submitting step our-step0...
+    [step::our-config.our-test.our-step0]     Gathering HPC argument packs...
+    [step::our-config.our-test.our-step0]       From [our-config] adding HPC argument pack 'select' :
+    [step::our-config.our-test.our-step0]         Adding option '-l '
+    [step::our-config.our-test.our-step0]           From our-config adding resource 'select' : 1
+    [step::our-config.our-test.our-step0]           From our-config adding resource 'mem'    : 32gb
+    [step::our-config.our-test.our-step0]       Final argpack output for select : '-l select=1:mem=32gb'
+    [step::our-config.our-test.our-step0]       From [our-config] adding HPC argument pack 'priority' :
+    [step::our-config.our-test.our-step0]         Adding option '-l '
+    [step::our-config.our-test.our-step0]           From our-config adding resource 'job_priority' : economy
+    [step::our-config.our-test.our-step0]       Final argpack output for priority : '-l job_priority=economy'
+    [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step0]     Running command:
+    [step::our-config.our-test.our-step0]       qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
-    [step::our-step0]     Doing dry-run, no ouptut
+    [step::our-config.our-test.our-step0]     Doing dry-run, no ouptut
     
-    [step::our-step0]     ***************STOP our-step0 ***************
-    [step::our-step0]     Finding job ID in "12345"
-    [step::our-step0]   Finished submitting step our-step0
+    [step::our-config.our-test.our-step0]     ***************STOP our-step0 ***************
+    [step::our-config.our-test.our-step0]     Finding job ID in "12345"
+    [step::our-config.our-test.our-step0]   Finished submitting step our-step0
     
-    [test::our-test]    Checking remaining steps...
-    [test::our-test]    No remaining steps, test submission complete
-    [test::our-test]    Doing dry-run, assumed complete
-    [test::our-test]    Outputting results...
-    [step::our-step0]   Results for our-step0
-    [step::our-step0]     Doing dry-run, assumed success
-    [test::our-test]    Writing relevant logfiles to view in master log file : 
-    [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-    [test::our-test]    [SUCCESS] : Test our-test completed successfully
+    [test::our-config.our-test]             Checking remaining steps...
+    [test::our-config.our-test]             No remaining steps, test submission complete
+    [test::our-config.our-test]             Doing dry-run, assumed complete
+    [test::our-config.our-test]             Outputting results...
+    [step::our-config.our-test.our-step0]   Results for our-step0
+    [step::our-config.our-test.our-step0]     Doing dry-run, assumed success
+    [test::our-config.our-test]             Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test]               /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
+    [test::our-config.our-test]             [SUCCESS] : Test our-test completed successfully
 
 
 ### Accumulating Resources
@@ -296,125 +296,125 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 -fs -
       }
     }
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test0]   Preparing working directory
-    [test::our-test0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test0]   Checking if results wait is required...
-    [test::our-test0]     Final results will wait for all jobs complete
-    [step::our-step0]   Preparing working directory
-    [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]   Submitting step our-step0...
-    [step::our-step0]     Gathering HPC argument packs...
-    [step::our-step0]       From [our-config] adding HPC argument pack 'select' :
-    [step::our-step0]         Adding option '-l '
-    [step::our-step0]           From our-config adding resource 'select' : 1
-    [step::our-step0]           From our-config adding resource 'mem'    : 32gb
-    [step::our-step0]       Final argpack output for select : '-l select=1:mem=32gb'
-    [step::our-step0]       From [our-config] adding HPC argument pack 'priority' :
-    [step::our-step0]         Adding option '-l '
-    [step::our-step0]           From our-config adding resource 'job_priority' : economy
-    [step::our-step0]       Final argpack output for priority : '-l job_priority=economy'
-    [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step0]     Running command:
-    [step::our-step0]       qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test0.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test0.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     ***************START our-step0***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test0]            Preparing working directory
+    [test::our-config.our-test0]              Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test0]            Checking if results wait is required...
+    [test::our-config.our-test0]              Final results will wait for all jobs complete
+    [step::our-config.our-test0.our-step0]  Preparing working directory
+    [step::our-config.our-test0.our-step0]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test0.our-step0]    Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test0.our-step0]  Submitting step our-step0...
+    [step::our-config.our-test0.our-step0]    Gathering HPC argument packs...
+    [step::our-config.our-test0.our-step0]      From [our-config] adding HPC argument pack 'select' :
+    [step::our-config.our-test0.our-step0]        Adding option '-l '
+    [step::our-config.our-test0.our-step0]          From our-config adding resource 'select' : 1
+    [step::our-config.our-test0.our-step0]          From our-config adding resource 'mem'    : 32gb
+    [step::our-config.our-test0.our-step0]      Final argpack output for select : '-l select=1:mem=32gb'
+    [step::our-config.our-test0.our-step0]      From [our-config] adding HPC argument pack 'priority' :
+    [step::our-config.our-test0.our-step0]        Adding option '-l '
+    [step::our-config.our-test0.our-step0]          From our-config adding resource 'job_priority' : economy
+    [step::our-config.our-test0.our-step0]      Final argpack output for priority : '-l job_priority=economy'
+    [step::our-config.our-test0.our-step0]    Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test0.our-step0]    Running command:
+    [step::our-config.our-test0.our-step0]      qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test0.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test0.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test0.our-step0]    ***************START our-step0***************
     
-    [step::our-step0]     Doing dry-run, no ouptut
+    [step::our-config.our-test0.our-step0]    Doing dry-run, no ouptut
     
-    [step::our-step0]     ***************STOP our-step0 ***************
-    [step::our-step0]     Finding job ID in "12345"
-    [step::our-step0]   Finished submitting step our-step0
+    [step::our-config.our-test0.our-step0]    ***************STOP our-step0 ***************
+    [step::our-config.our-test0.our-step0]    Finding job ID in "12345"
+    [step::our-config.our-test0.our-step0]  Finished submitting step our-step0
     
-    [test::our-test0]   Checking remaining steps...
-    [test::our-test0]   No remaining steps, test submission complete
-    [test::our-test0]   Doing dry-run, assumed complete
-    [test::our-test0]   Outputting results...
-    [step::our-step0]   Results for our-step0
-    [step::our-step0]     Doing dry-run, assumed success
-    [test::our-test0]   Writing relevant logfiles to view in master log file : 
-    [test::our-test0]     /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test0.log
-    [test::our-test0]   [SUCCESS] : Test our-test0 completed successfully
-    [test::our-test1]   Preparing working directory
-    [test::our-test1]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test1]   Checking if results wait is required...
-    [test::our-test1]     Final results will wait for all jobs complete
-    [step::our-step1]   Preparing working directory
-    [step::our-step1]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step1]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step1]   Submitting step our-step1...
-    [step::our-step1]     Gathering HPC argument packs...
-    [step::our-step1]       From [our-config] adding HPC argument pack 'select' :
-    [step::our-step1]         Adding option '-l '
-    [step::our-step1]           From our-config adding resource 'select' : 1
-    [step::our-step1]           From our-config adding resource 'mem'    : 32gb
-    [step::our-step1]       Final argpack output for select : '-l select=1:mem=32gb'
-    [step::our-step1]       From [our-config] adding HPC argument pack 'priority' :
-    [step::our-step1]         Adding option '-l '
-    [step::our-step1]           From our-config adding resource 'job_priority' : economy
-    [step::our-step1]       Final argpack output for priority : '-l job_priority=economy'
-    [step::our-step1]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step1]     Running command:
-    [step::our-step1]       qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test1.our-step1 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test1.our-step1.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step1]     ***************START our-step1***************
+    [test::our-config.our-test0]            Checking remaining steps...
+    [test::our-config.our-test0]            No remaining steps, test submission complete
+    [test::our-config.our-test0]            Doing dry-run, assumed complete
+    [test::our-config.our-test0]            Outputting results...
+    [step::our-config.our-test0.our-step0]  Results for our-step0
+    [step::our-config.our-test0.our-step0]    Doing dry-run, assumed success
+    [test::our-config.our-test0]            Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test0]              /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test0.log
+    [test::our-config.our-test0]            [SUCCESS] : Test our-test0 completed successfully
+    [test::our-config.our-test1]            Preparing working directory
+    [test::our-config.our-test1]              Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test1]            Checking if results wait is required...
+    [test::our-config.our-test1]              Final results will wait for all jobs complete
+    [step::our-config.our-test1.our-step1]  Preparing working directory
+    [step::our-config.our-test1.our-step1]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test1.our-step1]    Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test1.our-step1]  Submitting step our-step1...
+    [step::our-config.our-test1.our-step1]    Gathering HPC argument packs...
+    [step::our-config.our-test1.our-step1]      From [our-config] adding HPC argument pack 'select' :
+    [step::our-config.our-test1.our-step1]        Adding option '-l '
+    [step::our-config.our-test1.our-step1]          From our-config adding resource 'select' : 1
+    [step::our-config.our-test1.our-step1]          From our-config adding resource 'mem'    : 32gb
+    [step::our-config.our-test1.our-step1]      Final argpack output for select : '-l select=1:mem=32gb'
+    [step::our-config.our-test1.our-step1]      From [our-config] adding HPC argument pack 'priority' :
+    [step::our-config.our-test1.our-step1]        Adding option '-l '
+    [step::our-config.our-test1.our-step1]          From our-config adding resource 'job_priority' : economy
+    [step::our-config.our-test1.our-step1]      Final argpack output for priority : '-l job_priority=economy'
+    [step::our-config.our-test1.our-step1]    Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test1.our-step1]    Running command:
+    [step::our-config.our-test1.our-step1]      qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test1.our-step1 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test1.our-step1.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test1.our-step1]    ***************START our-step1***************
     
-    [step::our-step1]     Doing dry-run, no ouptut
+    [step::our-config.our-test1.our-step1]    Doing dry-run, no ouptut
     
-    [step::our-step1]     ***************STOP our-step1 ***************
-    [step::our-step1]     Finding job ID in "12345"
-    [step::our-step1]   Finished submitting step our-step1
+    [step::our-config.our-test1.our-step1]    ***************STOP our-step1 ***************
+    [step::our-config.our-test1.our-step1]    Finding job ID in "12345"
+    [step::our-config.our-test1.our-step1]  Finished submitting step our-step1
     
-    [test::our-test1]   Checking remaining steps...
-    [test::our-test1]   No remaining steps, test submission complete
-    [test::our-test1]   Doing dry-run, assumed complete
-    [test::our-test1]   Outputting results...
-    [step::our-step1]   Results for our-step1
-    [step::our-step1]     Doing dry-run, assumed success
-    [test::our-test1]   Writing relevant logfiles to view in master log file : 
-    [test::our-test1]     /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test1.log
-    [test::our-test1]   [SUCCESS] : Test our-test1 completed successfully
-    [test::our-test2]   Preparing working directory
-    [test::our-test2]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test2]   Checking if results wait is required...
-    [test::our-test2]     Final results will wait for all jobs complete
-    [step::our-step2]   Preparing working directory
-    [step::our-step2]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step2]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step2]   Submitting step our-step2...
-    [step::our-step2]     Gathering HPC argument packs...
-    [step::our-step2]       From [our-config] adding HPC argument pack 'select' :
-    [step::our-step2]         Adding option '-l '
-    [step::our-step2]           From our-config adding resource 'select' : 1
-    [step::our-step2]           From our-config adding resource 'mem'    : 32gb
-    [step::our-step2]       Final argpack output for select : '-l select=1:mem=32gb'
-    [step::our-step2]       From [our-config] adding HPC argument pack 'priority' :
-    [step::our-step2]         Adding option '-l '
-    [step::our-step2]           From our-config adding resource 'job_priority' : economy
-    [step::our-step2]       Final argpack output for priority : '-l job_priority=economy'
-    [step::our-step2]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step2]     Running command:
-    [step::our-step2]       qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test2.our-step2 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test2.our-step2.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step2]     ***************START our-step2***************
+    [test::our-config.our-test1]            Checking remaining steps...
+    [test::our-config.our-test1]            No remaining steps, test submission complete
+    [test::our-config.our-test1]            Doing dry-run, assumed complete
+    [test::our-config.our-test1]            Outputting results...
+    [step::our-config.our-test1.our-step1]  Results for our-step1
+    [step::our-config.our-test1.our-step1]    Doing dry-run, assumed success
+    [test::our-config.our-test1]            Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test1]              /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test1.log
+    [test::our-config.our-test1]            [SUCCESS] : Test our-test1 completed successfully
+    [test::our-config.our-test2]            Preparing working directory
+    [test::our-config.our-test2]              Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test2]            Checking if results wait is required...
+    [test::our-config.our-test2]              Final results will wait for all jobs complete
+    [step::our-config.our-test2.our-step2]  Preparing working directory
+    [step::our-config.our-test2.our-step2]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test2.our-step2]    Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test2.our-step2]  Submitting step our-step2...
+    [step::our-config.our-test2.our-step2]    Gathering HPC argument packs...
+    [step::our-config.our-test2.our-step2]      From [our-config] adding HPC argument pack 'select' :
+    [step::our-config.our-test2.our-step2]        Adding option '-l '
+    [step::our-config.our-test2.our-step2]          From our-config adding resource 'select' : 1
+    [step::our-config.our-test2.our-step2]          From our-config adding resource 'mem'    : 32gb
+    [step::our-config.our-test2.our-step2]      Final argpack output for select : '-l select=1:mem=32gb'
+    [step::our-config.our-test2.our-step2]      From [our-config] adding HPC argument pack 'priority' :
+    [step::our-config.our-test2.our-step2]        Adding option '-l '
+    [step::our-config.our-test2.our-step2]          From our-config adding resource 'job_priority' : economy
+    [step::our-config.our-test2.our-step2]      Final argpack output for priority : '-l job_priority=economy'
+    [step::our-config.our-test2.our-step2]    Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test2.our-step2]    Running command:
+    [step::our-config.our-test2.our-step2]      qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test2.our-step2 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test2.our-step2.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test2.our-step2]    ***************START our-step2***************
     
-    [step::our-step2]     Doing dry-run, no ouptut
+    [step::our-config.our-test2.our-step2]    Doing dry-run, no ouptut
     
-    [step::our-step2]     ***************STOP our-step2 ***************
-    [step::our-step2]     Finding job ID in "12345"
-    [step::our-step2]   Finished submitting step our-step2
+    [step::our-config.our-test2.our-step2]    ***************STOP our-step2 ***************
+    [step::our-config.our-test2.our-step2]    Finding job ID in "12345"
+    [step::our-config.our-test2.our-step2]  Finished submitting step our-step2
     
-    [test::our-test2]   Checking remaining steps...
-    [test::our-test2]   No remaining steps, test submission complete
-    [test::our-test2]   Doing dry-run, assumed complete
-    [test::our-test2]   Outputting results...
-    [step::our-step2]   Results for our-step2
-    [step::our-step2]     Doing dry-run, assumed success
-    [test::our-test2]   Writing relevant logfiles to view in master log file : 
-    [test::our-test2]     /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test2.log
-    [test::our-test2]   [SUCCESS] : Test our-test2 completed successfully
+    [test::our-config.our-test2]            Checking remaining steps...
+    [test::our-config.our-test2]            No remaining steps, test submission complete
+    [test::our-config.our-test2]            Doing dry-run, assumed complete
+    [test::our-config.our-test2]            Outputting results...
+    [step::our-config.our-test2.our-step2]  Results for our-step2
+    [step::our-config.our-test2.our-step2]    Doing dry-run, assumed success
+    [test::our-config.our-test2]            Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test2]              /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test2.log
+    [test::our-config.our-test2]            [SUCCESS] : Test our-test2 completed successfully
 
 
 Each should have its own set of resources requested via `qsub` in the final output command. If we go ahead and auto-join them for one large job we would instead get (we remove the `-fs` flag as that takes precedence over joining) :
@@ -427,92 +427,92 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 -i -d
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Computing maximum HPC resources of tests...
-    [file::our-config]  Accumulate maximum HPC resources per test...
-    [test::our-test0]     Computing maximum HPC resources per runnable step phase...
-    [test::our-test0]       Calculating expected runtime of steps across 1 thread workers [threadpool size]
-    [test::our-test0]         Simulating threadpool for 0:01:00
-    [test::our-test0]           Calculate max instantaneous resources for this phase
-    [test::our-test0]           [PHASE 0] Resources for [ our-step0 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [test::our-test0]           1 jobs completed during this runtime
-    [test::our-test0]       All jobs simulated, stopping
-    [test::our-test0]     Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
-    [test::our-test1]     Computing maximum HPC resources per runnable step phase...
-    [test::our-test1]       Calculating expected runtime of steps across 1 thread workers [threadpool size]
-    [test::our-test1]         Simulating threadpool for 0:01:00
-    [test::our-test1]           Calculate max instantaneous resources for this phase
-    [test::our-test1]           [PHASE 0] Resources for [ our-step1 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [test::our-test1]           1 jobs completed during this runtime
-    [test::our-test1]       All jobs simulated, stopping
-    [test::our-test1]     Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
-    [test::our-test2]     Computing maximum HPC resources per runnable step phase...
-    [test::our-test2]       Calculating expected runtime of steps across 1 thread workers [threadpool size]
-    [test::our-test2]         Simulating threadpool for 0:01:00
-    [test::our-test2]           Calculate max instantaneous resources for this phase
-    [test::our-test2]           [PHASE 0] Resources for [ our-step2 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [test::our-test2]           1 jobs completed during this runtime
-    [test::our-test2]       All jobs simulated, stopping
-    [test::our-test2]     Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
-    [file::our-config]  Calculating expected runtime of tests across 4 workers [pool size]
-    [file::our-config]    Simulating threadpool for 0:01:00
-    [file::our-config]        Joining argpack 'select'   from [join] into joinall
-    [file::our-config]        Joining argpack 'priority' from [join] into joinall
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]        Joining argpack 'select'   from [join] into joinall
-    [file::our-config]        Joining argpack 'priority' from [join] into joinall
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]      [PHASE 0] Resources for [  our-test0, our-test1, our-test2 ] : '-l select=3:mem=96gb -l job_priority=economy', timelimit = 0:01:00
-    [file::our-config]      3 jobs completed during this runtime
-    [file::our-config]  Maximum calculated resources for running all tests is '-l select=3:mem=96gb -l job_priority=economy'
-    [file::our-config]  Maximum calculated timelimit for running all tests is '00:01:00'
-    [file::our-config]  Using current file as launch executable : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
-    [file::our-config]  Setting keyphrase for passing to internally defined one
-    [test::joinHPC_our-test0_our-test1_our-test2] Preparing working directory
-    [test::joinHPC_our-test0_our-test1_our-test2]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::joinHPC_our-test0_our-test1_our-test2] Checking if results wait is required...
-    [test::joinHPC_our-test0_our-test1_our-test2]   Final results will wait for all jobs complete
-    [step::submit]      Preparing working directory
-    [step::submit]        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::submit]        Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::submit]      Submitting step submit...
-    [step::submit]        Gathering HPC argument packs...
-    [step::submit]          From [join] adding HPC argument pack 'select' :
-    [step::submit]            Adding option '-l '
-    [step::submit]              From join adding resource 'select' : 3
-    [step::submit]              From join adding resource 'mem'    : 96gb
-    [step::submit]          Final argpack output for select : '-l select=3:mem=96gb'
-    [step::submit]          From [join] adding HPC argument pack 'priority' :
-    [step::submit]            Adding option '-l '
-    [step::submit]              From join adding resource 'job_priority' : economy
-    [step::submit]          Final argpack output for priority : '-l job_priority=economy'
-    [step::submit]        Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
-    [step::submit]        Running command:
-    [step::submit]          qsub -l select=3:mem=96gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 12 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 1 --inlineLocal
-    [step::submit]        *************** START submit  ***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Computing maximum HPC resources of tests...
+    [file::our-config]                      Accumulate maximum HPC resources per test...
+    [test::our-config.our-test0]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.our-test0]                Calculating expected runtime of steps across 1 thread workers [threadpool size]
+    [test::our-config.our-test0]                  Simulating threadpool for 0:01:00
+    [test::our-config.our-test0]                    Calculate max instantaneous resources for this phase
+    [test::our-config.our-test0]                    [PHASE 0] Resources for [ our-step0 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.our-test0]                    1 jobs completed during this runtime
+    [test::our-config.our-test0]                All jobs simulated, stopping
+    [test::our-config.our-test0]              Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.our-test1]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.our-test1]                Calculating expected runtime of steps across 1 thread workers [threadpool size]
+    [test::our-config.our-test1]                  Simulating threadpool for 0:01:00
+    [test::our-config.our-test1]                    Calculate max instantaneous resources for this phase
+    [test::our-config.our-test1]                    [PHASE 0] Resources for [ our-step1 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.our-test1]                    1 jobs completed during this runtime
+    [test::our-config.our-test1]                All jobs simulated, stopping
+    [test::our-config.our-test1]              Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.our-test2]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.our-test2]                Calculating expected runtime of steps across 1 thread workers [threadpool size]
+    [test::our-config.our-test2]                  Simulating threadpool for 0:01:00
+    [test::our-config.our-test2]                    Calculate max instantaneous resources for this phase
+    [test::our-config.our-test2]                    [PHASE 0] Resources for [ our-step2 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.our-test2]                    1 jobs completed during this runtime
+    [test::our-config.our-test2]                All jobs simulated, stopping
+    [test::our-config.our-test2]              Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
+    [file::our-config]                      Calculating expected runtime of tests across 4 workers [pool size]
+    [file::our-config]                        Simulating threadpool for 0:01:00
+    [file::our-config]                            Joining argpack 'select'   from [join] into joinall
+    [file::our-config]                            Joining argpack 'priority' from [join] into joinall
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                            Joining argpack 'select'   from [join] into joinall
+    [file::our-config]                            Joining argpack 'priority' from [join] into joinall
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                          [PHASE 0] Resources for [  our-test0, our-test1, our-test2 ] : '-l select=3:mem=96gb -l job_priority=economy', timelimit = 0:01:00
+    [file::our-config]                          3 jobs completed during this runtime
+    [file::our-config]                      Maximum calculated resources for running all tests is '-l select=3:mem=96gb -l job_priority=economy'
+    [file::our-config]                      Maximum calculated timelimit for running all tests is '00:01:00'
+    [file::our-config]                      Using current file as launch executable : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
+    [file::our-config]                      Setting keyphrase for passing to internally defined one
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Preparing working directory
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Checking if results wait is required...
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2]   Final results will wait for all jobs complete
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Preparing working directory
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Submitting step submit...
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Gathering HPC argument packs...
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     From [join] adding HPC argument pack 'select' :
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]       Adding option '-l '
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]         From join adding resource 'select' : 3
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]         From join adding resource 'mem'    : 96gb
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     Final argpack output for select : '-l select=3:mem=96gb'
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     From [join] adding HPC argument pack 'priority' :
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]       Adding option '-l '
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]         From join adding resource 'job_priority' : economy
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     Final argpack output for priority : '-l job_priority=economy'
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Running command:
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     qsub -l select=3:mem=96gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 1 --inlineLocal --forceFQDN fv-az1536-455.clt0scp5daoehk2t4xy1kvnmsg.bx.internal.cloudapp.net
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   *************** START submit  ***************
     
-    [step::submit]        Doing dry-run, no ouptut
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Doing dry-run, no ouptut
     
-    [step::submit]        ***************  STOP submit  ***************
-    [step::submit]        Finding job ID in "12345"
-    [step::submit]      Finished submitting step submit
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   ***************  STOP submit  ***************
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Finding job ID in "12345"
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Finished submitting step submit
     
-    [test::joinHPC_our-test0_our-test1_our-test2] Checking remaining steps...
-    [test::joinHPC_our-test0_our-test1_our-test2] No remaining steps, test submission complete
-    [test::joinHPC_our-test0_our-test1_our-test2] Doing dry-run, assumed complete
-    [test::joinHPC_our-test0_our-test1_our-test2] Outputting results...
-    [step::submit]      Results for submit
-    [step::submit]        Doing dry-run, assumed success
-    [test::joinHPC_our-test0_our-test1_our-test2] Writing relevant logfiles to view in master log file : 
-    [test::joinHPC_our-test0_our-test1_our-test2]   /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.log
-    [test::joinHPC_our-test0_our-test1_our-test2] [SUCCESS] : Test joinHPC_our-test0_our-test1_our-test2 completed successfully
-    [file::our-config]  Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success
-    [file::our-config]  Post-processing all test results...
-    [file::our-config]  Doing dry-run, assumed success
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Checking remaining steps...
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] No remaining steps, test submission complete
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Doing dry-run, assumed complete
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Outputting results...
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Results for submit
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Doing dry-run, assumed success
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Writing relevant logfiles to view in master log file : 
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2]   /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.log
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] [SUCCESS] : Test joinHPC_our-test0_our-test1_our-test2 completed successfully
+    [file::our-config]                      Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success
+    [file::our-config]                      Post-processing all test results...
+    [file::our-config]                      Doing dry-run, assumed success
 
 
 We see that the output looks completely different than what we are used to. We start with a flurry of preprocessing of phases, calculation of resources, simulating threadpools, and so on... confusing stuff. All this happens before we even get to something we are familiar with of `Submitting step submit...`.
@@ -536,98 +536,98 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 -i -d
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Computing maximum HPC resources of tests...
-    [file::our-config]  Accumulate maximum HPC resources per test...
-    [test::our-test0]     Computing maximum HPC resources per runnable step phase...
-    [test::our-test0]       Calculating expected runtime of steps across 1 thread workers [threadpool size]
-    [test::our-test0]         Simulating threadpool for 0:01:00
-    [test::our-test0]           Calculate max instantaneous resources for this phase
-    [test::our-test0]           [PHASE 0] Resources for [ our-step0 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [test::our-test0]           1 jobs completed during this runtime
-    [test::our-test0]       All jobs simulated, stopping
-    [test::our-test0]     Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
-    [test::our-test1]     Computing maximum HPC resources per runnable step phase...
-    [test::our-test1]       Calculating expected runtime of steps across 1 thread workers [threadpool size]
-    [test::our-test1]         Simulating threadpool for 0:01:00
-    [test::our-test1]           Calculate max instantaneous resources for this phase
-    [test::our-test1]           [PHASE 0] Resources for [ our-step1 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [test::our-test1]           1 jobs completed during this runtime
-    [test::our-test1]       All jobs simulated, stopping
-    [test::our-test1]     Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
-    [test::our-test2]     Computing maximum HPC resources per runnable step phase...
-    [test::our-test2]       Calculating expected runtime of steps across 1 thread workers [threadpool size]
-    [test::our-test2]         Simulating threadpool for 0:01:00
-    [test::our-test2]           Calculate max instantaneous resources for this phase
-    [test::our-test2]           [PHASE 0] Resources for [ our-step2 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [test::our-test2]           1 jobs completed during this runtime
-    [test::our-test2]       All jobs simulated, stopping
-    [test::our-test2]     Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
-    [file::our-config]  Calculating expected runtime of tests across 1 workers [pool size]
-    [file::our-config]    Simulating threadpool for 0:01:00
-    [file::our-config]      [PHASE 0] Resources for [ our-test0 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [file::our-config]      1 jobs completed during this runtime
-    [file::our-config]    Simulating threadpool for 0:01:00
-    [file::our-config]        Joining argpack 'select'   from [join] into None
-    [file::our-config]        Joining argpack 'priority' from [join] into None
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]      [PHASE 1] Resources for [ our-test1 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [file::our-config]      1 jobs completed during this runtime
-    [file::our-config]    Simulating threadpool for 0:01:00
-    [file::our-config]        Joining argpack 'select'   from [join] into None
-    [file::our-config]        Joining argpack 'priority' from [join] into None
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]      [PHASE 2] Resources for [ our-test2 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [file::our-config]      1 jobs completed during this runtime
-    [file::our-config]  Maximum calculated resources for running all tests is '-l select=1:mem=32gb -l job_priority=economy'
-    [file::our-config]  Maximum calculated timelimit for running all tests is '00:03:00'
-    [file::our-config]  Using current file as launch executable : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
-    [file::our-config]  Setting keyphrase for passing to internally defined one
-    [test::joinHPC_our-test0_our-test1_our-test2] Preparing working directory
-    [test::joinHPC_our-test0_our-test1_our-test2]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::joinHPC_our-test0_our-test1_our-test2] Checking if results wait is required...
-    [test::joinHPC_our-test0_our-test1_our-test2]   Final results will wait for all jobs complete
-    [step::submit]      Preparing working directory
-    [step::submit]        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::submit]        Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::submit]      Submitting step submit...
-    [step::submit]        Gathering HPC argument packs...
-    [step::submit]          From [join] adding HPC argument pack 'select' :
-    [step::submit]            Adding option '-l '
-    [step::submit]              From join adding resource 'select' : 1
-    [step::submit]              From join adding resource 'mem'    : 32gb
-    [step::submit]          Final argpack output for select : '-l select=1:mem=32gb'
-    [step::submit]          From [join] adding HPC argument pack 'priority' :
-    [step::submit]            Adding option '-l '
-    [step::submit]              From join adding resource 'job_priority' : economy
-    [step::submit]          Final argpack output for priority : '-l job_priority=economy'
-    [step::submit]        Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
-    [step::submit]        Running command:
-    [step::submit]          qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:03:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 12 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 1 --threadpool 1 --inlineLocal
-    [step::submit]        *************** START submit  ***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Computing maximum HPC resources of tests...
+    [file::our-config]                      Accumulate maximum HPC resources per test...
+    [test::our-config.our-test0]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.our-test0]                Calculating expected runtime of steps across 1 thread workers [threadpool size]
+    [test::our-config.our-test0]                  Simulating threadpool for 0:01:00
+    [test::our-config.our-test0]                    Calculate max instantaneous resources for this phase
+    [test::our-config.our-test0]                    [PHASE 0] Resources for [ our-step0 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.our-test0]                    1 jobs completed during this runtime
+    [test::our-config.our-test0]                All jobs simulated, stopping
+    [test::our-config.our-test0]              Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.our-test1]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.our-test1]                Calculating expected runtime of steps across 1 thread workers [threadpool size]
+    [test::our-config.our-test1]                  Simulating threadpool for 0:01:00
+    [test::our-config.our-test1]                    Calculate max instantaneous resources for this phase
+    [test::our-config.our-test1]                    [PHASE 0] Resources for [ our-step1 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.our-test1]                    1 jobs completed during this runtime
+    [test::our-config.our-test1]                All jobs simulated, stopping
+    [test::our-config.our-test1]              Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.our-test2]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.our-test2]                Calculating expected runtime of steps across 1 thread workers [threadpool size]
+    [test::our-config.our-test2]                  Simulating threadpool for 0:01:00
+    [test::our-config.our-test2]                    Calculate max instantaneous resources for this phase
+    [test::our-config.our-test2]                    [PHASE 0] Resources for [ our-step2 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.our-test2]                    1 jobs completed during this runtime
+    [test::our-config.our-test2]                All jobs simulated, stopping
+    [test::our-config.our-test2]              Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
+    [file::our-config]                      Calculating expected runtime of tests across 1 workers [pool size]
+    [file::our-config]                        Simulating threadpool for 0:01:00
+    [file::our-config]                          [PHASE 0] Resources for [ our-test0 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [file::our-config]                          1 jobs completed during this runtime
+    [file::our-config]                        Simulating threadpool for 0:01:00
+    [file::our-config]                            Joining argpack 'select'   from [join] into maxlimit
+    [file::our-config]                            Joining argpack 'priority' from [join] into maxlimit
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                          [PHASE 1] Resources for [ our-test1 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [file::our-config]                          1 jobs completed during this runtime
+    [file::our-config]                        Simulating threadpool for 0:01:00
+    [file::our-config]                            Joining argpack 'select'   from [join] into maxlimit
+    [file::our-config]                            Joining argpack 'priority' from [join] into maxlimit
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                          [PHASE 2] Resources for [ our-test2 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [file::our-config]                          1 jobs completed during this runtime
+    [file::our-config]                      Maximum calculated resources for running all tests is '-l select=1:mem=32gb -l job_priority=economy'
+    [file::our-config]                      Maximum calculated timelimit for running all tests is '00:03:00'
+    [file::our-config]                      Using current file as launch executable : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
+    [file::our-config]                      Setting keyphrase for passing to internally defined one
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Preparing working directory
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Checking if results wait is required...
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2]   Final results will wait for all jobs complete
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Preparing working directory
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Submitting step submit...
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Gathering HPC argument packs...
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     From [join] adding HPC argument pack 'select' :
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]       Adding option '-l '
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]         From join adding resource 'select' : 1
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]         From join adding resource 'mem'    : 32gb
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     Final argpack output for select : '-l select=1:mem=32gb'
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     From [join] adding HPC argument pack 'priority' :
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]       Adding option '-l '
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]         From join adding resource 'job_priority' : economy
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     Final argpack output for priority : '-l job_priority=economy'
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Running command:
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:03:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 1 --threadpool 1 --inlineLocal --forceFQDN fv-az1536-455.clt0scp5daoehk2t4xy1kvnmsg.bx.internal.cloudapp.net
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   *************** START submit  ***************
     
-    [step::submit]        Doing dry-run, no ouptut
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Doing dry-run, no ouptut
     
-    [step::submit]        ***************  STOP submit  ***************
-    [step::submit]        Finding job ID in "12345"
-    [step::submit]      Finished submitting step submit
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   ***************  STOP submit  ***************
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Finding job ID in "12345"
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Finished submitting step submit
     
-    [test::joinHPC_our-test0_our-test1_our-test2] Checking remaining steps...
-    [test::joinHPC_our-test0_our-test1_our-test2] No remaining steps, test submission complete
-    [test::joinHPC_our-test0_our-test1_our-test2] Doing dry-run, assumed complete
-    [test::joinHPC_our-test0_our-test1_our-test2] Outputting results...
-    [step::submit]      Results for submit
-    [step::submit]        Doing dry-run, assumed success
-    [test::joinHPC_our-test0_our-test1_our-test2] Writing relevant logfiles to view in master log file : 
-    [test::joinHPC_our-test0_our-test1_our-test2]   /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.log
-    [test::joinHPC_our-test0_our-test1_our-test2] [SUCCESS] : Test joinHPC_our-test0_our-test1_our-test2 completed successfully
-    [file::our-config]  Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success
-    [file::our-config]  Post-processing all test results...
-    [file::our-config]  Doing dry-run, assumed success
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Checking remaining steps...
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] No remaining steps, test submission complete
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Doing dry-run, assumed complete
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Outputting results...
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Results for submit
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Doing dry-run, assumed success
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Writing relevant logfiles to view in master log file : 
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2]   /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.log
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] [SUCCESS] : Test joinHPC_our-test0_our-test1_our-test2 completed successfully
+    [file::our-config]                      Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success
+    [file::our-config]                      Post-processing all test results...
+    [file::our-config]                      Doing dry-run, assumed success
 
 
 The maximum outputs are now :
@@ -683,94 +683,94 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 \
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Computing maximum HPC resources of tests...
-    [file::our-config]  Accumulate maximum HPC resources per test...
-    [test::our-test0]     Computing maximum HPC resources per runnable step phase...
-    [test::our-test0]       Calculating expected runtime of steps across 1 thread workers [threadpool size]
-    [test::our-test0]         Simulating threadpool for 0:01:00
-    [test::our-test0]           Calculate max instantaneous resources for this phase
-    [test::our-test0]           [PHASE 0] Resources for [ our-step0 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [test::our-test0]           1 jobs completed during this runtime
-    [test::our-test0]       All jobs simulated, stopping
-    [test::our-test0]     Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
-    [test::our-test1]     Computing maximum HPC resources per runnable step phase...
-    [test::our-test1]       Calculating expected runtime of steps across 1 thread workers [threadpool size]
-    [test::our-test1]         Simulating threadpool for 0:01:00
-    [test::our-test1]           Calculate max instantaneous resources for this phase
-    [test::our-test1]           [PHASE 0] Resources for [ our-step1 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [test::our-test1]           1 jobs completed during this runtime
-    [test::our-test1]       All jobs simulated, stopping
-    [test::our-test1]     Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
-    [test::our-test2]     Computing maximum HPC resources per runnable step phase...
-    [test::our-test2]       Calculating expected runtime of steps across 1 thread workers [threadpool size]
-    [test::our-test2]         Simulating threadpool for 0:01:00
-    [test::our-test2]           Calculate max instantaneous resources for this phase
-    [test::our-test2]           [PHASE 0] Resources for [ our-step2 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
-    [test::our-test2]           1 jobs completed during this runtime
-    [test::our-test2]       All jobs simulated, stopping
-    [test::our-test2]     Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
-    [file::our-config]  Calculating expected runtime of tests across 4 workers [pool size]
-    [file::our-config]    Simulating threadpool for 0:01:00
-    [file::our-config]        Joining argpack 'select'   from [join] into joinall
-    [file::our-config]        Joining argpack 'priority' from [join] into joinall
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]        Joining argpack 'select'   from [join] into joinall
-    [file::our-config]        Joining argpack 'priority' from [join] into joinall
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]      [PHASE 0] Resources for [  our-test0, our-test1, our-test2 ] : '-l select=3:mem=96gb -l job_priority=economy', timelimit = 0:01:00
-    [file::our-config]      3 jobs completed during this runtime
-    [file::our-config]  Maximum calculated resources for running all tests is '-l select=3:mem=96gb -l job_priority=economy'
-    [file::our-config]  Maximum calculated timelimit for running all tests is '00:01:00'
-    [file::our-config]  Requested override of resources with '{"select":{"-l ":{"select":1}},"priority":{"-l ":{"job_priority":"premium"}}}'
-    [file::our-config]    New maximum resources for running all tests is '-l select=1:mem=96gb -l job_priority=premium'
-    [file::our-config]  Using current file as launch executable : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
-    [file::our-config]  Setting keyphrase for passing to internally defined one
-    [test::joinHPC_our-test0_our-test1_our-test2] Preparing working directory
-    [test::joinHPC_our-test0_our-test1_our-test2]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::joinHPC_our-test0_our-test1_our-test2] Checking if results wait is required...
-    [test::joinHPC_our-test0_our-test1_our-test2]   Final results will wait for all jobs complete
-    [step::submit]      Preparing working directory
-    [step::submit]        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::submit]        Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::submit]      Submitting step submit...
-    [step::submit]        Gathering HPC argument packs...
-    [step::submit]          From [join, cli] adding HPC argument pack 'select' :
-    [step::submit]            Adding option '-l '
-    [step::submit]              From cli  adding resource 'select' : 1
-    [step::submit]              From join adding resource 'mem'    : 96gb
-    [step::submit]          Final argpack output for select : '-l select=1:mem=96gb'
-    [step::submit]          From [cli] adding HPC argument pack 'priority' :
-    [step::submit]            Adding option '-l '
-    [step::submit]              From cli adding resource 'job_priority' : premium
-    [step::submit]          Final argpack output for priority : '-l job_priority=premium'
-    [step::submit]        Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
-    [step::submit]        Running command:
-    [step::submit]          qsub -l select=1:mem=96gb -l job_priority=premium -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 12 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 1 --inlineLocal
-    [step::submit]        *************** START submit  ***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Computing maximum HPC resources of tests...
+    [file::our-config]                      Accumulate maximum HPC resources per test...
+    [test::our-config.our-test0]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.our-test0]                Calculating expected runtime of steps across 1 thread workers [threadpool size]
+    [test::our-config.our-test0]                  Simulating threadpool for 0:01:00
+    [test::our-config.our-test0]                    Calculate max instantaneous resources for this phase
+    [test::our-config.our-test0]                    [PHASE 0] Resources for [ our-step0 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.our-test0]                    1 jobs completed during this runtime
+    [test::our-config.our-test0]                All jobs simulated, stopping
+    [test::our-config.our-test0]              Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.our-test1]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.our-test1]                Calculating expected runtime of steps across 1 thread workers [threadpool size]
+    [test::our-config.our-test1]                  Simulating threadpool for 0:01:00
+    [test::our-config.our-test1]                    Calculate max instantaneous resources for this phase
+    [test::our-config.our-test1]                    [PHASE 0] Resources for [ our-step1 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.our-test1]                    1 jobs completed during this runtime
+    [test::our-config.our-test1]                All jobs simulated, stopping
+    [test::our-config.our-test1]              Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.our-test2]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.our-test2]                Calculating expected runtime of steps across 1 thread workers [threadpool size]
+    [test::our-config.our-test2]                  Simulating threadpool for 0:01:00
+    [test::our-config.our-test2]                    Calculate max instantaneous resources for this phase
+    [test::our-config.our-test2]                    [PHASE 0] Resources for [ our-step2 ] : '-l select=1:mem=32gb -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.our-test2]                    1 jobs completed during this runtime
+    [test::our-config.our-test2]                All jobs simulated, stopping
+    [test::our-config.our-test2]              Maximum HPC resources required will be '-l select=1:mem=32gb -l job_priority=economy' with timelimit '00:01:00'
+    [file::our-config]                      Calculating expected runtime of tests across 4 workers [pool size]
+    [file::our-config]                        Simulating threadpool for 0:01:00
+    [file::our-config]                            Joining argpack 'select'   from [join] into joinall
+    [file::our-config]                            Joining argpack 'priority' from [join] into joinall
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                            Joining argpack 'select'   from [join] into joinall
+    [file::our-config]                            Joining argpack 'priority' from [join] into joinall
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                          [PHASE 0] Resources for [  our-test0, our-test1, our-test2 ] : '-l select=3:mem=96gb -l job_priority=economy', timelimit = 0:01:00
+    [file::our-config]                          3 jobs completed during this runtime
+    [file::our-config]                      Maximum calculated resources for running all tests is '-l select=3:mem=96gb -l job_priority=economy'
+    [file::our-config]                      Maximum calculated timelimit for running all tests is '00:01:00'
+    [file::our-config]                      Requested override of resources with '{"select":{"-l ":{"select":1}},"priority":{"-l ":{"job_priority":"premium"}}}'
+    [file::our-config]                        New maximum resources for running all tests is '-l select=1:mem=96gb -l job_priority=premium'
+    [file::our-config]                      Using current file as launch executable : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
+    [file::our-config]                      Setting keyphrase for passing to internally defined one
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Preparing working directory
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Checking if results wait is required...
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2]   Final results will wait for all jobs complete
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Preparing working directory
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Submitting step submit...
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Gathering HPC argument packs...
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     From [join, cli] adding HPC argument pack 'select' :
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]       Adding option '-l '
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]         From cli  adding resource 'select' : 1
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]         From join adding resource 'mem'    : 96gb
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     Final argpack output for select : '-l select=1:mem=96gb'
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     From [cli] adding HPC argument pack 'priority' :
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]       Adding option '-l '
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]         From cli adding resource 'job_priority' : premium
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     Final argpack output for priority : '-l job_priority=premium'
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Running command:
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     qsub -l select=1:mem=96gb -l job_priority=premium -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 1 --inlineLocal --forceFQDN fv-az1536-455.clt0scp5daoehk2t4xy1kvnmsg.bx.internal.cloudapp.net
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   *************** START submit  ***************
     
-    [step::submit]        Doing dry-run, no ouptut
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Doing dry-run, no ouptut
     
-    [step::submit]        ***************  STOP submit  ***************
-    [step::submit]        Finding job ID in "12345"
-    [step::submit]      Finished submitting step submit
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   ***************  STOP submit  ***************
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Finding job ID in "12345"
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Finished submitting step submit
     
-    [test::joinHPC_our-test0_our-test1_our-test2] Checking remaining steps...
-    [test::joinHPC_our-test0_our-test1_our-test2] No remaining steps, test submission complete
-    [test::joinHPC_our-test0_our-test1_our-test2] Doing dry-run, assumed complete
-    [test::joinHPC_our-test0_our-test1_our-test2] Outputting results...
-    [step::submit]      Results for submit
-    [step::submit]        Doing dry-run, assumed success
-    [test::joinHPC_our-test0_our-test1_our-test2] Writing relevant logfiles to view in master log file : 
-    [test::joinHPC_our-test0_our-test1_our-test2]   /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.log
-    [test::joinHPC_our-test0_our-test1_our-test2] [SUCCESS] : Test joinHPC_our-test0_our-test1_our-test2 completed successfully
-    [file::our-config]  Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success
-    [file::our-config]  Post-processing all test results...
-    [file::our-config]  Doing dry-run, assumed success
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Checking remaining steps...
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] No remaining steps, test submission complete
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Doing dry-run, assumed complete
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Outputting results...
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit] Results for submit
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Doing dry-run, assumed success
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] Writing relevant logfiles to view in master log file : 
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2]   /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.log
+    [test::our-config.joinHPC_our-test0_our-test1_our-test2] [SUCCESS] : Test joinHPC_our-test0_our-test1_our-test2 completed successfully
+    [file::our-config]                      Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success
+    [file::our-config]                      Post-processing all test results...
+    [file::our-config]                      Doing dry-run, assumed success
 
 
 After the max calculations, we get another line now : `Requested override of resources with <our input>...New maximum...is <what we wanted as final resources>`. Additionally, at the `[step::submit] Submitting step submit...Gathering HPC argument packs...` we now see that the `<origin>` for `'select'` is listed as `cli`, same for our `'job_priority'` <ins>resource argpack</ins>.
@@ -1008,116 +1008,116 @@ $1/../.ci/runner.py $1/../our-config.json -t quartnode-simple quartnode fullnode
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Computing maximum HPC resources of tests...
-    [file::our-config]  Accumulate maximum HPC resources per test...
-    [test::quartnode-simple]   Computing maximum HPC resources per runnable step phase...
-    [test::quartnode-simple]     Calculating expected runtime of steps across 2 thread workers [threadpool size]
-    [test::quartnode-simple]       Simulating threadpool for 0:01:00
-    [test::quartnode-simple]         Calculate max instantaneous resources for this phase
-    [test::quartnode-simple]             Joining argpack '.*quartnode.*::select' from [our-config, our-config.quartnode-simple] into joinall
-    [test::quartnode-simple]             Joining argpack 'priority'              from [our-config] into joinall
-    [test::quartnode-simple]           Unsure how to operate on resources economy and economy together, defaulting to economy
-    [test::quartnode-simple]         [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=32gb:ncpus=64:mpiprocs=32 -l job_priority=economy', timelimit = 0:01:00
-    [test::quartnode-simple]         2 jobs completed during this runtime
-    [test::quartnode-simple]     All jobs simulated, stopping
-    [test::quartnode-simple]   Maximum HPC resources required will be '-l select=2:mem=32gb:ncpus=64:mpiprocs=32 -l job_priority=economy' with timelimit '00:01:00'
-    [test::quartnode]     Computing maximum HPC resources per runnable step phase...
-    [test::quartnode]       Calculating expected runtime of steps across 2 thread workers [threadpool size]
-    [test::quartnode]         Simulating threadpool for 0:01:00
-    [test::quartnode]           Calculate max instantaneous resources for this phase
-    [test::quartnode]               Joining argpack '.*quartnode.*::select' from [our-config] into joinall
-    [test::quartnode]               Joining argpack 'priority'              from [our-config] into joinall
-    [test::quartnode]             Unsure how to operate on resources economy and economy together, defaulting to economy
-    [test::quartnode]           [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=64gb:ncpus=64:mpiprocs=32 -l job_priority=economy', timelimit = 0:01:00
-    [test::quartnode]           2 jobs completed during this runtime
-    [test::quartnode]       All jobs simulated, stopping
-    [test::quartnode]     Maximum HPC resources required will be '-l select=2:mem=64gb:ncpus=64:mpiprocs=32 -l job_priority=economy' with timelimit '00:01:00'
-    [test::fullnode-simple]   Computing maximum HPC resources per runnable step phase...
-    [test::fullnode-simple]     Calculating expected runtime of steps across 2 thread workers [threadpool size]
-    [test::fullnode-simple]       Simulating threadpool for 0:01:00
-    [test::fullnode-simple]         Calculate max instantaneous resources for this phase
-    [test::fullnode-simple]             Joining argpack '.*fullnode.*::select'  from [our-config] into joinall
-    [test::fullnode-simple]             Joining argpack 'priority'              from [our-config] into joinall
-    [test::fullnode-simple]           Unsure how to operate on resources economy and economy together, defaulting to economy
-    [test::fullnode-simple]         [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy', timelimit = 0:01:00
-    [test::fullnode-simple]         2 jobs completed during this runtime
-    [test::fullnode-simple]     All jobs simulated, stopping
-    [test::fullnode-simple]   Maximum HPC resources required will be '-l select=2:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy' with timelimit '00:01:00'
-    [test::fullnode-double]   Computing maximum HPC resources per runnable step phase...
-    [test::fullnode-double]     Calculating expected runtime of steps across 2 thread workers [threadpool size]
-    [test::fullnode-double]       Simulating threadpool for 0:01:00
-    [test::fullnode-double]         Calculate max instantaneous resources for this phase
-    [test::fullnode-double]             Joining argpack '.*fullnode.*::select'  from [our-config.fullnode-double, our-config] into joinall
-    [test::fullnode-double]             Joining argpack 'priority'              from [our-config] into joinall
-    [test::fullnode-double]           Unsure how to operate on resources economy and economy together, defaulting to economy
-    [test::fullnode-double]         [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=4:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy', timelimit = 0:01:00
-    [test::fullnode-double]         2 jobs completed during this runtime
-    [test::fullnode-double]     All jobs simulated, stopping
-    [test::fullnode-double]   Maximum HPC resources required will be '-l select=4:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy' with timelimit '00:01:00'
-    [file::our-config]  Calculating expected runtime of tests across 4 workers [pool size]
-    [file::our-config]    Simulating threadpool for 0:01:00
-    [file::our-config]        Joining argpack 'select'   from [join] into joinall
-    [file::our-config]        Joining argpack 'priority' from [join] into joinall
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]        Joining argpack 'select'   from [join] into joinall
-    [file::our-config]        Joining argpack 'priority' from [join] into joinall
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]        Joining argpack 'select'   from [join] into joinall
-    [file::our-config]        Joining argpack 'priority' from [join] into joinall
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]      [PHASE 0] Resources for [  quartnode-simple,        quartnode,  fullnode-simple,  fullnode-double ] : '-l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy', timelimit = 0:01:00
-    [file::our-config]      4 jobs completed during this runtime
-    [file::our-config]  Maximum calculated resources for running all tests is '-l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy'
-    [file::our-config]  Maximum calculated timelimit for running all tests is '00:01:00'
-    [file::our-config]  Using current file as launch executable : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
-    [file::our-config]  Setting keyphrase for passing to internally defined one
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Preparing working directory
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Checking if results wait is required...
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   Final results will wait for all jobs complete
-    [step::submit]      Preparing working directory
-    [step::submit]        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::submit]        Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::submit]      Submitting step submit...
-    [step::submit]        Gathering HPC argument packs...
-    [step::submit]          From [join] adding HPC argument pack 'select' :
-    [step::submit]            Adding option '-l '
-    [step::submit]              From join adding resource 'select'   : 10
-    [step::submit]              From join adding resource 'mem'      : 608gb
-    [step::submit]              From join adding resource 'ncpus'    : 640
-    [step::submit]              From join adding resource 'mpiprocs' : 320
-    [step::submit]          Final argpack output for select : '-l select=10:mem=608gb:ncpus=640:mpiprocs=320'
-    [step::submit]          From [join] adding HPC argument pack 'priority' :
-    [step::submit]            Adding option '-l '
-    [step::submit]              From join adding resource 'job_priority' : economy
-    [step::submit]          Final argpack output for priority : '-l job_priority=economy'
-    [step::submit]        Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
-    [step::submit]        Running command:
-    [step::submit]          qsub -l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests quartnode-simple quartnode fullnode-simple fullnode-double --submitType LOCAL --account WORKFLOWS --labelLength 12 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 2
-    [step::submit]        *************** START submit  ***************
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Computing maximum HPC resources of tests...
+    [file::our-config]                      Accumulate maximum HPC resources per test...
+    [test::our-config.quartnode-simple]       Computing maximum HPC resources per runnable step phase...
+    [test::our-config.quartnode-simple]         Calculating expected runtime of steps across 2 thread workers [threadpool size]
+    [test::our-config.quartnode-simple]           Simulating threadpool for 0:01:00
+    [test::our-config.quartnode-simple]             Calculate max instantaneous resources for this phase
+    [test::our-config.quartnode-simple]                 Joining argpack '.*quartnode.*::select' from [our-config.quartnode-simple, our-config] into joinall
+    [test::our-config.quartnode-simple]                 Joining argpack 'priority'              from [our-config] into joinall
+    [test::our-config.quartnode-simple]               Unsure how to operate on resources economy and economy together, defaulting to economy
+    [test::our-config.quartnode-simple]             [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=32gb:ncpus=64:mpiprocs=32 -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.quartnode-simple]             2 jobs completed during this runtime
+    [test::our-config.quartnode-simple]         All jobs simulated, stopping
+    [test::our-config.quartnode-simple]       Maximum HPC resources required will be '-l select=2:mem=32gb:ncpus=64:mpiprocs=32 -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.quartnode]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.quartnode]                Calculating expected runtime of steps across 2 thread workers [threadpool size]
+    [test::our-config.quartnode]                  Simulating threadpool for 0:01:00
+    [test::our-config.quartnode]                    Calculate max instantaneous resources for this phase
+    [test::our-config.quartnode]                        Joining argpack '.*quartnode.*::select' from [our-config] into joinall
+    [test::our-config.quartnode]                        Joining argpack 'priority'              from [our-config] into joinall
+    [test::our-config.quartnode]                      Unsure how to operate on resources economy and economy together, defaulting to economy
+    [test::our-config.quartnode]                    [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=64gb:ncpus=64:mpiprocs=32 -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.quartnode]                    2 jobs completed during this runtime
+    [test::our-config.quartnode]                All jobs simulated, stopping
+    [test::our-config.quartnode]              Maximum HPC resources required will be '-l select=2:mem=64gb:ncpus=64:mpiprocs=32 -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.fullnode-simple]        Computing maximum HPC resources per runnable step phase...
+    [test::our-config.fullnode-simple]          Calculating expected runtime of steps across 2 thread workers [threadpool size]
+    [test::our-config.fullnode-simple]            Simulating threadpool for 0:01:00
+    [test::our-config.fullnode-simple]              Calculate max instantaneous resources for this phase
+    [test::our-config.fullnode-simple]                  Joining argpack '.*fullnode.*::select'  from [our-config] into joinall
+    [test::our-config.fullnode-simple]                  Joining argpack 'priority'              from [our-config] into joinall
+    [test::our-config.fullnode-simple]                Unsure how to operate on resources economy and economy together, defaulting to economy
+    [test::our-config.fullnode-simple]              [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.fullnode-simple]              2 jobs completed during this runtime
+    [test::our-config.fullnode-simple]          All jobs simulated, stopping
+    [test::our-config.fullnode-simple]        Maximum HPC resources required will be '-l select=2:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.fullnode-double]        Computing maximum HPC resources per runnable step phase...
+    [test::our-config.fullnode-double]          Calculating expected runtime of steps across 2 thread workers [threadpool size]
+    [test::our-config.fullnode-double]            Simulating threadpool for 0:01:00
+    [test::our-config.fullnode-double]              Calculate max instantaneous resources for this phase
+    [test::our-config.fullnode-double]                  Joining argpack '.*fullnode.*::select'  from [our-config, our-config.fullnode-double] into joinall
+    [test::our-config.fullnode-double]                  Joining argpack 'priority'              from [our-config] into joinall
+    [test::our-config.fullnode-double]                Unsure how to operate on resources economy and economy together, defaulting to economy
+    [test::our-config.fullnode-double]              [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=4:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.fullnode-double]              2 jobs completed during this runtime
+    [test::our-config.fullnode-double]          All jobs simulated, stopping
+    [test::our-config.fullnode-double]        Maximum HPC resources required will be '-l select=4:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy' with timelimit '00:01:00'
+    [file::our-config]                      Calculating expected runtime of tests across 4 workers [pool size]
+    [file::our-config]                        Simulating threadpool for 0:01:00
+    [file::our-config]                            Joining argpack 'select'   from [join] into joinall
+    [file::our-config]                            Joining argpack 'priority' from [join] into joinall
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                            Joining argpack 'select'   from [join] into joinall
+    [file::our-config]                            Joining argpack 'priority' from [join] into joinall
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                            Joining argpack 'select'   from [join] into joinall
+    [file::our-config]                            Joining argpack 'priority' from [join] into joinall
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                          [PHASE 0] Resources for [  quartnode-simple,        quartnode,  fullnode-simple,  fullnode-double ] : '-l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy', timelimit = 0:01:00
+    [file::our-config]                          4 jobs completed during this runtime
+    [file::our-config]                      Maximum calculated resources for running all tests is '-l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy'
+    [file::our-config]                      Maximum calculated timelimit for running all tests is '00:01:00'
+    [file::our-config]                      Using current file as launch executable : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
+    [file::our-config]                      Setting keyphrase for passing to internally defined one
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Preparing working directory
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Checking if results wait is required...
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   Final results will wait for all jobs complete
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit] Preparing working directory
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit] Submitting step submit...
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Gathering HPC argument packs...
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     From [join] adding HPC argument pack 'select' :
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]       Adding option '-l '
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]         From join adding resource 'select'   : 10
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]         From join adding resource 'mem'      : 608gb
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]         From join adding resource 'ncpus'    : 640
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]         From join adding resource 'mpiprocs' : 320
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     Final argpack output for select : '-l select=10:mem=608gb:ncpus=640:mpiprocs=320'
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     From [join] adding HPC argument pack 'priority' :
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]       Adding option '-l '
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]         From join adding resource 'job_priority' : economy
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     Final argpack output for priority : '-l job_priority=economy'
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Running command:
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     qsub -l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests quartnode-simple quartnode fullnode-simple fullnode-double --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 2 --forceFQDN fv-az1536-455.clt0scp5daoehk2t4xy1kvnmsg.bx.internal.cloudapp.net
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   *************** START submit  ***************
     
-    [step::submit]        Doing dry-run, no ouptut
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Doing dry-run, no ouptut
     
-    [step::submit]        ***************  STOP submit  ***************
-    [step::submit]        Finding job ID in "12345"
-    [step::submit]      Finished submitting step submit
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   ***************  STOP submit  ***************
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Finding job ID in "12345"
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit] Finished submitting step submit
     
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Checking remaining steps...
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] No remaining steps, test submission complete
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Doing dry-run, assumed complete
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Outputting results...
-    [step::submit]      Results for submit
-    [step::submit]        Doing dry-run, assumed success
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Writing relevant logfiles to view in master log file : 
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.log
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] [SUCCESS] : Test joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double completed successfully
-    [file::our-config]  Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success
-    [file::our-config]  Post-processing all test results...
-    [file::our-config]  Doing dry-run, assumed success
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Checking remaining steps...
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] No remaining steps, test submission complete
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Doing dry-run, assumed complete
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Outputting results...
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit] Results for submit
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Doing dry-run, assumed success
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Writing relevant logfiles to view in master log file : 
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.log
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] [SUCCESS] : Test joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double completed successfully
+    [file::our-config]                      Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success
+    [file::our-config]                      Post-processing all test results...
+    [file::our-config]                      Doing dry-run, assumed success
 
 
 What? Our results are completely wrong as in they would not even be allowed to be submitted!
@@ -1170,118 +1170,118 @@ $1/../.ci/runner.py $1/../our-config.json -t quartnode-simple quartnode fullnode
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Computing maximum HPC resources of tests...
-    [file::our-config]  Accumulate maximum HPC resources per test...
-    [test::quartnode-simple]   Computing maximum HPC resources per runnable step phase...
-    [test::quartnode-simple]     Calculating expected runtime of steps across 2 thread workers [threadpool size]
-    [test::quartnode-simple]       Simulating threadpool for 0:01:00
-    [test::quartnode-simple]         Calculate max instantaneous resources for this phase
-    [test::quartnode-simple]             Joining argpack '.*quartnode.*::select' from [our-config, our-config.quartnode-simple] into joinall
-    [test::quartnode-simple]             Joining argpack 'priority'              from [our-config] into joinall
-    [test::quartnode-simple]           Unsure how to operate on resources economy and economy together, defaulting to economy
-    [test::quartnode-simple]         [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=32gb:ncpus=64:mpiprocs=32 -l job_priority=economy', timelimit = 0:01:00
-    [test::quartnode-simple]         2 jobs completed during this runtime
-    [test::quartnode-simple]     All jobs simulated, stopping
-    [test::quartnode-simple]   Maximum HPC resources required will be '-l select=2:mem=32gb:ncpus=64:mpiprocs=32 -l job_priority=economy' with timelimit '00:01:00'
-    [test::quartnode]     Computing maximum HPC resources per runnable step phase...
-    [test::quartnode]       Calculating expected runtime of steps across 2 thread workers [threadpool size]
-    [test::quartnode]         Simulating threadpool for 0:01:00
-    [test::quartnode]           Calculate max instantaneous resources for this phase
-    [test::quartnode]               Joining argpack '.*quartnode.*::select' from [our-config] into joinall
-    [test::quartnode]               Joining argpack 'priority'              from [our-config] into joinall
-    [test::quartnode]             Unsure how to operate on resources economy and economy together, defaulting to economy
-    [test::quartnode]           [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=64gb:ncpus=64:mpiprocs=32 -l job_priority=economy', timelimit = 0:01:00
-    [test::quartnode]           2 jobs completed during this runtime
-    [test::quartnode]       All jobs simulated, stopping
-    [test::quartnode]     Maximum HPC resources required will be '-l select=2:mem=64gb:ncpus=64:mpiprocs=32 -l job_priority=economy' with timelimit '00:01:00'
-    [test::fullnode-simple]   Computing maximum HPC resources per runnable step phase...
-    [test::fullnode-simple]     Calculating expected runtime of steps across 2 thread workers [threadpool size]
-    [test::fullnode-simple]       Simulating threadpool for 0:01:00
-    [test::fullnode-simple]         Calculate max instantaneous resources for this phase
-    [test::fullnode-simple]             Joining argpack '.*fullnode.*::select'  from [our-config] into joinall
-    [test::fullnode-simple]             Joining argpack 'priority'              from [our-config] into joinall
-    [test::fullnode-simple]           Unsure how to operate on resources economy and economy together, defaulting to economy
-    [test::fullnode-simple]         [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy', timelimit = 0:01:00
-    [test::fullnode-simple]         2 jobs completed during this runtime
-    [test::fullnode-simple]     All jobs simulated, stopping
-    [test::fullnode-simple]   Maximum HPC resources required will be '-l select=2:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy' with timelimit '00:01:00'
-    [test::fullnode-double]   Computing maximum HPC resources per runnable step phase...
-    [test::fullnode-double]     Calculating expected runtime of steps across 2 thread workers [threadpool size]
-    [test::fullnode-double]       Simulating threadpool for 0:01:00
-    [test::fullnode-double]         Calculate max instantaneous resources for this phase
-    [test::fullnode-double]             Joining argpack '.*fullnode.*::select'  from [our-config.fullnode-double, our-config] into joinall
-    [test::fullnode-double]             Joining argpack 'priority'              from [our-config] into joinall
-    [test::fullnode-double]           Unsure how to operate on resources economy and economy together, defaulting to economy
-    [test::fullnode-double]         [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=4:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy', timelimit = 0:01:00
-    [test::fullnode-double]         2 jobs completed during this runtime
-    [test::fullnode-double]     All jobs simulated, stopping
-    [test::fullnode-double]   Maximum HPC resources required will be '-l select=4:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy' with timelimit '00:01:00'
-    [file::our-config]  Calculating expected runtime of tests across 4 workers [pool size]
-    [file::our-config]    Simulating threadpool for 0:01:00
-    [file::our-config]        Joining argpack 'select'   from [join] into joinall
-    [file::our-config]        Joining argpack 'priority' from [join] into joinall
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]        Joining argpack 'select'   from [join] into joinall
-    [file::our-config]        Joining argpack 'priority' from [join] into joinall
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]        Joining argpack 'select'   from [join] into joinall
-    [file::our-config]        Joining argpack 'priority' from [join] into joinall
-    [file::our-config]      Unsure how to operate on resources economy and economy together, defaulting to economy
-    [file::our-config]      [PHASE 0] Resources for [  quartnode-simple,        quartnode,  fullnode-simple,  fullnode-double ] : '-l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy', timelimit = 0:01:00
-    [file::our-config]      4 jobs completed during this runtime
-    [file::our-config]  Maximum calculated resources for running all tests is '-l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy'
-    [file::our-config]  Maximum calculated timelimit for running all tests is '00:01:00'
-    [file::our-config]  Requested override of resources with '{"select":{"-l ":{"select":7,"mem":"128GB","ncpus":128,"mpiprocs":128}}}'
-    [file::our-config]    New maximum resources for running all tests is '-l select=7:mem=128GB:ncpus=128:mpiprocs=128 -l job_priority=economy'
-    [file::our-config]  Using current file as launch executable : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
-    [file::our-config]  Setting keyphrase for passing to internally defined one
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Preparing working directory
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Checking if results wait is required...
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   Final results will wait for all jobs complete
-    [step::submit]      Preparing working directory
-    [step::submit]        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::submit]        Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::submit]      Submitting step submit...
-    [step::submit]        Gathering HPC argument packs...
-    [step::submit]          From [cli] adding HPC argument pack 'select' :
-    [step::submit]            Adding option '-l '
-    [step::submit]              From cli adding resource 'select'   : 7
-    [step::submit]              From cli adding resource 'mem'      : 128GB
-    [step::submit]              From cli adding resource 'ncpus'    : 128
-    [step::submit]              From cli adding resource 'mpiprocs' : 128
-    [step::submit]          Final argpack output for select : '-l select=7:mem=128GB:ncpus=128:mpiprocs=128'
-    [step::submit]          From [join] adding HPC argument pack 'priority' :
-    [step::submit]            Adding option '-l '
-    [step::submit]              From join adding resource 'job_priority' : economy
-    [step::submit]          Final argpack output for priority : '-l job_priority=economy'
-    [step::submit]        Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
-    [step::submit]        Running command:
-    [step::submit]          qsub -l select=7:mem=128GB:ncpus=128:mpiprocs=128 -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests quartnode-simple quartnode fullnode-simple fullnode-double --submitType LOCAL --account WORKFLOWS --labelLength 12 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 2
-    [step::submit]        *************** START submit  ***************
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Computing maximum HPC resources of tests...
+    [file::our-config]                      Accumulate maximum HPC resources per test...
+    [test::our-config.quartnode-simple]       Computing maximum HPC resources per runnable step phase...
+    [test::our-config.quartnode-simple]         Calculating expected runtime of steps across 2 thread workers [threadpool size]
+    [test::our-config.quartnode-simple]           Simulating threadpool for 0:01:00
+    [test::our-config.quartnode-simple]             Calculate max instantaneous resources for this phase
+    [test::our-config.quartnode-simple]                 Joining argpack '.*quartnode.*::select' from [our-config.quartnode-simple, our-config] into joinall
+    [test::our-config.quartnode-simple]                 Joining argpack 'priority'              from [our-config] into joinall
+    [test::our-config.quartnode-simple]               Unsure how to operate on resources economy and economy together, defaulting to economy
+    [test::our-config.quartnode-simple]             [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=32gb:ncpus=64:mpiprocs=32 -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.quartnode-simple]             2 jobs completed during this runtime
+    [test::our-config.quartnode-simple]         All jobs simulated, stopping
+    [test::our-config.quartnode-simple]       Maximum HPC resources required will be '-l select=2:mem=32gb:ncpus=64:mpiprocs=32 -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.quartnode]              Computing maximum HPC resources per runnable step phase...
+    [test::our-config.quartnode]                Calculating expected runtime of steps across 2 thread workers [threadpool size]
+    [test::our-config.quartnode]                  Simulating threadpool for 0:01:00
+    [test::our-config.quartnode]                    Calculate max instantaneous resources for this phase
+    [test::our-config.quartnode]                        Joining argpack '.*quartnode.*::select' from [our-config] into joinall
+    [test::our-config.quartnode]                        Joining argpack 'priority'              from [our-config] into joinall
+    [test::our-config.quartnode]                      Unsure how to operate on resources economy and economy together, defaulting to economy
+    [test::our-config.quartnode]                    [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=64gb:ncpus=64:mpiprocs=32 -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.quartnode]                    2 jobs completed during this runtime
+    [test::our-config.quartnode]                All jobs simulated, stopping
+    [test::our-config.quartnode]              Maximum HPC resources required will be '-l select=2:mem=64gb:ncpus=64:mpiprocs=32 -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.fullnode-simple]        Computing maximum HPC resources per runnable step phase...
+    [test::our-config.fullnode-simple]          Calculating expected runtime of steps across 2 thread workers [threadpool size]
+    [test::our-config.fullnode-simple]            Simulating threadpool for 0:01:00
+    [test::our-config.fullnode-simple]              Calculate max instantaneous resources for this phase
+    [test::our-config.fullnode-simple]                  Joining argpack '.*fullnode.*::select'  from [our-config] into joinall
+    [test::our-config.fullnode-simple]                  Joining argpack 'priority'              from [our-config] into joinall
+    [test::our-config.fullnode-simple]                Unsure how to operate on resources economy and economy together, defaulting to economy
+    [test::our-config.fullnode-simple]              [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.fullnode-simple]              2 jobs completed during this runtime
+    [test::our-config.fullnode-simple]          All jobs simulated, stopping
+    [test::our-config.fullnode-simple]        Maximum HPC resources required will be '-l select=2:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy' with timelimit '00:01:00'
+    [test::our-config.fullnode-double]        Computing maximum HPC resources per runnable step phase...
+    [test::our-config.fullnode-double]          Calculating expected runtime of steps across 2 thread workers [threadpool size]
+    [test::our-config.fullnode-double]            Simulating threadpool for 0:01:00
+    [test::our-config.fullnode-double]              Calculate max instantaneous resources for this phase
+    [test::our-config.fullnode-double]                  Joining argpack '.*fullnode.*::select'  from [our-config, our-config.fullnode-double] into joinall
+    [test::our-config.fullnode-double]                  Joining argpack 'priority'              from [our-config] into joinall
+    [test::our-config.fullnode-double]                Unsure how to operate on resources economy and economy together, defaulting to economy
+    [test::our-config.fullnode-double]              [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=4:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy', timelimit = 0:01:00
+    [test::our-config.fullnode-double]              2 jobs completed during this runtime
+    [test::our-config.fullnode-double]          All jobs simulated, stopping
+    [test::our-config.fullnode-double]        Maximum HPC resources required will be '-l select=4:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy' with timelimit '00:01:00'
+    [file::our-config]                      Calculating expected runtime of tests across 4 workers [pool size]
+    [file::our-config]                        Simulating threadpool for 0:01:00
+    [file::our-config]                            Joining argpack 'select'   from [join] into joinall
+    [file::our-config]                            Joining argpack 'priority' from [join] into joinall
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                            Joining argpack 'select'   from [join] into joinall
+    [file::our-config]                            Joining argpack 'priority' from [join] into joinall
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                            Joining argpack 'select'   from [join] into joinall
+    [file::our-config]                            Joining argpack 'priority' from [join] into joinall
+    [file::our-config]                          Unsure how to operate on resources economy and economy together, defaulting to economy
+    [file::our-config]                          [PHASE 0] Resources for [  quartnode-simple,        quartnode,  fullnode-simple,  fullnode-double ] : '-l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy', timelimit = 0:01:00
+    [file::our-config]                          4 jobs completed during this runtime
+    [file::our-config]                      Maximum calculated resources for running all tests is '-l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy'
+    [file::our-config]                      Maximum calculated timelimit for running all tests is '00:01:00'
+    [file::our-config]                      Requested override of resources with '{"select":{"-l ":{"select":7,"mem":"128GB","ncpus":128,"mpiprocs":128}}}'
+    [file::our-config]                        New maximum resources for running all tests is '-l select=7:mem=128GB:ncpus=128:mpiprocs=128 -l job_priority=economy'
+    [file::our-config]                      Using current file as launch executable : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
+    [file::our-config]                      Setting keyphrase for passing to internally defined one
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Preparing working directory
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Checking if results wait is required...
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   Final results will wait for all jobs complete
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit] Preparing working directory
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit] Submitting step submit...
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Gathering HPC argument packs...
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     From [cli] adding HPC argument pack 'select' :
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]       Adding option '-l '
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]         From cli adding resource 'select'   : 7
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]         From cli adding resource 'mem'      : 128GB
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]         From cli adding resource 'ncpus'    : 128
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]         From cli adding resource 'mpiprocs' : 128
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     Final argpack output for select : '-l select=7:mem=128GB:ncpus=128:mpiprocs=128'
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     From [join] adding HPC argument pack 'priority' :
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]       Adding option '-l '
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]         From join adding resource 'job_priority' : economy
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     Final argpack output for priority : '-l job_priority=economy'
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Running command:
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     qsub -l select=7:mem=128GB:ncpus=128:mpiprocs=128 -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests quartnode-simple quartnode fullnode-simple fullnode-double --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 2 --forceFQDN fv-az1536-455.clt0scp5daoehk2t4xy1kvnmsg.bx.internal.cloudapp.net
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   *************** START submit  ***************
     
-    [step::submit]        Doing dry-run, no ouptut
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Doing dry-run, no ouptut
     
-    [step::submit]        ***************  STOP submit  ***************
-    [step::submit]        Finding job ID in "12345"
-    [step::submit]      Finished submitting step submit
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   ***************  STOP submit  ***************
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Finding job ID in "12345"
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit] Finished submitting step submit
     
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Checking remaining steps...
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] No remaining steps, test submission complete
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Doing dry-run, assumed complete
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Outputting results...
-    [step::submit]      Results for submit
-    [step::submit]        Doing dry-run, assumed success
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Writing relevant logfiles to view in master log file : 
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.log
-    [test::joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] [SUCCESS] : Test joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double completed successfully
-    [file::our-config]  Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success
-    [file::our-config]  Post-processing all test results...
-    [file::our-config]  Doing dry-run, assumed success
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Checking remaining steps...
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] No remaining steps, test submission complete
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Doing dry-run, assumed complete
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Outputting results...
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit] Results for submit
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Doing dry-run, assumed success
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] Writing relevant logfiles to view in master log file : 
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double]   /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.log
+    [test::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double] [SUCCESS] : Test joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double completed successfully
+    [file::our-config]                      Joined HPC tests complete, above success only means tests managed to complete, please see logs for per-test success
+    [file::our-config]                      Post-processing all test results...
+    [file::our-config]                      Doing dry-run, assumed success
 
 
 That worked, but we had to basically do the whole aggregation calculations ourselves. This was an extreme example where all the tests and steps run at the same time, but effectively demonstrates the complexities involved with this sort of feature. 

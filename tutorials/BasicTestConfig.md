@@ -175,7 +175,7 @@ md( "```jsonc\n" + open( notebookDirectory + "/../.ci/template.json", "r" ).read
 
 
 
-The bulk of the the configurable power of this layout is generally carried by the `"submit_options"` and its ability to be inherited + overridden, especially on a per-host-FQDN manner which is discussed in the [Advanced Test Config](./AdvancedTestConfig.ipynb).
+The bulk of the the configurable power of this layout is generally carried by the `"submit_options"` and its ability to be inherited + overridden, especially on a per-host-FQDN manner which is discussed in the [Advanced Test Config - Host Specific](./AdvancedTestConfig_host_specific.ipynb).
 
 
 ## Writing our own test config
@@ -214,19 +214,19 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing to run multiple tests
-    [file::our-config]    Automatically redirecting our-test to /home/runner/work/hpc-workflows/hpc-workflows/our-test_stdout.log
-    [file::our-config]  Spawning process pool of size 4 to perform 1 tests
-    [file::our-config]    Launching test our-test
-    [file::our-config]    Waiting for tests to complete - BE PATIENT
-    [file::our-config]    [SUCCESS] : Test our-test reported success
-    [file::our-config]  Test suite complete, writing test results to master log file : 
-    [file::our-config]    /home/runner/work/hpc-workflows/hpc-workflows/our-config.log
-    [file::our-config]  [SUCCESS] : All tests passed
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing to run multiple tests
+    [file::our-config]                        Automatically redirecting our-test to /home/runner/work/hpc-workflows/hpc-workflows/our-test_stdout.log
+    [file::our-config]                      Spawning process pool of size 4 to perform 1 tests
+    [file::our-config]                        Launching test our-test
+    [file::our-config]                        Waiting for tests to complete - BE PATIENT
+    [file::our-config]                        [SUCCESS] : Test our-test reported success
+    [file::our-config]                      Test suite complete, writing test results to master log file : 
+    [file::our-config]                        /home/runner/work/hpc-workflows/hpc-workflows/our-config.log
+    [file::our-config]                      [SUCCESS] : All tests passed
 
 
 Excellent! 
@@ -242,38 +242,38 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test --forceSingle # we could s
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Preparing working directory
-    [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Checking if results wait is required...
-    [test::our-test]      No HPC submissions, no results waiting required
-    [step::our-step0]   Preparing working directory
-    [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]   Submitting step our-step0...
-    [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step0]     Running command:
-    [step::our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     ***************START our-step0***************
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Preparing working directory
+    [test::our-config.our-test]               Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Checking if results wait is required...
+    [test::our-config.our-test]               No HPC submissions, no results waiting required
+    [step::our-config.our-test.our-step0]   Preparing working directory
+    [step::our-config.our-test.our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]   Submitting step our-step0...
+    [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step0]     Running command:
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
-    [step::our-step0]     Local step will be redirected to logfile /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
+    [step::our-config.our-test.our-step0]     Local step will be redirected to logfile /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
     
-    [step::our-step0]     ***************STOP our-step0 ***************
-    [step::our-step0]   Finished submitting step our-step0
+    [step::our-config.our-test.our-step0]     ***************STOP our-step0 ***************
+    [step::our-config.our-test.our-step0]   Finished submitting step our-step0
     
-    [test::our-test]    Checking remaining steps...
-    [test::our-test]    No remaining steps, test submission complete
-    [test::our-test]    Outputting results...
-    [step::our-step0]   Results for our-step0
-    [step::our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
-    [step::our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-    [step::our-step0]     [SUCCESS]
-    [test::our-test]    Writing relevant logfiles to view in master log file : 
-    [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-    [test::our-test]    [SUCCESS] : Test our-test completed successfully
+    [test::our-config.our-test]             Checking remaining steps...
+    [test::our-config.our-test]             No remaining steps, test submission complete
+    [test::our-config.our-test]             Outputting results...
+    [step::our-config.our-test.our-step0]   Results for our-step0
+    [step::our-config.our-test.our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
+    [step::our-config.our-test.our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
+    [step::our-config.our-test.our-step0]     [SUCCESS]
+    [test::our-config.our-test]             Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test]               /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
+    [test::our-config.our-test]             [SUCCESS] : Test our-test completed successfully
 
 
 One step further is to inline the <ins>step</ins> output. Again, we will not do a deep-dive of launch options here, but instead are building up to a method of running an example <ins>suite of tests</ins> that doesn't rely on opening logfiles. This is mainly to better suit the notebook format. To inline our step  we can add `--inlineLocal/-i` to our run script options.
@@ -285,40 +285,40 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Preparing working directory
-    [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Checking if results wait is required...
-    [test::our-test]      No HPC submissions, no results waiting required
-    [step::our-step0]   Preparing working directory
-    [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]   Submitting step our-step0...
-    [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step0]     Running command:
-    [step::our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     ***************START our-step0***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Preparing working directory
+    [test::our-config.our-test]               Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Checking if results wait is required...
+    [test::our-config.our-test]               No HPC submissions, no results waiting required
+    [step::our-config.our-test.our-step0]   Preparing working directory
+    [step::our-config.our-test.our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]   Submitting step our-step0...
+    [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step0]     Running command:
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     
     TEST echo_normal.sh PASS
     
-    [step::our-step0]     ***************STOP our-step0 ***************
-    [step::our-step0]   Finished submitting step our-step0
+    [step::our-config.our-test.our-step0]     ***************STOP our-step0 ***************
+    [step::our-config.our-test.our-step0]   Finished submitting step our-step0
     
-    [test::our-test]    Checking remaining steps...
-    [test::our-test]    No remaining steps, test submission complete
-    [test::our-test]    Outputting results...
-    [step::our-step0]   Results for our-step0
-    [step::our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
-    [step::our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-    [step::our-step0]     [SUCCESS]
-    [test::our-test]    Writing relevant logfiles to view in master log file : 
-    [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-    [test::our-test]    [SUCCESS] : Test our-test completed successfully
+    [test::our-config.our-test]             Checking remaining steps...
+    [test::our-config.our-test]             No remaining steps, test submission complete
+    [test::our-config.our-test]             Outputting results...
+    [step::our-config.our-test.our-step0]   Results for our-step0
+    [step::our-config.our-test.our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
+    [step::our-config.our-test.our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
+    [step::our-config.our-test.our-step0]     [SUCCESS]
+    [test::our-config.our-test]             Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test]               /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
+    [test::our-config.our-test]             [SUCCESS] : Test our-test completed successfully
 
 
 ## Adding step arguments
@@ -374,40 +374,40 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Preparing working directory
-    [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Checking if results wait is required...
-    [test::our-test]      No HPC submissions, no results waiting required
-    [step::our-step0]   Preparing working directory
-    [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]   Submitting step our-step0...
-    [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step0]     Running command:
-    [step::our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows foobar
-    [step::our-step0]     ***************START our-step0***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Preparing working directory
+    [test::our-config.our-test]               Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Checking if results wait is required...
+    [test::our-config.our-test]               No HPC submissions, no results waiting required
+    [step::our-config.our-test.our-step0]   Preparing working directory
+    [step::our-config.our-test.our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]   Submitting step our-step0...
+    [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step0]     Running command:
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows foobar
+    [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     foobar
     TEST echo_normal.sh PASS
     
-    [step::our-step0]     ***************STOP our-step0 ***************
-    [step::our-step0]   Finished submitting step our-step0
+    [step::our-config.our-test.our-step0]     ***************STOP our-step0 ***************
+    [step::our-config.our-test.our-step0]   Finished submitting step our-step0
     
-    [test::our-test]    Checking remaining steps...
-    [test::our-test]    No remaining steps, test submission complete
-    [test::our-test]    Outputting results...
-    [step::our-step0]   Results for our-step0
-    [step::our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
-    [step::our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-    [step::our-step0]     [SUCCESS]
-    [test::our-test]    Writing relevant logfiles to view in master log file : 
-    [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-    [test::our-test]    [SUCCESS] : Test our-test completed successfully
+    [test::our-config.our-test]             Checking remaining steps...
+    [test::our-config.our-test]             No remaining steps, test submission complete
+    [test::our-config.our-test]             Outputting results...
+    [step::our-config.our-test.our-step0]   Results for our-step0
+    [step::our-config.our-test.our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
+    [step::our-config.our-test.our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
+    [step::our-config.our-test.our-step0]     [SUCCESS]
+    [test::our-config.our-test]             Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test]               /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
+    [test::our-config.our-test]             [SUCCESS] : Test our-test completed successfully
 
 
 ## Step dependencies
@@ -471,61 +471,61 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Preparing working directory
-    [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Checking if results wait is required...
-    [test::our-test]      No HPC submissions, no results waiting required
-    [step::our-step0]   Preparing working directory
-    [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]   Submitting step our-step0...
-    [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step0]     Running command:
-    [step::our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows foobar
-    [step::our-step0]     ***************START our-step0***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Preparing working directory
+    [test::our-config.our-test]               Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Checking if results wait is required...
+    [test::our-config.our-test]               No HPC submissions, no results waiting required
+    [step::our-config.our-test.our-step0]   Preparing working directory
+    [step::our-config.our-test.our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]   Submitting step our-step0...
+    [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step0]     Running command:
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows foobar
+    [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     foobar
     TEST echo_normal.sh PASS
     
-    [step::our-step0]     ***************STOP our-step0 ***************
-    [step::our-step0]     Notifying children...
-    [step::our-step0]   Finished submitting step our-step0
+    [step::our-config.our-test.our-step0]     ***************STOP our-step0 ***************
+    [step::our-config.our-test.our-step0]     Notifying children...
+    [step::our-config.our-test.our-step0]   Finished submitting step our-step0
     
-    [test::our-test]    Checking remaining steps...
-    [step::our-step1]   Preparing working directory
-    [step::our-step1]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step1]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step1]   Submitting step our-step1...
-    [step::our-step1]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step1]     Running command:
-    [step::our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows why "not more" args?
-    [step::our-step1]     ***************START our-step1***************
+    [test::our-config.our-test]             Checking remaining steps...
+    [step::our-config.our-test.our-step1]   Preparing working directory
+    [step::our-config.our-test.our-step1]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step1]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step1]   Submitting step our-step1...
+    [step::our-config.our-test.our-step1]     Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step1]     Running command:
+    [step::our-config.our-test.our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows why "not more" args?
+    [step::our-config.our-test.our-step1]     ***************START our-step1***************
     
     why not more args?
     TEST echo_normal.sh PASS
     
-    [step::our-step1]     ***************STOP our-step1 ***************
-    [step::our-step1]   Finished submitting step our-step1
+    [step::our-config.our-test.our-step1]     ***************STOP our-step1 ***************
+    [step::our-config.our-test.our-step1]   Finished submitting step our-step1
     
-    [test::our-test]    Checking remaining steps...
-    [test::our-test]    No remaining steps, test submission complete
-    [test::our-test]    Outputting results...
-    [step::our-step0]   Results for our-step0
-    [step::our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
-    [step::our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-    [step::our-step0]     [SUCCESS]
-    [step::our-step1]   Results for our-step1
-    [step::our-step1]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step1.log
-    [step::our-step1]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-    [step::our-step1]     [SUCCESS]
-    [test::our-test]    Writing relevant logfiles to view in master log file : 
-    [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-    [test::our-test]    [SUCCESS] : Test our-test completed successfully
+    [test::our-config.our-test]             Checking remaining steps...
+    [test::our-config.our-test]             No remaining steps, test submission complete
+    [test::our-config.our-test]             Outputting results...
+    [step::our-config.our-test.our-step0]   Results for our-step0
+    [step::our-config.our-test.our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
+    [step::our-config.our-test.our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
+    [step::our-config.our-test.our-step0]     [SUCCESS]
+    [step::our-config.our-test.our-step1]   Results for our-step1
+    [step::our-config.our-test.our-step1]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step1.log
+    [step::our-config.our-test.our-step1]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
+    [step::our-config.our-test.our-step1]     [SUCCESS]
+    [test::our-config.our-test]             Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test]               /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
+    [test::our-config.our-test]             [SUCCESS] : Test our-test completed successfully
 
 
 Most of the output should look very similar, but notice that after running `our-step0` there is an additional line now stating `Notifying children...` just before `our-step1` begins to run. This tells us that we have properly tied a dependency between `our-step0` as a parent step and `our-step1` as a dependent child step.
@@ -610,65 +610,65 @@ rm $1/../our-config.json $1/../*.log
 ```
 
     Using Python version : 
-    3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
-    [file::our-config]  Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
-    [file::our-config]  Preparing working directory
-    [file::our-config]    Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Preparing working directory
-    [test::our-test]      Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-test]    Checking if results wait is required...
-    [test::our-test]      No HPC submissions, no results waiting required
-    [step::our-step0]   Preparing working directory
-    [step::our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step0]   Submitting step our-step0...
-    [step::our-step0]     Gathering argument packs...
-    [step::our-step0]       From our-config.our-test adding arguments pack 'our-default-argpack' : ['foobar']
-    [step::our-step0]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step0]     Running command:
-    [step::our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows foobar foobar
-    [step::our-step0]     ***************START our-step0***************
+    [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
+    [file::our-config]                      Preparing working directory
+    [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Preparing working directory
+    [test::our-config.our-test]               Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [test::our-config.our-test]             Checking if results wait is required...
+    [test::our-config.our-test]               No HPC submissions, no results waiting required
+    [step::our-config.our-test.our-step0]   Preparing working directory
+    [step::our-config.our-test.our-step0]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]   Submitting step our-step0...
+    [step::our-config.our-test.our-step0]     Gathering argument packs...
+    [step::our-config.our-test.our-step0]       From our-config.our-test adding arguments pack 'our-default-argpack' : ['foobar']
+    [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step0]     Running command:
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows foobar foobar
+    [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     foobar foobar
     TEST echo_normal.sh PASS
     
-    [step::our-step0]     ***************STOP our-step0 ***************
-    [step::our-step0]     Notifying children...
-    [step::our-step0]   Finished submitting step our-step0
+    [step::our-config.our-test.our-step0]     ***************STOP our-step0 ***************
+    [step::our-config.our-test.our-step0]     Notifying children...
+    [step::our-config.our-test.our-step0]   Finished submitting step our-step0
     
-    [test::our-test]    Checking remaining steps...
-    [step::our-step1]   Preparing working directory
-    [step::our-step1]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step1]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
-    [step::our-step1]   Submitting step our-step1...
-    [step::our-step1]     Gathering argument packs...
-    [step::our-step1]       From our-config.our-test adding arguments pack 'our-default-argpack' : ['foobar']
-    [step::our-step1]     Script : ./tests/scripts/echo_normal.sh
-    [step::our-step1]     Running command:
-    [step::our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows why "not more" args? foobar
-    [step::our-step1]     ***************START our-step1***************
+    [test::our-config.our-test]             Checking remaining steps...
+    [step::our-config.our-test.our-step1]   Preparing working directory
+    [step::our-config.our-test.our-step1]     Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step1]     Current directory : /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step1]   Submitting step our-step1...
+    [step::our-config.our-test.our-step1]     Gathering argument packs...
+    [step::our-config.our-test.our-step1]       From our-config.our-test adding arguments pack 'our-default-argpack' : ['foobar']
+    [step::our-config.our-test.our-step1]     Script : ./tests/scripts/echo_normal.sh
+    [step::our-config.our-test.our-step1]     Running command:
+    [step::our-config.our-test.our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows why "not more" args? foobar
+    [step::our-config.our-test.our-step1]     ***************START our-step1***************
     
     why not more args? foobar
     TEST echo_normal.sh PASS
     
-    [step::our-step1]     ***************STOP our-step1 ***************
-    [step::our-step1]   Finished submitting step our-step1
+    [step::our-config.our-test.our-step1]     ***************STOP our-step1 ***************
+    [step::our-config.our-test.our-step1]   Finished submitting step our-step1
     
-    [test::our-test]    Checking remaining steps...
-    [test::our-test]    No remaining steps, test submission complete
-    [test::our-test]    Outputting results...
-    [step::our-step0]   Results for our-step0
-    [step::our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
-    [step::our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-    [step::our-step0]     [SUCCESS]
-    [step::our-step1]   Results for our-step1
-    [step::our-step1]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step1.log
-    [step::our-step1]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
-    [step::our-step1]     [SUCCESS]
-    [test::our-test]    Writing relevant logfiles to view in master log file : 
-    [test::our-test]      /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
-    [test::our-test]    [SUCCESS] : Test our-test completed successfully
+    [test::our-config.our-test]             Checking remaining steps...
+    [test::our-config.our-test]             No remaining steps, test submission complete
+    [test::our-config.our-test]             Outputting results...
+    [step::our-config.our-test.our-step0]   Results for our-step0
+    [step::our-config.our-test.our-step0]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
+    [step::our-config.our-test.our-step0]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
+    [step::our-config.our-test.our-step0]     [SUCCESS]
+    [step::our-config.our-test.our-step1]   Results for our-step1
+    [step::our-config.our-test.our-step1]     Opening log file /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step1.log
+    [step::our-config.our-test.our-step1]     Checking last line for success <KEY PHRASE> of format 'TEST ((?:\w+|[.-])+) PASS'
+    [step::our-config.our-test.our-step1]     [SUCCESS]
+    [test::our-config.our-test]             Writing relevant logfiles to view in master log file : 
+    [test::our-config.our-test]               /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.log
+    [test::our-config.our-test]             [SUCCESS] : Test our-test completed successfully
 
 
 Now notice how in the step preparation phase between `Submitting step ...` and `Running command` for each respective step we now have a new output of `From our-test adding argument pack 'our-default-argpack'...`. This line tells us both the origin of the <ins>argpack</ins> (which level in our step's <ins>ancestry</ins> provided the defintion) and the effective values of the arguments to be added. Any additional lines of the format `From <origin> adding argument pack '<argpack>'...` would also be listed in the order applied to the step's run command, where `<argpack>` is determining that order.

@@ -1,5 +1,4 @@
 import copy
-import socket
 import re
 import heapq
 from collections import OrderedDict
@@ -171,12 +170,10 @@ class SubmitOptions( ) :
     for hostOpt in self.hostSpecificOptions_.values() :
       hostOpt.setName( name )
 
-  def selectHostSpecificSubmitOptions( self, forceFQDN=None, print=print ) :
-    # Must be valid for this specific host or generically
-    fqdn = forceFQDN if forceFQDN else socket.getfqdn() 
+  def selectHostSpecificSubmitOptions( self, host=None, print=print ) :
 
     # Have to do string matching rather than in dict
-    hostSpecificOptKey = next( ( hostOpt for hostOpt in self.hostSpecificOptions_ if hostOpt in fqdn ), None )
+    hostSpecificOptKey = next( ( hostOpt for hostOpt in self.hostSpecificOptions_ if hostOpt in host ), None )
 
     # Quickly generate a stand-in SubmitOptions in spitting image
     currentSubmitOptions = copy.deepcopy( self )
