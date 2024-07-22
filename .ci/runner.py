@@ -5,6 +5,8 @@ import os
 import copy
 import argparse
 import inspect
+import socket
+
 from collections import OrderedDict
 from multiprocessing import Pool
 from contextlib import redirect_stdout
@@ -481,6 +483,11 @@ def runSuite( options ) :
 
   # Construct simplified name 
   basename = os.path.splitext( os.path.basename( options.testsConfig ) )[0]
+
+  # Check if a host config was specified to use in lieu of fqdn
+  if options.forceFQDN is None :
+    # Use fqdn as the default host selection
+    options.forceFQDN = socket.getfqdn() 
 
   success = False
   logs    = []
