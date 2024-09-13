@@ -262,7 +262,7 @@ class Suite( SubmitAction ) :
 
     # Make our current key check for multitest pass
     self.log( "Setting keyphrase for passing to internally defined one")
-    hpcJoinOpts.key = "\[file::(\w+)\][ ]*\[SUCCESS\] : All tests passed"
+    hpcJoinOpts.key = "\[file::(.*?)\][ ]*\[SUCCESS\] : All tests passed"
 
     hpcJoinTest = Test( "joinHPC_" + "_".join( tests ), testDict, self.submitOptions_, hpcJoinOpts, parent=self.ancestry(), rootDir=self.rootDir_ )
     # No argpacks
