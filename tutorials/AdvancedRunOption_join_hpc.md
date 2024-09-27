@@ -184,7 +184,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
     [step::our-config.our-test.our-step0]       Final argpack output for priority : '-l job_priority=economy'
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]       qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     [step::our-config.our-test.our-step0]     Doing dry-run, no ouptut
@@ -323,7 +323,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 -fs -
     [step::our-config.our-test0.our-step0]      Final argpack output for priority : '-l job_priority=economy'
     [step::our-config.our-test0.our-step0]    Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test0.our-step0]    Running command:
-    [step::our-config.our-test0.our-step0]      qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test0.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test0.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test0.our-step0]      qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test0.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test0.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test0.our-step0]    ***************START our-step0***************
     
     [step::our-config.our-test0.our-step0]    Doing dry-run, no ouptut
@@ -361,7 +361,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 -fs -
     [step::our-config.our-test1.our-step1]      Final argpack output for priority : '-l job_priority=economy'
     [step::our-config.our-test1.our-step1]    Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test1.our-step1]    Running command:
-    [step::our-config.our-test1.our-step1]      qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test1.our-step1 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test1.our-step1.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test1.our-step1]      qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test1.our-step1 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test1.our-step1.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test1.our-step1]    ***************START our-step1***************
     
     [step::our-config.our-test1.our-step1]    Doing dry-run, no ouptut
@@ -399,7 +399,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 -fs -
     [step::our-config.our-test2.our-step2]      Final argpack output for priority : '-l job_priority=economy'
     [step::our-config.our-test2.our-step2]    Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test2.our-step2]    Running command:
-    [step::our-config.our-test2.our-step2]      qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test2.our-step2 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test2.our-step2.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test2.our-step2]      qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test2.our-step2 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test2.our-step2.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test2.our-step2]    ***************START our-step2***************
     
     [step::our-config.our-test2.our-step2]    Doing dry-run, no ouptut
@@ -495,7 +495,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 -i -d
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     Final argpack output for priority : '-l job_priority=economy'
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Running command:
-    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     qsub -l select=3:mem=96gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 1 --inlineLocal --forceFQDN fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     qsub -l select=3:mem=96gb -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 1 --inlineLocal --forceFQDN fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   *************** START submit  ***************
     
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Doing dry-run, no ouptut
@@ -611,7 +611,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 -i -d
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     Final argpack output for priority : '-l job_priority=economy'
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Running command:
-    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:03:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 1 --threadpool 1 --inlineLocal --forceFQDN fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     qsub -l select=1:mem=32gb -l job_priority=economy -q main -l walltime=00:03:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 1 --threadpool 1 --inlineLocal --forceFQDN fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   *************** START submit  ***************
     
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Doing dry-run, no ouptut
@@ -755,7 +755,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test0 our-test1 our-test2 \
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     Final argpack output for priority : '-l job_priority=premium'
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Running command:
-    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     qsub -l select=1:mem=96gb -l job_priority=premium -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 1 --inlineLocal --forceFQDN fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net
+    [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]     qsub -l select=1:mem=96gb -l job_priority=premium -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_our-test0_our-test1_our-test2.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_our-test0_our-test1_our-test2.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests our-test0 our-test1 our-test2 --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 1 --inlineLocal --forceFQDN fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   *************** START submit  ***************
     
     [step::our-config.joinHPC_our-test0_our-test1_our-test2.submit]   Doing dry-run, no ouptut
@@ -1023,7 +1023,7 @@ $1/../.ci/runner.py $1/../our-config.json -t quartnode-simple quartnode fullnode
     [test::our-config.quartnode-simple]         Calculating expected runtime of steps across 2 thread workers [threadpool size]
     [test::our-config.quartnode-simple]           Simulating threadpool for 0:01:00
     [test::our-config.quartnode-simple]             Calculate max instantaneous resources for this phase
-    [test::our-config.quartnode-simple]                 Joining argpack '.*quartnode.*::select' from [our-config, our-config.quartnode-simple] into joinall
+    [test::our-config.quartnode-simple]                 Joining argpack '.*quartnode.*::select' from [our-config.quartnode-simple, our-config] into joinall
     [test::our-config.quartnode-simple]                 Joining argpack 'priority'              from [our-config] into joinall
     [test::our-config.quartnode-simple]               Unsure how to operate on resources economy and economy together, defaulting to economy
     [test::our-config.quartnode-simple]             [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=32gb:ncpus=64:mpiprocs=32 -l job_priority=economy', timelimit = 0:01:00
@@ -1103,7 +1103,7 @@ $1/../.ci/runner.py $1/../our-config.json -t quartnode-simple quartnode fullnode
     [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     Final argpack output for priority : '-l job_priority=economy'
     [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
     [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Running command:
-    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     qsub -l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests quartnode-simple quartnode fullnode-simple fullnode-double --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 2 --forceFQDN fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     qsub -l select=10:mem=608gb:ncpus=640:mpiprocs=320 -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests quartnode-simple quartnode fullnode-simple fullnode-double --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 2 --forceFQDN fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net
     [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   *************** START submit  ***************
     
     [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Doing dry-run, no ouptut
@@ -1186,7 +1186,7 @@ $1/../.ci/runner.py $1/../our-config.json -t quartnode-simple quartnode fullnode
     [test::our-config.quartnode-simple]         Calculating expected runtime of steps across 2 thread workers [threadpool size]
     [test::our-config.quartnode-simple]           Simulating threadpool for 0:01:00
     [test::our-config.quartnode-simple]             Calculate max instantaneous resources for this phase
-    [test::our-config.quartnode-simple]                 Joining argpack '.*quartnode.*::select' from [our-config, our-config.quartnode-simple] into joinall
+    [test::our-config.quartnode-simple]                 Joining argpack '.*quartnode.*::select' from [our-config.quartnode-simple, our-config] into joinall
     [test::our-config.quartnode-simple]                 Joining argpack 'priority'              from [our-config] into joinall
     [test::our-config.quartnode-simple]               Unsure how to operate on resources economy and economy together, defaulting to economy
     [test::our-config.quartnode-simple]             [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=2:mem=32gb:ncpus=64:mpiprocs=32 -l job_priority=economy', timelimit = 0:01:00
@@ -1268,7 +1268,7 @@ $1/../.ci/runner.py $1/../our-config.json -t quartnode-simple quartnode fullnode
     [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     Final argpack output for priority : '-l job_priority=economy'
     [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Script : /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py
     [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Running command:
-    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     qsub -l select=7:mem=128GB:ncpus=128:mpiprocs=128 -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests quartnode-simple quartnode fullnode-simple fullnode-double --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 2 --forceFQDN fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net
+    [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]     qsub -l select=7:mem=128GB:ncpus=128:mpiprocs=128 -l job_priority=economy -q main -l walltime=00:01:00 -A WORKFLOWS -N our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit.log -- /home/runner/work/hpc-workflows/hpc-workflows/.ci/runner.py /home/runner/work/hpc-workflows/hpc-workflows/our-config.json --tests quartnode-simple quartnode fullnode-simple fullnode-double --submitType LOCAL --account WORKFLOWS --labelLength 32 --dryRun --key "TEST ((?:\w+|[.-])+) PASS" --pool 4 --threadpool 2 --forceFQDN fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net
     [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   *************** START submit  ***************
     
     [step::our-config.joinHPC_quartnode-simple_quartnode_fullnode-simple_fullnode-double.submit]   Doing dry-run, no ouptut

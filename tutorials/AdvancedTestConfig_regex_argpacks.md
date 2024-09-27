@@ -167,7 +167,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.send-step0]     From our-config.regex-test adding arguments pack '.*send.*::send_prefix' : ['[send] ']
     [step::our-config.regex-test.send-step0]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.send-step0]   Running command:
-    [step::our-config.regex-test.send-step0]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows Hello! "[send] "
+    [step::our-config.regex-test.send-step0]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows Hello! "[send] "
     [step::our-config.regex-test.send-step0]   ***************START send-step0***************
     
     Hello! [send]
@@ -185,7 +185,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.recv-step1]     From our-config.regex-test adding arguments pack '.*recv.*::recv_prefix' : ['[recv] ']
     [step::our-config.regex-test.recv-step1]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.recv-step1]   Running command:
-    [step::our-config.regex-test.recv-step1]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows "Hello back!" "[recv] "
+    [step::our-config.regex-test.recv-step1]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows "Hello back!" "[recv] "
     [step::our-config.regex-test.recv-step1]   ***************START recv-step1***************
     
     Hello back! [recv]
@@ -202,7 +202,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.send-step2]     From our-config.regex-test adding arguments pack '.*send.*::send_prefix' : ['[send] ']
     [step::our-config.regex-test.send-step2]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.send-step2]   Running command:
-    [step::our-config.regex-test.send-step2]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows "Ping 1" "[send] "
+    [step::our-config.regex-test.send-step2]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows "Ping 1" "[send] "
     [step::our-config.regex-test.send-step2]   ***************START send-step2***************
     
     Ping 1 [send]
@@ -219,7 +219,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.send-step3]     From our-config.regex-test adding arguments pack '.*send.*::send_prefix' : ['[send] ']
     [step::our-config.regex-test.send-step3]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.send-step3]   Running command:
-    [step::our-config.regex-test.send-step3]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows "Ping 2" "[send] "
+    [step::our-config.regex-test.send-step3]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows "Ping 2" "[send] "
     [step::our-config.regex-test.send-step3]   ***************START send-step3***************
     
     Ping 2 [send]
@@ -236,7 +236,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.recv-step4]     From our-config.regex-test adding arguments pack '.*recv.*::recv_prefix' : ['[recv] ']
     [step::our-config.regex-test.recv-step4]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.recv-step4]   Running command:
-    [step::our-config.regex-test.recv-step4]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows "Pings received" "[recv] "
+    [step::our-config.regex-test.recv-step4]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows "Pings received" "[recv] "
     [step::our-config.regex-test.recv-step4]   ***************START recv-step4***************
     
     Pings received [recv]
@@ -398,7 +398,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.build-omp-fp32-dbg]     From our-config.regex-test adding arguments pack '.*omp.*::omp_flag' : ['--omp']
     [step::our-config.regex-test.build-omp-fp32-dbg]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.build-omp-fp32-dbg]   Running command:
-    [step::our-config.regex-test.build-omp-fp32-dbg]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-dbg -d --omp
+    [step::our-config.regex-test.build-omp-fp32-dbg]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-dbg -d --omp
     [step::our-config.regex-test.build-omp-fp32-dbg]   ***************START build-omp-fp32-dbg***************
     
     -o build-omp-fp32-dbg -d --omp
@@ -407,18 +407,17 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.build-omp-fp32-dbg]   ***************STOP build-omp-fp32-dbg***************
     [step::our-config.regex-test.build-omp-fp32-dbg] Finished submitting step build-omp-fp32-dbg
     
-    [test::our-config.regex-test]           Checking remaining steps...
     [step::our-config.regex-test.build-omp-fp32-ftA] Preparing working directory
     [step::our-config.regex-test.build-omp-fp32-ftA]   Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
-    [test::our-config.regex-test]           Checking remaining steps...
     [step::our-config.regex-test.build-omp-fp32-ftA]   Current directory : /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.regex-test.build-omp-fp32-ftA] Submitting step build-omp-fp32-ftA...
     [step::our-config.regex-test.build-omp-fp32-ftA]   Gathering argument packs...
     [step::our-config.regex-test.build-omp-fp32-ftA]     From our-config.regex-test adding arguments pack '.*ft[^A]*A.*::feature_a' : ['-a']
     [step::our-config.regex-test.build-omp-fp32-ftA]     From our-config.regex-test adding arguments pack '.*omp.*::omp_flag'       : ['--omp']
+    [test::our-config.regex-test]           Checking remaining steps...
     [step::our-config.regex-test.build-omp-fp32-ftA]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.build-omp-fp32-ftA]   Running command:
-    [step::our-config.regex-test.build-omp-fp32-ftA]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-ftA -a --omp
+    [step::our-config.regex-test.build-omp-fp32-ftA]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-ftA -a --omp
     [step::our-config.regex-test.build-omp-fp32-ftA]   ***************START build-omp-fp32-ftA***************
     
     -o build-omp-fp32-ftA -a --omp
@@ -437,7 +436,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.build-omp-fp32-ftAB]     From our-config.regex-test adding arguments pack '.*omp.*::omp_flag'       : ['--omp']
     [step::our-config.regex-test.build-omp-fp32-ftAB]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.build-omp-fp32-ftAB]   Running command:
-    [step::our-config.regex-test.build-omp-fp32-ftAB]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-ftAB -a -b --omp
+    [step::our-config.regex-test.build-omp-fp32-ftAB]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-ftAB -a -b --omp
     [step::our-config.regex-test.build-omp-fp32-ftAB]   ***************START build-omp-fp32-ftAB***************
     
     -o build-omp-fp32-ftAB -a -b --omp
@@ -456,7 +455,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.build-omp-fp32-ftBC]     From our-config.regex-test adding arguments pack '.*omp.*::omp_flag'       : ['--omp']
     [step::our-config.regex-test.build-omp-fp32-ftBC]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.build-omp-fp32-ftBC]   Running command:
-    [step::our-config.regex-test.build-omp-fp32-ftBC]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-ftBC -b -c --omp
+    [step::our-config.regex-test.build-omp-fp32-ftBC]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp32-ftBC -b -c --omp
     [step::our-config.regex-test.build-omp-fp32-ftBC]   ***************START build-omp-fp32-ftBC***************
     
     -o build-omp-fp32-ftBC -b -c --omp
@@ -475,7 +474,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.build-omp-fp64-ftB]     From our-config.regex-test adding arguments pack '.*omp.*::omp_flag'       : ['--omp']
     [step::our-config.regex-test.build-omp-fp64-ftB]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.build-omp-fp64-ftB]   Running command:
-    [step::our-config.regex-test.build-omp-fp64-ftB]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp64-ftB -b --double --omp
+    [step::our-config.regex-test.build-omp-fp64-ftB]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-omp-fp64-ftB -b --double --omp
     [step::our-config.regex-test.build-omp-fp64-ftB]   ***************START build-omp-fp64-ftB***************
     
     -o build-omp-fp64-ftB -b --double --omp
@@ -493,7 +492,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.build-mpi-fp32-dbg]     From our-config.regex-test adding arguments pack '.*mpi.*::mpi_flag' : ['--mpi']
     [step::our-config.regex-test.build-mpi-fp32-dbg]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.build-mpi-fp32-dbg]   Running command:
-    [step::our-config.regex-test.build-mpi-fp32-dbg]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-mpi-fp32-dbg -d --mpi
+    [step::our-config.regex-test.build-mpi-fp32-dbg]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-mpi-fp32-dbg -d --mpi
     [step::our-config.regex-test.build-mpi-fp32-dbg]   ***************START build-mpi-fp32-dbg***************
     
     -o build-mpi-fp32-dbg -d --mpi
@@ -510,7 +509,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.build-mpi-fp32]     From our-config.regex-test adding arguments pack '.*mpi.*::mpi_flag' : ['--mpi']
     [step::our-config.regex-test.build-mpi-fp32]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.build-mpi-fp32]   Running command:
-    [step::our-config.regex-test.build-mpi-fp32]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-mpi-fp32 --mpi
+    [step::our-config.regex-test.build-mpi-fp32]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-mpi-fp32 --mpi
     [step::our-config.regex-test.build-mpi-fp32]   ***************START build-mpi-fp32***************
     
     -o build-mpi-fp32 --mpi
@@ -528,7 +527,7 @@ $1/../.ci/runner.py $1/../our-config.json -t regex-test --forceSingle --inlineLo
     [step::our-config.regex-test.build-mpi-fp64]     From our-config.regex-test adding arguments pack '.*mpi.*::mpi_flag'   : ['--mpi']
     [step::our-config.regex-test.build-mpi-fp64]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.regex-test.build-mpi-fp64]   Running command:
-    [step::our-config.regex-test.build-mpi-fp64]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-mpi-fp64 --double --mpi
+    [step::our-config.regex-test.build-mpi-fp64]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows -o build-mpi-fp64 --double --mpi
     [step::our-config.regex-test.build-mpi-fp64]   ***************START build-mpi-fp64***************
     
     -o build-mpi-fp64 --double --mpi
