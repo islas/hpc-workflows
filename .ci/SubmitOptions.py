@@ -50,55 +50,64 @@ class SubmitOptions( ) :
     self.parse( origin=origin, print=print )
 
   def parse( self, print=print, origin=None ):
-    submitKeys = []
+    try :
+      submitKeys = []
 
-    key = "working_directory"
-    submitKeys.append( key )
-    if key in self.submit_ :
-      self.workingDirectory_ = self.submit_[ key ]
-    
-    key = "queue"
-    submitKeys.append( key )
-    if key in self.submit_ :
-      self.queue_ = self.submit_[ key ]
-    
-    key = "timelimit"
-    submitKeys.append( key )
-    if key in self.submit_ :
-      self.timelimit_ = self.submit_[ key ]
-    
-    key = "wait"
-    submitKeys.append( key )
-    if key in self.submit_ :
-      self.wait_ = self.submit_[ key ]
+      key = "working_directory"
+      submitKeys.append( key )
+      if key in self.submit_ :
+        self.workingDirectory_ = self.submit_[ key ]
+      
+      key = "queue"
+      submitKeys.append( key )
+      if key in self.submit_ :
+        self.queue_ = self.submit_[ key ]
+      
+      key = "timelimit"
+      submitKeys.append( key )
+      if key in self.submit_ :
+        self.timelimit_ = self.submit_[ key ]
+      
+      key = "wait"
+      submitKeys.append( key )
+      if key in self.submit_ :
+        self.wait_ = self.submit_[ key ]
 
-    key = "hpc_arguments"
-    submitKeys.append( key )
-    if key in self.submit_ :
-      self.hpcArguments_.update( HpcArgpacks( self.submit_[ key ], origin ), print )
-    
-    key = "arguments"
-    submitKeys.append( key )
-    if key in self.submit_ :
-      self.arguments_.update( SubmitArgpacks( self.submit_[ key ], origin ), print )
-    
-    # Allow parsing of per-action submission
-    key = "submission"
-    submitKeys.append( key )
-    if key in self.submit_ :
-      if not self.lockSubmitType_ :
-        self.submitType_ = sc.SubmissionType( self.submit_[ key ] )
+      key = "hpc_arguments"
+      submitKeys.append( key )
+      if key in self.submit_ :
+        self.hpcArguments_.update( HpcArgpacks( self.submit_[ key ], origin ), print )
+      
+      key = "arguments"
+      submitKeys.append( key )
+      if key in self.submit_ :
+        self.arguments_.update( SubmitArgpacks( self.submit_[ key ], origin ), print )
+      
+      # Allow parsing of per-action submission
+      key = "submission"
+      submitKeys.append( key )
+      if key in self.submit_ :
+        if not self.lockSubmitType_ :
+          self.submitType_ = sc.SubmissionType( self.submit_[ key ] )
 
 
-    # Process all other keys as host-specific options
-    for key, value in self.submit_.items() :
-      if key not in submitKeys :
-        if not self.isHostSpecific_ :
-          # ok to parse
-          self.hostSpecificOptions_[ key ] = SubmitOptions( value, isHostSpecific=True )
-          self.hostSpecificOptions_[ key ].parse( origin=origin )
-        else :
-          print( "Warning: Host-specific options cannot have sub-host-specific options" )
+      # Process all other keys as host-specific options
+      for key, value in self.submit_.items() :
+        if key not in submitKeys :
+          if not self.isHostSpecific_ :
+            # ok to parse
+            self.hostSpecificOptions_[ key ] = SubmitOptions( value, isHostSpecific=True )
+            self.hostSpecificOptions_[ key ].parse( origin=origin )
+          else :
+            print( "Warning: Host-specific options cannot have sub-host-specific options" )
+    except Exception as e :
+      msg = print( "ERROR! Failed parse for submit options : {{ {fields} }}".format( fields=str( self.submit_ ) )
+            )
+      if msg is None :
+        # just re-raise, we don't have enough info
+        raise e
+      else :
+        raise sc.SubmitParseException( msg ) from e
 
 
   # Updates and overrides current with values from rhs if they exist

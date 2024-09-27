@@ -49,21 +49,29 @@ class Step( SubmitAction ):
 
   def parseSpecificOptions( self ) :
 
+    optionKeys = []
+
     key = "command"
+    optionKeys.append( key )
     if key in self.options_ :
       self.command_ = self.options_[ key ]
 
     key = "arguments"
+    optionKeys.append( key )
     if key in self.options_ :
       self.arguments_ = self.options_[ key ]
 
     key = "dependencies"
+    optionKeys.append( key )
     if key in self.options_ :
       for depStep, depType in self.options_[ key ].items() :
         self.dependencies_[ depStep ] = Step.DependencyType( depType )
 
     # Now set things manually
     self.submitOptions_ = self.submitOptions_.selectHostSpecificSubmitOptions( host=self.globalOpts_.forceFQDN, print=self.log )
+
+    # return valid keys
+    return optionKeys
 
   def validate( self ) :
     self.submitOptions_.validate( print=self.log )
