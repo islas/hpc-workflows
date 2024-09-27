@@ -119,6 +119,9 @@ md( "```python\n##### From Step.py #####" +
     # Now set things manually
     self.submitOptions_ = self.submitOptions_.selectHostSpecificSubmitOptions( host=self.globalOpts_.forceFQDN, print=self.log )
 
+    # return valid keys
+    return optionKeys
+
   
 ##### From runner.py #####
 

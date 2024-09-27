@@ -53,6 +53,8 @@ class Suite( SubmitAction ) :
       if test != "submit_options" :
         self.tests_[ test ] = Test( test, testDict, self.submitOptions_, self.globalOpts_, parent=self.ancestry(), rootDir=self.rootDir_ )
 
+    return [] # all keys are valid
+
   # Take immediate test return and output what happened
   def reportErrs( self, test, testLog ) :
     if testLog["success"] :

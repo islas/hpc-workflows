@@ -213,11 +213,11 @@ echo ""
         success, logs = testSuite.run( options.tests )
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 439, in run
         self.tests_[test].validate()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 57, in validate
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 61, in validate
         step.validate()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 69, in validate
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 77, in validate
         self.submitOptions_.validate( print=self.log )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 158, in validate
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 167, in validate
         raise Exception( errMsg )
     Exception: Error: Invalid submission options [Missing account on non-LOCAL submission]
     {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7f983a7afe80>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': None, 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7f983a7afee0>, 'union_parse': {'submission': 'PBS'}}
@@ -271,11 +271,11 @@ echo ""
         success, logs = testSuite.run( options.tests )
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 439, in run
         self.tests_[test].validate()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 57, in validate
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 61, in validate
         step.validate()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 69, in validate
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 77, in validate
         self.submitOptions_.validate( print=self.log )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 158, in validate
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 167, in validate
         raise Exception( errMsg )
     Exception: Error: Invalid submission options [Missing queue on non-LOCAL submission]
     {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7fa2311abe80>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': 'WORKFLOWS', 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7fa2311abee0>, 'union_parse': {'submission': 'PBS'}}
@@ -788,17 +788,17 @@ echo ""
         super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitAction.py", line 32, in __init__
         self.parse()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitAction.py", line 65, in parse
-        self.parseSpecificOptions()
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitAction.py", line 67, in parse
+        optionKeys = self.parseSpecificOptions()
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 54, in parseSpecificOptions
         self.tests_[ test ] = Test( test, testDict, self.submitOptions_, self.globalOpts_, parent=self.ancestry(), rootDir=self.rootDir_ )
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 30, in __init__
         super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitAction.py", line 32, in __init__
         self.parse()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitAction.py", line 60, in parse
-        self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.ancestry(), print=self.log ), print=self.log )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 124, in update
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitAction.py", line 62, in parse
+        self.submitOptions_.update( SubmitOptions( self.options_[ submitKey ], origin=self.ancestry(), print=self.log ), print=self.log )
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 133, in update
         if rhs.hpcArguments_.arguments_         : self.hpcArguments_.update( rhs.hpcArguments_, print=print )    
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/HpcArgpacks.py", line 35, in update
         self.nestedArguments_[key].update( rhs.nestedArguments_[key], print )
@@ -990,11 +990,11 @@ echo ""
         success, logs = testSuite.run( options.tests )
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 439, in run
         self.tests_[test].validate()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 57, in validate
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 61, in validate
         step.validate()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 69, in validate
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Step.py", line 77, in validate
         self.submitOptions_.validate( print=self.log )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 161, in validate
+      File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 170, in validate
         self.hpcArguments_.selectAncestrySpecificSubmitArgpacks( print=print )
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/HpcArgpacks.py", line 69, in selectAncestrySpecificSubmitArgpacks
         finalHpcArgpacks.validate( print=print )

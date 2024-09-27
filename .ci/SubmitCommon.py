@@ -20,3 +20,13 @@ def recursiveUpdate( dest, source ):
       dest[k] = v
   return dest
 
+# An exception type to handle parse errors
+class SubmitParseException( Exception ) :
+  def __init__( self, msg ) :
+    super( Exception, self ).__init__( msg )
+
+# An exception type to handle parse errors parents
+class SubmitParentParseException( Exception ) :
+  def __init__( self, msg ) :
+    super( Exception, self ).__init__( msg )
+

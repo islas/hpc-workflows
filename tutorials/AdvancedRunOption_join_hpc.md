@@ -13,7 +13,7 @@ print( "Working from " + notebookDirectory )
     Working from /home/runner/work/hpc-workflows/hpc-workflows/tutorials
 
 
-Advanced usage of the <ins>run script</ins> command line option `-j` will be the focus of this tutorial :
+Advanced usage of the <ins>run script</ins> command line option `-j`/`--joinHPC` will be the focus of this tutorial :
 
 
 ```bash
@@ -1056,7 +1056,7 @@ $1/../.ci/runner.py $1/../our-config.json -t quartnode-simple quartnode fullnode
     [test::our-config.fullnode-double]          Calculating expected runtime of steps across 2 thread workers [threadpool size]
     [test::our-config.fullnode-double]            Simulating threadpool for 0:01:00
     [test::our-config.fullnode-double]              Calculate max instantaneous resources for this phase
-    [test::our-config.fullnode-double]                  Joining argpack '.*fullnode.*::select'  from [our-config, our-config.fullnode-double] into joinall
+    [test::our-config.fullnode-double]                  Joining argpack '.*fullnode.*::select'  from [our-config.fullnode-double, our-config] into joinall
     [test::our-config.fullnode-double]                  Joining argpack 'priority'              from [our-config] into joinall
     [test::our-config.fullnode-double]                Unsure how to operate on resources economy and economy together, defaulting to economy
     [test::our-config.fullnode-double]              [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=4:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy', timelimit = 0:01:00
@@ -1219,7 +1219,7 @@ $1/../.ci/runner.py $1/../our-config.json -t quartnode-simple quartnode fullnode
     [test::our-config.fullnode-double]          Calculating expected runtime of steps across 2 thread workers [threadpool size]
     [test::our-config.fullnode-double]            Simulating threadpool for 0:01:00
     [test::our-config.fullnode-double]              Calculate max instantaneous resources for this phase
-    [test::our-config.fullnode-double]                  Joining argpack '.*fullnode.*::select'  from [our-config, our-config.fullnode-double] into joinall
+    [test::our-config.fullnode-double]                  Joining argpack '.*fullnode.*::select'  from [our-config.fullnode-double, our-config] into joinall
     [test::our-config.fullnode-double]                  Joining argpack 'priority'              from [our-config] into joinall
     [test::our-config.fullnode-double]                Unsure how to operate on resources economy and economy together, defaulting to economy
     [test::our-config.fullnode-double]              [PHASE 0] Resources for [      our-step0  our-step0-mpi ] : '-l select=4:mem=256gb:ncpus=256:mpiprocs=128 -l job_priority=economy', timelimit = 0:01:00
