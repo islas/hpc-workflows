@@ -256,7 +256,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test --forceSingle # we could s
     [step::our-config.our-test.our-step0]   Submitting step our-step0...
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     [step::our-config.our-test.our-step0]     Local step will be redirected to logfile /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
@@ -300,7 +300,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
     [step::our-config.our-test.our-step0]   Submitting step our-step0...
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     
@@ -389,7 +389,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
     [step::our-config.our-test.our-step0]   Submitting step our-step0...
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows foobar
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows foobar
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     foobar
@@ -486,7 +486,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
     [step::our-config.our-test.our-step0]   Submitting step our-step0...
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows foobar
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows foobar
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     foobar
@@ -503,7 +503,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
     [step::our-config.our-test.our-step1]   Submitting step our-step1...
     [step::our-config.our-test.our-step1]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step1]     Running command:
-    [step::our-config.our-test.our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows why "not more" args?
+    [step::our-config.our-test.our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows why "not more" args?
     [step::our-config.our-test.our-step1]     ***************START our-step1***************
     
     why not more args?
@@ -627,7 +627,7 @@ rm $1/../our-config.json $1/../*.log
     [step::our-config.our-test.our-step0]       From our-config.our-test adding arguments pack 'our-default-argpack' : ['foobar']
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows foobar foobar
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows foobar foobar
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     foobar foobar
@@ -646,7 +646,7 @@ rm $1/../our-config.json $1/../*.log
     [step::our-config.our-test.our-step1]       From our-config.our-test adding arguments pack 'our-default-argpack' : ['foobar']
     [step::our-config.our-test.our-step1]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step1]     Running command:
-    [step::our-config.our-test.our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows why "not more" args? foobar
+    [step::our-config.our-test.our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows why "not more" args? foobar
     [step::our-config.our-test.our-step1]     ***************START our-step1***************
     
     why not more args? foobar

@@ -153,7 +153,7 @@ $1/../.ci/runner.py $1/../our-config.json -h | \
     Using Python version : 
     3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     usage: runner.py [-h] [-t TESTS [TESTS ...]] [-s {PBS,SLURM,LOCAL}]
-                     [-a ACCOUNT] [-d DIROFFSET] [-j [JOINHPC]]
+                     [-a ACCOUNT] [-d DIROFFSET] [-j [JOINHPC]] [-jn JOINNAME]
                      [-alt [ALTDIRS ...]] [-l LABELLENGTH] [-g GLOBALPREFIX]
                      [-dry] [-nf] [-nw] [-np] [-k KEY] [-p POOL] [-tp THREADPOOL]
                      [-r REDIRECT] [-i] [-ff FORCEFQDN] [-fs]

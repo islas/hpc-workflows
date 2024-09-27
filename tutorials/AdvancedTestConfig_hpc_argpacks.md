@@ -145,7 +145,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i
     [step::our-config.our-test.our-step0]   Submitting step our-step0...
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     
@@ -203,15 +203,15 @@ echo ""
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]   Error: Invalid submission options [Missing account on non-LOCAL submission]
-    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7f90fbef7a90>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': None, 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7f90fbef7af0>, 'union_parse': {'submission': 'PBS'}}
+    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7fb42c9f4070>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': None, 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7fb42c9f40d0>, 'union_parse': {'submission': 'PBS'}}
     Traceback (most recent call last):
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 717, in <module>
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 730, in <module>
         main()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 711, in main
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 724, in main
         success, tests, logs = runSuite( options )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 520, in runSuite
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 526, in runSuite
         success, logs = testSuite.run( options.tests )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 435, in run
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 441, in run
         self.tests_[test].validate()
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 61, in validate
         step.validate()
@@ -220,7 +220,7 @@ echo ""
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 167, in validate
         raise Exception( errMsg )
     Exception: Error: Invalid submission options [Missing account on non-LOCAL submission]
-    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7f90fbef7a90>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': None, 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7f90fbef7af0>, 'union_parse': {'submission': 'PBS'}}
+    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7fb42c9f4070>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': None, 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7fb42c9f40d0>, 'union_parse': {'submission': 'PBS'}}
     
 
 
@@ -261,15 +261,15 @@ echo ""
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]   Error: Invalid submission options [Missing queue on non-LOCAL submission]
-    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7fcabc6afa90>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': 'WORKFLOWS', 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7fcabc6afaf0>, 'union_parse': {'submission': 'PBS'}}
+    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7f039d53c070>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': 'WORKFLOWS', 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7f039d53c0d0>, 'union_parse': {'submission': 'PBS'}}
     Traceback (most recent call last):
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 717, in <module>
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 730, in <module>
         main()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 711, in main
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 724, in main
         success, tests, logs = runSuite( options )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 520, in runSuite
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 526, in runSuite
         success, logs = testSuite.run( options.tests )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 435, in run
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 441, in run
         self.tests_[test].validate()
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 61, in validate
         step.validate()
@@ -278,7 +278,7 @@ echo ""
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/SubmitOptions.py", line 167, in validate
         raise Exception( errMsg )
     Exception: Error: Invalid submission options [Missing queue on non-LOCAL submission]
-    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7fcabc6afa90>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': 'WORKFLOWS', 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7fcabc6afaf0>, 'union_parse': {'submission': 'PBS'}}
+    {'working_directory': None, 'queue': None, 'hpc_arguments': <HpcArgpacks.HpcArgpacks object at 0x7f039d53c070>, 'timelimit': None, 'wait': None, 'submitType': <SubmissionType.PBS: 'PBS'>, 'lockSubmitType': False, 'debug': None, 'account': 'WORKFLOWS', 'name': 'our-config.our-test.our-step0', 'dependencies': None, 'arguments': <SubmitArgpacks.SubmitArgpacks object at 0x7f039d53c0d0>, 'union_parse': {'submission': 'PBS'}}
     
 
 
@@ -334,7 +334,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
     [step::our-config.our-test.our-step0]   Submitting step our-step0...
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       qsub -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]       qsub -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     [step::our-config.our-test.our-step0]     Doing dry-run, no ouptut
@@ -479,7 +479,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
     [step::our-config.our-test.our-step0]       Final argpack output for node_select : '-l'
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       qsub -l -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]       qsub -l -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     [step::our-config.our-test.our-step0]     Doing dry-run, no ouptut
@@ -565,7 +565,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
     [step::our-config.our-test.our-step0]       Final argpack output for select : '-lselect=1'
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       qsub -lselect=1 -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]       qsub -lselect=1 -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     [step::our-config.our-test.our-step0]     Doing dry-run, no ouptut
@@ -676,7 +676,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
     [step::our-config.our-test.our-step0]       Final argpack output for select : '-l select=1'
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       qsub -l select=1 -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]       qsub -l select=1 -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0 -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     [step::our-config.our-test.our-step0]     Doing dry-run, no ouptut
@@ -778,11 +778,11 @@ echo ""
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [test::our-config.our-test]             Argument pack select at our-config.our-test '.*more-nodes.*::select' name conflict with '.*less-nodes.*::select', declared at our-config
     Traceback (most recent call last):
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 717, in <module>
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 730, in <module>
         main()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 711, in main
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 724, in main
         success, tests, logs = runSuite( options )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 512, in runSuite
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 518, in runSuite
         testSuite = Suite( 
       File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 41, in __init__
         super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
@@ -894,7 +894,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -dry -a WORKFLOWS
     [step::our-config.our-test.our-step0-less-nodes]     Final argpack output for .*less-nodes.*::select : '-l select=1'
     [step::our-config.our-test.our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0-less-nodes]   Running command:
-    [step::our-config.our-test.our-step0-less-nodes]     qsub -l select=1 -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0-less-nodes -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0-less-nodes.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az842-452.yhlsagsewx4upp3hyc34bwbk4e.cx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0-less-nodes]     qsub -l select=1 -q economy -l walltime=00:01:00 -A WORKFLOWS -N our-config.our-test.our-step0-less-nodes -j oe -o /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0-less-nodes.log -- /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az714-33.22nzjvkrszmuhkvqy55p1tioig.phxx.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0-less-nodes]   ***************START our-step0-less-nodes***************
     
     [step::our-config.our-test.our-step0-less-nodes]   Doing dry-run, no ouptut
@@ -982,13 +982,13 @@ echo ""
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0-less-nodes] Argument pack select at our-config.our-test '.*our.*::select' name conflict with '.*less-nodes.*::select', declared at our-config
     Traceback (most recent call last):
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 717, in <module>
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 730, in <module>
         main()
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 711, in main
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 724, in main
         success, tests, logs = runSuite( options )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 520, in runSuite
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 526, in runSuite
         success, logs = testSuite.run( options.tests )
-      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 435, in run
+      File "/home/runner/work/hpc-workflows/hpc-workflows/tutorials/../.ci/runner.py", line 441, in run
         self.tests_[test].validate()
       File "/home/runner/work/hpc-workflows/hpc-workflows/.ci/Test.py", line 61, in validate
         step.validate()
