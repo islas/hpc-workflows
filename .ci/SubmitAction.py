@@ -44,6 +44,7 @@ class SubmitAction( ) :
     contents = output.getvalue()
     output.close()
     print( self.label_ + self.labelIndentation_ * self.labelLevel_ + contents, flush=True )
+    return self.label_ + self.labelIndentation_ * self.labelLevel_ + contents
   
   def log_push( self, levels=1 ) :
     self.labelLevel_ += levels
