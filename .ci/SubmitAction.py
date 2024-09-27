@@ -56,15 +56,32 @@ class SubmitAction( ) :
     pass
 
   def parse( self ) :
-    key = "submit_options"
-    if key in self.options_ :
-      self.submitOptions_.update( SubmitOptions( self.options_[ key ], origin=self.ancestry(), print=self.log ), print=self.log )
+    try :
+      submitKey = "submit_options"
+      if submitKey in self.options_ :
+        self.submitOptions_.update( SubmitOptions( self.options_[ submitKey ], origin=self.ancestry(), print=self.log ), print=self.log )
+      
+      self.submitOptions_.setName( self.ancestry() )
+
+      # Now call child parse
+      optionKeys = self.parseSpecificOptions()
+
+      if optionKeys :
+        # We limit parsing to these keys specifically
+        for key, value in self.options_.items() :
+          if key not in optionKeys and key != submitKey :
+            msg = self.log( "Invalid key in {scope} : {key}".format( scope=self.scope(), key=key ) )
+            raise KeyError( msg )
+
+    except sc.SubmitParentParseException as sppe :
+      raise sppe
+    except sc.SubmitParseException as spe :
+      # No parent yet
+      msg = self.log( "From parent {name} : {fields}".format( name=self.name_, fields=str( self.options_ ) ) )
+      if msg is None :
+        raise spe # no parent available anyways
+      raise sc.SubmitParentParseException( msg ) from spe
     
-    self.submitOptions_.setName( self.ancestry() )
-
-    # Now call child parse
-    self.parseSpecificOptions()
-
     # Now generate masterlog name
     self.logfile_ = os.path.abspath( "{0}/{1}".format( self.rootDir_, self.ancestry() + ".log" ) )
 
