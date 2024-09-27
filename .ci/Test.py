@@ -30,8 +30,10 @@ class Test( SubmitAction ):
     super().__init__( name, options, defaultSubmitOptions, globalOpts, parent, rootDir )
 
   def parseSpecificOptions( self ) :
+    optionKeys = []
 
     key = "steps"
+    optionKeys.append( key )
     if key in self.options_ :
       if key == "results" :
         msg = "Keyword 'results' not allowed as step name, reason: reserved"
@@ -51,6 +53,8 @@ class Test( SubmitAction ):
     
     # Now that steps are fully parsed, attempt to organize dependencies
     Step.sortDependencies( self.steps_ )
+
+    return optionKeys
 
   def validate( self ) :
     for step in self.steps_.values() :
