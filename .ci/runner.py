@@ -264,7 +264,13 @@ class Suite( SubmitAction ) :
     self.log( "Setting keyphrase for passing to internally defined one")
     hpcJoinOpts.key = "\[file::(.*?)\][ ]*\[SUCCESS\] : All tests passed"
 
-    hpcJoinTest = Test( "joinHPC_" + "_".join( tests ), testDict, self.submitOptions_, hpcJoinOpts, parent=self.ancestry(), rootDir=self.rootDir_ )
+    # Create the test name if not provided
+    joinTestName = self.globalOpts_.joinName
+    if joinTestName is None :
+      joinTestName = "joinHPC_" + "_".join( tests )
+      self.log( "No join name provided, defaulting to '{joinName}'".format( joinName=joinTestName ) )
+
+    hpcJoinTest = Test( joinTestName, testDict, self.submitOptions_, hpcJoinOpts, parent=self.ancestry(), rootDir=self.rootDir_ )
     # No argpacks
     hpcJoinTest.steps_["submit"].submitOptions_.arguments_    = SubmitArgpacks( OrderedDict() )
     hpcJoinTest.steps_["submit"].submitOptions_.hpcArguments_ = maxResources
@@ -586,6 +592,13 @@ def getOptionsParser():
                       type=str,
                       nargs="?",
                       default=argparse.SUPPRESS
+                      )
+  parser.add_argument( 
+                      "-jn", "--joinName",
+                      dest="joinName",
+                      help="Combined test name of joined test, default is all test names concatenated",
+                      type=str,
+                      default=None
                       )
   parser.add_argument( 
                       "-alt", "--altdirs",
