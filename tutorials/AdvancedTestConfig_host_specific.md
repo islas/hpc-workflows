@@ -148,9 +148,9 @@ $1/../.ci/runner.py $1/../our-config.json -h | \
 ```
 
     Using Python version : 
-    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     usage: runner.py [-h] [-t TESTS [TESTS ...]] [-s {PBS,SLURM,LOCAL}]
-                     [-a ACCOUNT] [-d DIROFFSET] [-j [JOINHPC]]
+                     [-a ACCOUNT] [-d DIROFFSET] [-j [JOINHPC]] [-jn JOINNAME]
                      [-alt [ALTDIRS ...]] [-l LABELLENGTH] [-g GLOBALPREFIX]
                      [-dry] [-nf] [-nw] [-np] [-k KEY] [-p POOL] [-tp THREADPOOL]
                      [-r REDIRECT] [-i] [-ff FORCEFQDN] [-fs]
@@ -211,7 +211,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -ff tutorials.hpc-w
       }
     }
     Using Python version : 
-    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [file::our-config]                      Preparing working directory
@@ -228,7 +228,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -ff tutorials.hpc-w
     [step::our-config.our-test.our-step0-less-nodes]     From our-config adding arguments pack 'data_path' : ['-p', '/some/local/path/']
     [step::our-config.our-test.our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0-less-nodes]   Running command:
-    [step::our-config.our-test.our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -p /some/local/path/
+    [step::our-config.our-test.our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh tutorials.hpc-workflows.foobar.com /home/runner/work/hpc-workflows/hpc-workflows -p /some/local/path/
     [step::our-config.our-test.our-step0-less-nodes]   ***************START our-step0-less-nodes***************
     
     -p /some/local/path/
@@ -309,7 +309,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -ff tutorials.hpc-w
       }
     }
     Using Python version : 
-    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [file::our-config]                      Preparing working directory
@@ -326,7 +326,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -ff tutorials.hpc-w
     [step::our-config.our-test.our-step0-less-nodes]     From our-config adding arguments pack 'data_path' : ['-p', '/opt/data/path']
     [step::our-config.our-test.our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0-less-nodes]   Running command:
-    [step::our-config.our-test.our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -p /opt/data/path
+    [step::our-config.our-test.our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh tutorials.hpc-workflows.foobar.com /home/runner/work/hpc-workflows/hpc-workflows -p /opt/data/path
     [step::our-config.our-test.our-step0-less-nodes]   ***************START our-step0-less-nodes***************
     
     -p /opt/data/path
@@ -427,7 +427,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -ff tutorials.hpc-w
       }
     }
     Using Python version : 
-    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [file::our-config]                      Preparing working directory
@@ -444,7 +444,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i -ff tutorials.hpc-w
     [step::our-config.our-test.our-step0-less-nodes]     From our-config.our-test adding arguments pack 'data_path' : ['-p', '/home/user/data/path']
     [step::our-config.our-test.our-step0-less-nodes]   Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0-less-nodes]   Running command:
-    [step::our-config.our-test.our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows -p /home/user/data/path
+    [step::our-config.our-test.our-step0-less-nodes]     /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh tutorials.hpc-workflows.foobar.com /home/runner/work/hpc-workflows/hpc-workflows -p /home/user/data/path
     [step::our-config.our-test.our-step0-less-nodes]   ***************START our-step0-less-nodes***************
     
     -p /home/user/data/path

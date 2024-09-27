@@ -214,7 +214,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test
 ```
 
     Using Python version : 
-    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [file::our-config]                      Preparing working directory
     [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
@@ -242,7 +242,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test --forceSingle # we could s
 ```
 
     Using Python version : 
-    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [file::our-config]                      Preparing working directory
     [file::our-config]                        Running from root directory /home/runner/work/hpc-workflows/hpc-workflows
@@ -256,7 +256,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test --forceSingle # we could s
     [step::our-config.our-test.our-step0]   Submitting step our-step0...
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     [step::our-config.our-test.our-step0]     Local step will be redirected to logfile /home/runner/work/hpc-workflows/hpc-workflows/our-config.our-test.our-step0.log
@@ -285,7 +285,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
 ```
 
     Using Python version : 
-    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [file::our-config]                      Preparing working directory
@@ -300,7 +300,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
     [step::our-config.our-test.our-step0]   Submitting step our-step0...
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     
@@ -374,7 +374,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
 ```
 
     Using Python version : 
-    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [file::our-config]                      Preparing working directory
@@ -389,7 +389,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
     [step::our-config.our-test.our-step0]   Submitting step our-step0...
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows foobar
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows foobar
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     foobar
@@ -471,7 +471,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
 ```
 
     Using Python version : 
-    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [file::our-config]                      Preparing working directory
@@ -486,7 +486,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
     [step::our-config.our-test.our-step0]   Submitting step our-step0...
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows foobar
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows foobar
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     foobar
@@ -503,7 +503,7 @@ $1/../.ci/runner.py $1/../our-config.json -t our-test -fs -i # using shorthand o
     [step::our-config.our-test.our-step1]   Submitting step our-step1...
     [step::our-config.our-test.our-step1]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step1]     Running command:
-    [step::our-config.our-test.our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows why "not more" args?
+    [step::our-config.our-test.our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows why "not more" args?
     [step::our-config.our-test.our-step1]     ***************START our-step1***************
     
     why not more args?
@@ -610,7 +610,7 @@ rm $1/../our-config.json $1/../*.log
 ```
 
     Using Python version : 
-    3.10.12 (main, Mar 22 2024, 16:50:05) [GCC 11.4.0]
+    3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0]
     Inline stdout for steps requested, but steps' threadpool is greater than 1 - forcing threadpool to size 1 (serial)
     [file::our-config]                      Root directory is : /home/runner/work/hpc-workflows/hpc-workflows
     [file::our-config]                      Preparing working directory
@@ -627,7 +627,7 @@ rm $1/../our-config.json $1/../*.log
     [step::our-config.our-test.our-step0]       From our-config.our-test adding arguments pack 'our-default-argpack' : ['foobar']
     [step::our-config.our-test.our-step0]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step0]     Running command:
-    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows foobar foobar
+    [step::our-config.our-test.our-step0]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows foobar foobar
     [step::our-config.our-test.our-step0]     ***************START our-step0***************
     
     foobar foobar
@@ -646,7 +646,7 @@ rm $1/../our-config.json $1/../*.log
     [step::our-config.our-test.our-step1]       From our-config.our-test adding arguments pack 'our-default-argpack' : ['foobar']
     [step::our-config.our-test.our-step1]     Script : ./tests/scripts/echo_normal.sh
     [step::our-config.our-test.our-step1]     Running command:
-    [step::our-config.our-test.our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh /home/runner/work/hpc-workflows/hpc-workflows why "not more" args? foobar
+    [step::our-config.our-test.our-step1]       /home/runner/work/hpc-workflows/hpc-workflows/tests/scripts/echo_normal.sh fv-az883-167.sk5y2rh0qbtexpi1qont3x1wzb.ex.internal.cloudapp.net /home/runner/work/hpc-workflows/hpc-workflows why "not more" args? foobar
     [step::our-config.our-test.our-step1]     ***************START our-step1***************
     
     why not more args? foobar
