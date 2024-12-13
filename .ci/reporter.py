@@ -56,7 +56,7 @@ def getSummaryPrintedStr( masterDict, metadata ) :
     if not testlog["success"] :
       testCmd = cmdFormat.format(
                                   runner=metadata["rel_exec"],
-                                  file=metadata["rel_file"],
+                                  file=metadata["rel_prefix"] + "/" + metadata["rel_file"],
                                   test=test,
                                   offset="" if metadata["rel_offset"] == "" else "-d " + metadata["rel_offset"]
                                   )
@@ -102,6 +102,13 @@ def getOptionsParser():
                       help="Exec to use when outputting instructions on reproduction",
                       type=str,
                       default="<location to hpc-workflows/.ci/runner.py>"
+                      )
+  parser.add_argument( 
+                      "-p", "--prefix",
+                      dest="prefix",
+                      help="Prefix path to prepend to test config when outputting instructions on reproduction",
+                      type=str,
+                      default="<folder path to test config>"
                       )
   parser.add_argument( 
                       "-f", "--failedStepsOnly",
@@ -150,7 +157,8 @@ def main() :
   logs = json.load( fp )
 
   metadata = logs.pop( "metadata", None )
-  metadata["rel_exec"] = options.exec 
+  metadata["rel_exec"]   = options.exec 
+  metadata["rel_prefix"] = options.prefix 
   failure = False
 
   startGroup  = None
