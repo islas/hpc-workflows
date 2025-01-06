@@ -432,6 +432,10 @@ class Suite( SubmitAction ) :
 
   # main entry point for testing
   def run( self, tests ) :
+    currentDir = os.getcwd()
+    self.log( "Storing current working directory [{cwd}]".format( cwd=currentDir ) )
+    self.log( "  Will return to this directory at the end of testing" )
+
     for test in tests :
       if test not in self.tests_.keys() :
         msg = "Error: no test named '{0}'".format( test )
@@ -443,18 +447,23 @@ class Suite( SubmitAction ) :
     self.setWorkingDirectory()
 
     # Let joining steps into a single HPC job take precedence
+    success = True
+    logs    = []
     if self.globalOpts_.forceSingle :
       success = True
       logs    = []
       for test in tests :
         success = success and self.tests_[ test ].run()
         logs.append( self.tests_[ test ].logfile_ )
-      return success, logs
     else :
       if hasattr( self.globalOpts_, 'joinHPC' ) :
-        return self.runHPCJoin( tests )
+        success, logs = self.runHPCJoin( tests )
       else :
-        return self.runMultitest( tests )
+        success, logs = self.runMultitest( tests )
+    
+    # Popping back to old cwd
+    os.chdir( currentDir )
+    return success, logs
 
 # A separated helper function to wrap this in a callable format
 def runSuite( options ) :
