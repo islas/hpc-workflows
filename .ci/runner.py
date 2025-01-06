@@ -363,6 +363,12 @@ class Suite( SubmitAction ) :
       for testIdx, opt in enumerate( individualTestOpts ) :
         opt.testsConfig = testDirs[testIdx] + "/" + os.path.basename( self.globalOpts_.testsConfig )
 
+      if testDirs :
+        self.log_push()
+        for testIdx, opt in enumerate( individualTestOpts ) :
+          self.log( "Test [{test}] will run {config} from {cwd}".format( test=opt.tests[0], config=opt.testsConfig, cwd=os.getcwd() ) )
+        self.log_pop()
+
     self.log_pop()
 
     self.log( "Spawning process pool of size {0} to perform {1} tests".format( self.globalOpts_.pool, len(tests) ) )
