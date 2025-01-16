@@ -252,8 +252,12 @@ class Suite( SubmitAction ) :
     stepDict = {
                   "submit_options" : 
                   {
-                    "submission" : hpcSubmit[0],
-                    "timelimit"  : maxTimelimitStr
+                    self.globalOpts_.forceFQDN :
+                    {
+                      # Make this a host-specific so that it has priority
+                      "submission" : hpcSubmit[0],
+                      "timelimit"  : maxTimelimitStr
+                    }
                   },
                   "command"   : ABS_FILEPATH,
                   "arguments" : args
