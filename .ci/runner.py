@@ -250,15 +250,6 @@ class Suite( SubmitAction ) :
 
     self.log( "Using current file as launch executable : " + ABS_FILEPATH )
     stepDict = {
-                  "submit_options" : 
-                  {
-                    self.globalOpts_.forceFQDN :
-                    {
-                      # Make this a host-specific so that it has priority
-                      "submission" : hpcSubmit[0],
-                      "timelimit"  : maxTimelimitStr
-                    }
-                  },
                   "command"   : ABS_FILEPATH,
                   "arguments" : args
                 }
@@ -282,6 +273,9 @@ class Suite( SubmitAction ) :
     hpcJoinTest.steps_["submit"].submitOptions_.hpcArguments_ = maxResources
     # No other args
     hpcJoinTest.steps_["submit"].addTestScriptArgs_ = False
+    # Force submit type and timelimit - this allows preceding host specifics but overrides just these options
+    hpcJoinTest.steps_["submit"].submitOptions_.timelimit_  = maxTimelimitStr
+    hpcJoinTest.steps_["submit"].submitOptions_.submitType_ =  sc.SubmissionType( hpcSubmit[0] )
 
     hpcJoinTest.validate()
     success = hpcJoinTest.run()
