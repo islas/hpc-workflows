@@ -12,7 +12,7 @@ from multiprocessing import Pool
 from contextlib import redirect_stdout
 from datetime import timedelta
 
-
+import JSONCDecoder
 import SubmitCommon as sc
 
 from SubmitAction   import SubmitAction
@@ -518,7 +518,7 @@ def runSuite( options ) :
       with redirect_stdout( redirect ) :
         testSuite = Suite( 
                           basename,
-                          json.load( fp ),
+                          json.load( fp, cls=JSONCDecoder.JSONCDecoder ),
                           opts,
                           options,
                           parent=options.globalPrefix,
@@ -529,13 +529,13 @@ def runSuite( options ) :
         #   print( options.message )
   else :
     testSuite = Suite( 
-                          basename,
-                          json.load( fp ),
-                          opts,
-                          options,
-                          parent=options.globalPrefix,
-                          rootDir=root
-                          )
+                      basename,
+                      json.load( fp, cls=JSONCDecoder.JSONCDecoder ),
+                      opts,
+                      options,
+                      parent=options.globalPrefix,
+                      rootDir=root
+                      )
     success, logs = testSuite.run( options.tests )
     # if success and options.message :
     #   print( options.message ) 
